@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry
+from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary
 
 def home(request):
     return render(request, 'views/index.html')
@@ -10,7 +10,7 @@ def products(request):
     return render(request, 'views/products.html', context)
 
 def ecom(request):
-    all_products = Product.objects.all()
+    all_products = ProductEngagementSummary.objects.all()
     context = {'products': all_products}
     return render(request, 'views/ecom.html', context)
 

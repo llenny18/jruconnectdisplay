@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 28, 2024 at 04:29 PM
+-- Generation Time: Aug 28, 2024 at 05:09 PM
 -- Server version: 11.4.3-MariaDB
 -- PHP Version: 8.2.12
 
@@ -155,6 +155,26 @@ INSERT INTO `products` (`product_id`, `user_id`, `title`, `description`, `catego
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `product_engagement_summary`
+-- (See below for the actual view)
+--
+CREATE TABLE `product_engagement_summary` (
+`product_id` int(11)
+,`user_id` int(11)
+,`title` varchar(100)
+,`description` text
+,`category` varchar(50)
+,`price` decimal(10,2)
+,`location` varchar(100)
+,`image_url` varchar(255)
+,`date_posted` datetime
+,`purchase_count` bigint(21)
+,`likes_count` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `profiles`
 --
 
@@ -231,6 +251,15 @@ INSERT INTO `users` (`user_id`, `username`, `password_hash`, `email`, `full_name
 (3, 'admin1', 'passwordhash3', 'admin1@example.com', 'Admin One', 'admin', 1, '2024-08-27 11:00:00', '2024-08-27 09:10:00'),
 (4, 'student1', 'passwordhash4', 'student1@example.com', 'Student One', 'student', 0, NULL, '2024-08-27 09:15:00'),
 (5, 'student2', 'passwordhash5', 'student2@example.com', 'Student Two', 'student', 1, '2024-08-27 12:00:00', '2024-08-27 09:20:00');
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `product_engagement_summary`
+--
+DROP TABLE IF EXISTS `product_engagement_summary`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `product_engagement_summary`  AS SELECT `p`.`product_id` AS `product_id`, `p`.`user_id` AS `user_id`, `p`.`title` AS `title`, `p`.`description` AS `description`, `p`.`category` AS `category`, `p`.`price` AS `price`, `p`.`location` AS `location`, `p`.`image_url` AS `image_url`, `p`.`date_posted` AS `date_posted`, coalesce(`fb`.`feedback_count`,0) AS `purchase_count`, coalesce(`e`.`likes_count`,0) AS `likes_count` FROM ((`products` `p` left join (select `feedback`.`product_id` AS `product_id`,count(0) AS `feedback_count` from `feedback` group by `feedback`.`product_id`) `fb` on(`p`.`product_id` = `fb`.`product_id`)) left join (select `engagement`.`product_id` AS `product_id`,count(0) AS `likes_count` from `engagement` where `engagement`.`type` = 'like' group by `engagement`.`product_id`) `e` on(`p`.`product_id` = `e`.`product_id`)) ;
 
 --
 -- Indexes for dumped tables
