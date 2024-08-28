@@ -17,12 +17,12 @@ def users(request):
 def engagements(request):
     all_engagements = Engagement.objects.all()
     context = {'engagements': all_engagements}
-    return render(request, 'views/engagements.html', context)
+    return render(request, 'views/engagement.html', context)
 
 def feedbacks(request):
     all_feedbacks = Feedback.objects.all()
     context = {'feedbacks': all_feedbacks}
-    return render(request, 'views/feedbacks.html', context)
+    return render(request, 'views/feedback.html', context)
 
 def messages(request):
     all_messages = Message.objects.all()
@@ -37,4 +37,4 @@ def profiles(request):
 def support_inquiries(request):
     all_inquiries = SupportInquiry.objects.all()
     context = {'inquiries': all_inquiries}
-    return render(request, 'views/support_inquiries.html', context)
+    return render(request, 'views/support.html', context)

@@ -290,37 +290,40 @@
                     <h4 class="card-title">Administrator Table</h4>
 
                     <div class="table-responsive pt-3">
-                      <table class="table table-bordered" id="example">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Location</th>
-                                <th>Date Posted</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for product in products %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ product.title }}</td>
-                                <td>{{ product.description }}</td>
-                                <td>{{ product.category }}</td>
-                                <td>${{ product.price }}</td>
-                                <td>{{ product.location }}</td>
-                                <td>{{ product.date_posted|date:"Y-m-d H:i:s" }}</td>
-                                <td>
-                                    <a href="" class="btn btn-primary m-1">Edit</a>
-                                    <a href="" class="btn btn-danger m-1">Delete</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                     <table class="table table-bordered" id="example">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Verified</th>
+            <th>Last Login</th>
+            <th>Date Created</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.full_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.get_role_display }}</td>
+            <td>{{ user.verified }}</td>
+            <td>{{ user.last_login }}</td>
+            <td>{{ user.date_created }}</td>
+            <td>
+                <a href="" class="btn btn-primary m-1">Edit</a>
+                <a href="" class="btn btn-danger m-1">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
                       
                     </div>
                   </div>

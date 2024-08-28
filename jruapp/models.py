@@ -17,7 +17,7 @@ class User(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.username
+        return f'{self.full_name} ({self.username})'
 
     class Meta:
         managed = False
@@ -35,7 +35,7 @@ class Product(models.Model):
     date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return f'{self.title} by {self.user.username}'
 
     class Meta:
         managed = False
@@ -48,13 +48,13 @@ class Engagement(models.Model):
     ]
 
     engagement_id = models.AutoField(primary_key=True)
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, choices=ENGAGEMENT_TYPES)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user_id} {self.type} {self.product_id}'
+        return f'{self.user.username} {self.get_type_display()} {self.product.title}'
 
     class Meta:
         managed = False
@@ -62,14 +62,14 @@ class Engagement(models.Model):
 
 class Feedback(models.Model):
     feedback_id = models.AutoField(primary_key=True)
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Feedback by {self.user_id} on {self.product_id}'
+        return f'Feedback by {self.user.username} on {self.product.title} - Rating: {self.rating}'
 
     class Meta:
         managed = False
@@ -77,13 +77,13 @@ class Feedback(models.Model):
 
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
-    sender_id = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
-    receiver_id = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
     content = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Message from {self.sender_id} to {self.receiver_id}'
+        return f'Message from {self.sender.username} to {self.receiver.username}'
 
     class Meta:
         managed = False
@@ -91,13 +91,13 @@ class Message(models.Model):
 
 class Profile(models.Model):
     profile_id = models.AutoField(primary_key=True)
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(null=True, blank=True)
     profile_picture = models.URLField(max_length=255, null=True, blank=True)
     contact_number = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
-        return f'Profile of {self.user_id}'
+        return f'Profile of {self.user.username}'
 
     class Meta:
         managed = False
@@ -110,14 +110,14 @@ class SupportInquiry(models.Model):
     ]
 
     inquiry_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     subject = models.CharField(max_length=100, null=True, blank=True)
     message = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=10, choices=INQUIRY_STATUSES, default='open')
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Inquiry by {self.user_id} on {self.subject}'
+        return f'Inquiry by {self.user.username} on {self.subject} - Status: {self.get_status_display()}'
 
     class Meta:
         managed = False

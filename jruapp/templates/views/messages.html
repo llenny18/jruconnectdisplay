@@ -290,37 +290,34 @@
                     <h4 class="card-title">Administrator Table</h4>
 
                     <div class="table-responsive pt-3">
-                      <table class="table table-bordered" id="example">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Location</th>
-                                <th>Date Posted</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for product in products %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ product.title }}</td>
-                                <td>{{ product.description }}</td>
-                                <td>{{ product.category }}</td>
-                                <td>${{ product.price }}</td>
-                                <td>{{ product.location }}</td>
-                                <td>{{ product.date_posted|date:"Y-m-d H:i:s" }}</td>
-                                <td>
-                                    <a href="" class="btn btn-primary m-1">Edit</a>
-                                    <a href="" class="btn btn-danger m-1">Delete</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                     <table class="table table-bordered" id="example">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Sender</th>
+            <th>Receiver</th>
+            <th>Content</th>
+            <th>Date Sent</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for message in messages %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ message.sender.username }}</td>
+            <td>{{ message.receiver.username }}</td>
+            <td>{{ message.content }}</td>
+            <td>{{ message.date_sent }}</td>
+            <td>
+                <a href="" class="btn btn-primary m-1">Edit</a>
+                <a href="" class="btn btn-danger m-1">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
                       
                     </div>
                   </div>
