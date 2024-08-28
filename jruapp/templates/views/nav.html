@@ -1,0 +1,71 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item sidebar-category">
+            <p>Home</p>
+            <span></span>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">
+                <i class="mdi mdi-home menu-icon"></i>
+                <span class="menu-title">Home</span>
+            </a>
+        </li>
+        <li class="nav-item sidebar-category">
+            <p>Management</p>
+            <span></span>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <i class="mdi mdi-account-group menu-icon"></i>
+                <span class="menu-title">Users</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'users' %}">All Users</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'products' %}">
+                <i class="mdi mdi-box menu-icon"></i>
+                <span class="menu-title">Products</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'engagements' %}">
+                <i class="mdi mdi-thumb-up menu-icon"></i>
+                <span class="menu-title">Engagements</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'feedbacks' %}">
+                <i class="mdi mdi-comment-text menu-icon"></i>
+                <span class="menu-title">Feedbacks</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'messages' %}">
+                <i class="mdi mdi-message menu-icon"></i>
+                <span class="menu-title">Messages</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'profiles' %}">
+                <i class="mdi mdi-account menu-icon"></i>
+                <span class="menu-title">Profiles</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'support_inquiries' %}">
+                <i class="mdi mdi-help-circle menu-icon"></i>
+                <span class="menu-title">Support Inquiries</span>
+            </a>
+        </li>
+        <li class="nav-item sidebar-category">
+            <p>System Monitoring</p>
+            <span></span>
+        </li>
+        
+    </ul>
+</nav>
