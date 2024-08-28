@@ -5,6 +5,7 @@ from jruapp import views  # Import views from your app
 urlpatterns = [
     path('', views.home, name='home'),
     path('products/', views.products, name='products'),
+    path('ecom/', views.ecom, name='ecom'),
     path('users/', views.users, name='users'),
     path('engagements/', views.engagements, name='engagements'),
     path('feedbacks/', views.feedbacks, name='feedbacks'),

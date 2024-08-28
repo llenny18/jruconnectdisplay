@@ -9,3 +9,9 @@
     b. Edit and Delete Table Values
     c. Create sold products and other values table to students per user id and admin all values
     d. view profile
+
+
+
+CREATE USER 'Neo'@'localhost' IDENTIFIED BY '';
+GRANT ALL PRIVILEGES ON *.* TO 'Neo'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;

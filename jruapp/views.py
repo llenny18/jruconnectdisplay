@@ -9,6 +9,11 @@ def products(request):
     context = {'products': all_products}
     return render(request, 'views/products.html', context)
 
+def ecom(request):
+    all_products = Product.objects.all()
+    context = {'products': all_products}
+    return render(request, 'views/ecom.html', context)
+
 def users(request):
     all_users = User.objects.all()
     context = {'users': all_users}
