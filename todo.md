@@ -1,7 +1,7 @@
 1. SubSystem
-    a. Product pages to display products
-    b. View and Like products
-    c. Buy products using table cart and user_id
+    a. Product pages to display products /
+    b. View and Like products insert
+    c. Buy products using create new table cart and user_id 
     d. View profile
 
 2. Admin System
