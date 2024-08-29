@@ -4,6 +4,9 @@ from .models import Product, User, Engagement, Feedback, Message, Profile, Suppo
 def home(request):
     return render(request, 'views/index.html')
 
+def view(request):
+    return render(request, 'views/view.html')
+
 def products(request):
     all_products = Product.objects.all()
     context = {'products': all_products}
