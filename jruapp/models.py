@@ -2,6 +2,7 @@ from django.db import models
 
 class ProductEngagementSummary(models.Model):
     product_id = models.IntegerField(primary_key=True)
+    stock = models.IntegerField()
     user_id = models.IntegerField()
     title = models.CharField(max_length=100)
     description = models.TextField()
@@ -44,6 +45,7 @@ class Product(models.Model):
     product_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
+    stock = models.IntegerField()
     description = models.TextField()
     category = models.CharField(max_length=50, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

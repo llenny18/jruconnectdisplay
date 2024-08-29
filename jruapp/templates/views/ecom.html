@@ -1,209 +1,23 @@
 {% load static %}
-
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>JRU-Connect - Ecommerce</title>
     <!-- base:css -->
-    <link
-      rel="stylesheet"
-      href="{% static 'vendors/mdi/css/materialdesignicons.min.css '%}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'vendors/css/vendor.bundle.base.css '%}"
-    />
+    <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}" />
     <!-- endinject -->
-    <!-- plugin css for this page -->
-    <!-- End plugin css for this page -->
     <!-- inject:css -->
-    <link rel="stylesheet" href="{% static 'css/style.css '%}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <!-- endinject -->
     <link rel="shortcut icon" href="{% static 'images/favicon.png'%}" />
   </head>
   <body>
     <div class="container-scroller d-flex">
-      <!-- partial:./partials/_sidebar.html -->
-
       {% include 'views/nav.html' %}
-      <!-- partial -->
       <div class="container-fluid page-body-wrapper">
-        <!-- partial:./partials/_navbar.html -->
-        <nav
-          class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row"
-          style="height: 120px"
-        >
-          <div
-            class="navbar-menu-wrapper d-flex align-items-center justify-content-end"
-          >
-            <button
-              class="navbar-toggler navbar-toggler align-self-center"
-              type="button"
-              data-toggle="minimize"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-            <div class="navbar-brand-wrapper mr-5"></div>
-            <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">
-              Welcome back, User Name
-            </h4>
-            <ul class="navbar-nav navbar-nav-right">
-              <li class="nav-item">
-                <h4 class="mb-0 font-weight-bold d-none d-xl-block">
-                  August 22, 2024
-                </h4>
-              </li>
-              <li class="nav-item dropdown mr-1">
-                <a
-                  class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
-                  id="messageDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-calendar mx-0"></i>
-                  <span class="count bg-info">2</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="messageDropdown"
-                >
-                  <p class="mb-0 font-weight-normal float-left dropdown-header">
-                    Messages
-                  </p>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face4.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        David Grey
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        The meeting is cancelled
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face2.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        Tim Cook
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        New product launch
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face3.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        Johnson
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        Upcoming board meeting
-                      </p>
-                    </div>
-                  </a>
-                </div>
-              </li>
-              <li class="nav-item dropdown mr-2">
-                <a
-                  class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
-                  id="notificationDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-email-open mx-0"></i>
-                  <span class="count bg-danger">1</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="notificationDropdown"
-                >
-                  <p class="mb-0 font-weight-normal float-left dropdown-header">
-                    Notifications
-                  </p>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-success">
-                        <i class="mdi mdi-information mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        Application Error
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        Just now
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-warning">
-                        <i class="mdi mdi-settings mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        Settings
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        Private message
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-info">
-                        <i class="mdi mdi-account-box mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        New user registration
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        2 days ago
-                      </p>
-                    </div>
-                  </a>
-                </div>
-              </li>
-            </ul>
-            <button
-              class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
-              type="button"
-              data-toggle="offcanvas"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-          </div>
-        </nav>
-        <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="row">
@@ -212,66 +26,108 @@
                   <div class="row">
                     {% for product in products %}
                     <div class="col-md-3 grid-margin stretch-card">
-                        <div class="card shadow-sm" style="border: 3px solid #283c9c; border-radius: 20px;">
-                            <div class="card-body text-center">
-                              <img
-                              src="{% if product.image_url %}{{ product.image_url }}{% else %}{% static 'images/default.png' %}{% endif %}"
-                              class="img-fluid rounded mb-3"
-                              style="height: 200px; width: auto;"
-                              alt="{{ product.title }}"
-                          />
-                          
-                                <h4 class="font-weight-bold text-dark mb-2">{{ product.title }} : PHP {{ product.price }}</h4>
-                                <h6 class="text-muted mb-1">Likes: <strong>{{ product.likes_count }}</strong></h6>
-                                <h6 class="text-muted mb-3">Purchases: <strong>{{ product.purchase_count }}</strong></h6>
-                                <hr>
-                                <div class="d-flex justify-content-center mb-2">
-                                    <a href="" class="btn btn-primary m-1">
-                                        <i class="mdi mdi-eye mdi-24px"></i> <br>View
-                                    </a>
-                                    
-                                    <a href="" class="btn btn-success m-1">
-                                        <i class="mdi mdi-cart mdi-24px"></i> <br>Add to Cart
-                                    </a>
-                                </div>
-                            </div>
+                      <div class="card shadow-sm" style="border: 3px solid #283c9c; border-radius: 20px;">
+                        <div class="card-body text-center">
+                          <img src="{% if product.image_url %}{{ product.image_url }}{% else %}{% static 'images/default.png' %}{% endif %}" class="img-fluid rounded mb-3" style="height: 200px; width: auto;" alt="{{ product.title }}" />
+                          <h4 class="font-weight-bold text-dark mb-2">{{ product.title }} : PHP {{ product.price }}</h4>
+                          <h6 class="text-muted mb-1">Likes: <strong>{{ product.likes_count }}</strong></h6>
+                          <h6 class="text-muted mb-3">Purchases: <strong>{{ product.purchase_count }}</strong></h6>
+                          <hr>
+                          <div class="d-flex justify-content-center mb-2">
+                            <!-- View Button triggers modal -->
+                            <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#productModal{{ product.product_id }}" onclick="recordEngagement({{ product.product_id }}, 'click')">
+                              <i class="mdi mdi-eye mdi-24px"></i> <br>View
+                            </button>
+                            
+                            <a href="" class="btn btn-success m-1">
+                              <i class="mdi mdi-cart mdi-24px"></i> <br>Add to Cart
+                            </a>
+                          </div>
                         </div>
+                      </div>
                     </div>
+
+                    <!-- Product Modal -->
+                    <div class="modal fade" id="productModal{{ product.product_id }}" tabindex="-1" role="dialog" aria-labelledby="productModalLabel{{ product.product_id }}" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="productModalLabel{{ product.product_id }}">{{ product.title }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <img src="{% if product.image_url %}{{ product.image_url }}{% else %}{% static 'images/default.png' %}{% endif %}" class="img-fluid rounded mb-3" alt="{{ product.title }}">
+                              </div>
+                              <div class="col-md-6">
+                                <h5>PHP {{ product.price }}</h5>
+                                <p>{{ product.description }}</p>
+                                <p><strong>Category:</strong> {{ product.category }}</p>
+                                <p><strong>Stock:</strong> {{ product.stock }}</p>
+                                <p><strong>Location:</strong> {{ product.location }}</p>
+                                <p><strong>Date Posted:</strong> {{ product.date_posted }}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="recordEngagement({{ product.product_id }}, 'like')">Like</button>
+                            <button type="button" class="btn btn-success">Add to Cart</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End of Product Modal -->
                     {% endfor %}
-                </div>
-                
-                  
+                  </div>
                 </div>
               </div>
-             
-            <!-- row end -->
+            </div>
           </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:./partials/_footer.html -->
-          
-          <!-- partial -->
         </div>
-        <!-- main-panel ends -->
       </div>
-      <!-- page-body-wrapper ends -->
     </div>
-    <!-- container-scroller -->
+
+    <!-- CSRF Token -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
     <!-- base:js -->
+    <script>
+      function recordEngagement(productId, type) {
+          const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+          fetch('/record_engagement/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': csrftoken
+              },
+              body: JSON.stringify({
+                  'product_id': productId,
+                  'type': type
+              })
+          }).then(response => response.json())
+          .then(data => {
+              console.log('Success:', data);
+          }).catch((error) => {
+              console.error('Error:', error);
+          });
+      }
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    
     <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
     <!-- endinject -->
-    <!-- Plugin js for this page-->
-    <script src="{% static 'vendors/chart.js/Chart.min.js' %}"></script>
-    <!-- End plugin js for this page-->
     <!-- inject:js -->
     <script src="{% static 'js/off-canvas.js' %}"></script>
     <script src="{% static 'js/hoverable-collapse.js' %}"></script>
     <script src="{% static 'js/template.js' %}"></script>
     <!-- endinject -->
-    <!-- plugin js for this page -->
-    <!-- End plugin js for this page -->
-    <!-- Custom js for this page-->
-    <script src="{% static 'js/dashboard.js' %}"></script>
-    <!-- End custom js for this page-->
   </body>
 </html>
