@@ -95,7 +95,20 @@ def update_product(request, product_id):
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
     
-    
+
+
+@csrf_exempt
+def delete_product(request, product_id):
+    if request.method == 'DELETE':
+        try:
+            product = Product.objects.get(pk=product_id)
+            product.delete()
+            return JsonResponse({'status': 'success'})
+        except Product.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Product not found'})
+    else:
+        return HttpResponseForbidden()
+
     
 @csrf_exempt
 def add_product(request):
