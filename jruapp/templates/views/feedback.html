@@ -2,19 +2,13 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>JRU-Connect - Feedbacks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>JRU-Connect - Feedback</title>
     <!-- base:css -->
-    <link
-      rel="stylesheet"
-      href="{% static 'vendors/mdi/css/materialdesignicons.min.css'%}"
-    />
+    <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css'%}" />
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css'%}" />
     <!-- endinject -->
     <!-- inject:css -->
@@ -26,262 +20,344 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <!-- DataTables Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css">
+</head>
 
-
-
-
-  </head>
-
-  <body>
+<body>
     <div class="container-scroller d-flex">
-      <!-- partial:{% static 'partials/_sidebar.html -->
-      {% include 'views/nav.html' %}
-      <!-- partial -->
-      <div class="container-fluid page-body-wrapper">
-        <!-- partial:./partials/_navbar.html -->
-        <nav
-          class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row"
-          style="height: 120px"
-        >
-          <div
-            class="navbar-menu-wrapper d-flex align-items-center justify-content-end"
-          >
-            <button
-              class="navbar-toggler navbar-toggler align-self-center"
-              type="button"
-              data-toggle="minimize"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-            <div class="navbar-brand-wrapper mr-5"></div>
-            <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">
-              Welcome back, User Name
-            </h4>
-            <ul class="navbar-nav navbar-nav-right">
-              <li class="nav-item">
-                <h4 class="mb-0 font-weight-bold d-none d-xl-block">
-                  August 22, 2024
-                </h4>
-              </li>
-              <li class="nav-item dropdown mr-1">
-                <a
-                  class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
-                  id="messageDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-calendar mx-0"></i>
-                  <span class="count bg-info">2</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="messageDropdown"
-                >
-                  <p class="mb-0 font-weight-normal float-left dropdown-header">
-                    Messages
-                  </p>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face4.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        David Grey
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        The meeting is cancelled
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face2.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        Tim Cook
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        New product launch
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face3.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        Johnson
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        Upcoming board meeting
-                      </p>
-                    </div>
-                  </a>
+        {% include 'views/nav.html' %}
+        <div class="container-fluid page-body-wrapper">
+            <nav class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row" style="height: 120px">
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+                    <div class="navbar-brand-wrapper mr-5"></div>
+                    <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, User Name</h4>
+                    <ul class="navbar-nav navbar-nav-right">
+                        <li class="nav-item">
+                            <h4 class="mb-0 font-weight-bold d-none d-xl-block">August 22, 2024</h4>
+                        </li>
+                        <li class="nav-item dropdown mr-1">
+                            <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center" id="messageDropdown" href="#" data-toggle="dropdown">
+                                <i class="mdi mdi-calendar mx-0"></i>
+                                <span class="count bg-info">2</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
+                                <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="{% static 'images/faces/face4.jpg' %}" alt="image" class="profile-pic" />
+                                    </div>
+                                    <div class="preview-item-content flex-grow">
+                                        <h6 class="preview-subject ellipsis font-weight-normal">David Grey</h6>
+                                        <p class="font-weight-light small-text text-muted mb-0">The meeting is cancelled</p>
+                                    </div>
+                                </a>
+                                <!-- Add more messages here -->
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown mr-2">
+                            <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
+                                <i class="mdi mdi-email-open mx-0"></i>
+                                <span class="count bg-danger">1</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                                <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <div class="preview-icon bg-success">
+                                            <i class="mdi mdi-information mx-0"></i>
+                                        </div>
+                                    </div>
+                                    <div class="preview-item-content">
+                                        <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                                        <p class="font-weight-light small-text mb-0 text-muted">Just now</p>
+                                    </div>
+                                </a>
+                                <!-- Add more notifications here -->
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
                 </div>
-              </li>
-              <li class="nav-item dropdown mr-2">
-                <a
-                  class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
-                  id="notificationDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-email-open mx-0"></i>
-                  <span class="count bg-danger">1</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="notificationDropdown"
-                >
-                  <p class="mb-0 font-weight-normal float-left dropdown-header">
-                    Notifications
-                  </p>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-success">
-                        <i class="mdi mdi-information mx-0"></i>
-                      </div>
+            </nav>
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Feedback Table</h4>
+                                    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addFeedbackModal">Add Feedback</button>
+                                    <div class="table-responsive pt-3">
+                                        <table class="table table-bordered" id="example">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>User</th>
+                                                    <th>Product</th>
+                                                    <th>Rating</th>
+                                                    <th>Comment</th>
+                                                    <th>Date Created</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for feedback in feedbacks %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ feedback.user.username }}</td>
+                                                    <td>{{ feedback.product.title }}</td>
+                                                    <td>{{ feedback.rating }}</td>
+                                                    <td>{{ feedback.comment }}</td>
+                                                    <td>{{ feedback.date_created }}</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editFeedbackModal" data-id="{{ feedback.id }}" data-user="{{ feedback.user.username }}" data-product="{{ feedback.product.title }}" data-rating="{{ feedback.rating }}" data-comment="{{ feedback.comment }}">Edit</button>
+                                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteFeedback({{ feedback.id }})">Delete</button>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        Application Error
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        Just now
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-warning">
-                        <i class="mdi mdi-settings mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        Settings
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        Private message
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-info">
-                        <i class="mdi mdi-account-box mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        New user registration
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        2 days ago
-                      </p>
-                    </div>
-                  </a>
                 </div>
-              </li>
-            </ul>
-            <button
-              class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
-              type="button"
-              data-toggle="offcanvas"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-          </div>
-        </nav>
-        <!-- partial -->
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Sold and Feedbacks Table</h4>
-
-                    <div class="table-responsive pt-3">
-                     <table class="table table-bordered" id="example">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>User</th>
-            <th>Product</th>
-            <th>Rating</th>
-            <th>Comment</th>
-            <th>Date Created</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for feedback in feedbacks %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ feedback.user.username }}</td>
-            <td>{{ feedback.product.title }}</td>
-            <td>{{ feedback.rating }}</td>
-            <td>{{ feedback.comment }}</td>
-            <td>{{ feedback.date_created }}</td>
-            <td>
-                <a href="" class="btn btn-primary m-1">Edit</a>
-                <a href="" class="btn btn-danger m-1">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-                      
-                    </div>
-                  </div>
-                </div>
-              </div>
+                {% include 'views/footer.html' %}
             </div>
-          </div>
-          <!-- content-wrapper ends -->
-          {% include 'views/footer.html' %}
-          <!-- partial -->
         </div>
-        <!-- main-panel ends -->
-      </div>
-      <!-- page-body-wrapper ends -->
     </div>
-    <!-- container-scroller -->
+
+    <!-- Add Feedback Modal -->
+    <div class="modal fade" id="addFeedbackModal" tabindex="-1" role="dialog" aria-labelledby="addFeedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFeedbackModalLabel">Add Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addFeedbackForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="user">User</label>
+                            <input type="text" readonly class="form-control" id="new_user" name="user" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="product">Product</label>
+                            <input type="text" readonly class="form-control" id="new_product" name="product" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="rating">Rating</label>
+                            <input type="number" class="form-control" id="new_rating" name="rating" min="1" max="5" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Comment</label>
+                            <textarea class="form-control" id="new_comment" name="comment" rows="3" required></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="addFeedback()">Add Feedback</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Feedback Modal -->
+    <div class="modal fade" id="editFeedbackModal" tabindex="-1" role="dialog" aria-labelledby="editFeedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editFeedbackModalLabel">Edit Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editFeedbackForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="edit_id" name="id" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="edit_user">User</label>
+                            <input type="text" readonly class="form-control" id="edit_user" name="user" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_product">Product</label>
+                            <input type="text" readonly class="form-control" id="edit_product" name="product" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_rating">Rating</label>
+                            <input type="number" class="form-control" id="edit_rating" name="rating" min="1" max="5" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_comment">Comment</label>
+                            <textarea class="form-control" id="edit_comment" name="comment" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="updateFeedback()">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Feedback Modal -->
+    <div class="modal fade" id="deleteFeedbackModal" tabindex="-1" role="dialog" aria-labelledby="deleteFeedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteFeedbackModalLabel">Delete Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="deleteFeedbackForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="delete_id" name="id" />
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this feedback?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteFeedback()">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- base:js -->
     <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#example').DataTable();
-        });
-    </script>
     <!-- endinject -->
-    <!-- Plugin js for this page-->
-    <!-- End plugin js for this page-->
     <!-- inject:js -->
     <script src="{% static 'js/off-canvas.js' %}"></script>
     <script src="{% static 'js/hoverable-collapse.js' %}"></script>
-    <script src="{% static 'js/template.js' %}"></script>
-    <!-- endinject -->
-    <!-- End custom js for this page-->
-  </body>
+    <script src="{% static 'js/misc.js' %}"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- DataTables Bootstrap JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+
+        function deleteFeedback(feedbackId) {
+            if (confirm('Are you sure you want to delete this feedback?')) {
+                const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+                fetch(`/delete_feedback/${feedbackId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload(); // Reload the page to see the changes
+                    } else {
+                        alert('Error deleting feedback.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function addFeedback() {
+            const user = document.getElementById("new_user").value;
+            const product = document.getElementById("new_product").value;
+            const rating = document.getElementById("new_rating").value;
+            const comment = document.getElementById("new_comment").value;
+            const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+            fetch("/add_feedback/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                },
+                body: JSON.stringify({
+                    user: user,
+                    product: product,
+                    rating: rating,
+                    comment: comment,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    window.location.reload(); // Reload the page to see the changes
+                } else {
+                    alert("Error adding feedback: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function updateFeedback() {
+            const id = document.getElementById("edit_id").value;
+            const user = document.getElementById("edit_user").value;
+            const product = document.getElementById("edit_product").value;
+            const rating = document.getElementById("edit_rating").value;
+            const comment = document.getElementById("edit_comment").value;
+            const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+            fetch(`/update_feedback/${id}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                },
+                body: JSON.stringify({
+                    user: user,
+                    product: product,
+                    rating: rating,
+                    comment: comment,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    window.location.reload(); // Reload the page to see the changes
+                } else {
+                    alert("Error updating feedback: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        // Set up modals with data from table rows
+        $('#editFeedbackModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var id = button.data('id'); // Extract info from data-* attributes
+            var user = button.data('user');
+            var product = button.data('product');
+            var rating = button.data('rating');
+            var comment = button.data('comment');
+            
+            var modal = $(this);
+            modal.find('#edit_id').val(id);
+            modal.find('#edit_user').val(user);
+            modal.find('#edit_product').val(product);
+            modal.find('#edit_rating').val(rating);
+            modal.find('#edit_comment').val(comment);
+        });
+
+        $('#deleteFeedbackModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var id = button.data('id'); // Extract info from data-* attributes
+
+            var modal = $(this);
+            modal.find('#delete_id').val(id);
+        });
+    </script>
+</body>
 </html>

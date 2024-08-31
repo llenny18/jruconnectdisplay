@@ -95,8 +95,15 @@ def users(request):
 
 def engagements(request):
     all_engagements = Engagement.objects.all()
-    context = {'engagements': all_engagements}
+    users = User.objects.all()
+    products = Product.objects.all()
+    context = {
+        'engagements': all_engagements,
+        'users': users,
+        'products': products,
+    }
     return render(request, 'views/engagement.html', context)
+
 
 def feedbacks(request):
     all_feedbacks = Feedback.objects.all()
@@ -138,8 +145,8 @@ def add_engagement(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            product_id = data.get('product_id')
-            user_id = data.get('user_id')
+            product_id = data.get('product')
+            user_id = data.get('user')
             engagement_type = data.get('type')
             user = User.objects.get(pk=user_id)
             product = Product.objects.get(pk=product_id)
@@ -226,21 +233,25 @@ def update_user(request, user_id):
             return JsonResponse({'status': 'fail', 'message': 'User not found.'})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
-
 @csrf_exempt
 def update_engagement(request, engagement_id):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             engagement = Engagement.objects.get(pk=engagement_id)
-            engagement.type = data.get('type', engagement.type)
+            
+            # Update the fields
+            engagement.user_id = data.get('user')
+            engagement.product_id = data.get('product')
+            engagement.type = data.get('type')
+            
             engagement.save()
             return JsonResponse({'status': 'success', 'message': 'Engagement updated successfully!'})
         except Engagement.DoesNotExist:
             return JsonResponse({'status': 'fail', 'message': 'Engagement not found.'})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
-
+    
 @csrf_exempt
 def update_feedback(request, feedback_id):
     if request.method == 'POST':
