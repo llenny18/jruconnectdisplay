@@ -2,284 +2,282 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>JRU-Connect - Messages</title>
     <!-- base:css -->
-    <link
-      rel="stylesheet"
-      href="{% static 'vendors/mdi/css/materialdesignicons.min.css'%}"
-    />
-    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css'%}" />
+    <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}" />
     <!-- endinject -->
     <!-- inject:css -->
-    <link rel="stylesheet" href="{% static 'css/style.css'%}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <!-- endinject -->
-    <link rel="shortcut icon" href="{% static 'images/favicon.png'%}" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <!-- DataTables Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css">
-
-
-
-
-  </head>
-
-  <body>
+</head>
+<body>
     <div class="container-scroller d-flex">
-      <!-- partial:{% static 'partials/_sidebar.html -->
-      {% include 'views/nav.html' %}
-      <!-- partial -->
-      <div class="container-fluid page-body-wrapper">
-        <!-- partial:./partials/_navbar.html -->
-        <nav
-          class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row"
-          style="height: 120px"
-        >
-          <div
-            class="navbar-menu-wrapper d-flex align-items-center justify-content-end"
-          >
-            <button
-              class="navbar-toggler navbar-toggler align-self-center"
-              type="button"
-              data-toggle="minimize"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-            <div class="navbar-brand-wrapper mr-5"></div>
-            <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">
-              Welcome back, User Name
-            </h4>
-            <ul class="navbar-nav navbar-nav-right">
-              <li class="nav-item">
-                <h4 class="mb-0 font-weight-bold d-none d-xl-block">
-                  August 22, 2024
-                </h4>
-              </li>
-              <li class="nav-item dropdown mr-1">
-                <a
-                  class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
-                  id="messageDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-calendar mx-0"></i>
-                  <span class="count bg-info">2</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="messageDropdown"
-                >
-                  <p class="mb-0 font-weight-normal float-left dropdown-header">
-                    Messages
-                  </p>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face4.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
+        {% include 'views/nav.html' %}
+        <div class="container-fluid page-body-wrapper">
+            <nav class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row" style="height: 120px">
+                <!-- Navigation content -->
+            </nav>
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Messages Table</h4>
+                                    <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addMessageModal">Add Message</button>
+                                    <div class="table-responsive pt-3">
+                                        <table class="table table-bordered" id="example">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Sender</th>
+                                                    <th>Receiver</th>
+                                                    <th>Content</th>
+                                                    <th>Date Sent</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for message in messages %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ message.sender.full_name }}</td>
+                                                    <td>{{ message.receiver.full_name }}</td>
+                                                    <td>{{ message.content }}</td>
+                                                    <td>{{ message.date_sent }}</td>
+                                                    <td>
+                                                        <button class="btn btn-primary m-1" data-toggle="modal" data-target="#editMessageModal" 
+                                                                data-id="{{ message.message_id }}" 
+                                                                data-content="{{ message.content }}" 
+                                                                data-sender="{{ message.sender_id }}" 
+                                                                data-receiver="{{ message.receiver_id }}">Edit</button>
+                                                        <button class="btn btn-danger m-1" onclick="deleteMessage({{ message.message_id }})">Delete</button>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        David Grey
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        The meeting is cancelled
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face2.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        Tim Cook
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        New product launch
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face3.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        Johnson
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        Upcoming board meeting
-                      </p>
-                    </div>
-                  </a>
                 </div>
-              </li>
-              <li class="nav-item dropdown mr-2">
-                <a
-                  class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
-                  id="notificationDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-email-open mx-0"></i>
-                  <span class="count bg-danger">1</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="notificationDropdown"
-                >
-                  <p class="mb-0 font-weight-normal float-left dropdown-header">
-                    Notifications
-                  </p>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-success">
-                        <i class="mdi mdi-information mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        Application Error
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        Just now
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-warning">
-                        <i class="mdi mdi-settings mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        Settings
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        Private message
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-info">
-                        <i class="mdi mdi-account-box mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        New user registration
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        2 days ago
-                      </p>
-                    </div>
-                  </a>
-                </div>
-              </li>
-            </ul>
-            <button
-              class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
-              type="button"
-              data-toggle="offcanvas"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-          </div>
-        </nav>
-        <!-- partial -->
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Messages Table</h4>
-
-                    <div class="table-responsive pt-3">
-                     <table class="table table-bordered" id="example">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Sender</th>
-            <th>Receiver</th>
-            <th>Content</th>
-            <th>Date Sent</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for message in messages %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ message.sender.username }}</td>
-            <td>{{ message.receiver.username }}</td>
-            <td>{{ message.content }}</td>
-            <td>{{ message.date_sent }}</td>
-            <td>
-                <a href="" class="btn btn-primary m-1">Edit</a>
-                <a href="" class="btn btn-danger m-1">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-                      
-                    </div>
-                  </div>
-                </div>
-              </div>
+                {% include 'views/footer.html' %}
             </div>
-          </div>
-          <!-- content-wrapper ends -->
-          {% include 'views/footer.html' %}
-          <!-- partial -->
         </div>
-        <!-- main-panel ends -->
-      </div>
-      <!-- page-body-wrapper ends -->
     </div>
-    <!-- container-scroller -->
+
+    <!-- Add Message Modal -->
+    <div class="modal fade" id="addMessageModal" tabindex="-1" role="dialog" aria-labelledby="addMessageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addMessageModalLabel">Add Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMessageForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="addMessageSender">Sender</label>
+                            <select class="form-control" id="addMessageSender" name="sender_id">
+                                <!-- Populate with users -->
+                                {% for user in users %}
+                                <option value="{{ user.user_id }}">{{ user.full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="addMessageReceiver">Receiver</label>
+                            <select class="form-control" id="addMessageReceiver" name="receiver_id">
+                                <!-- Populate with users -->
+                                {% for user in users %}
+                                <option value="{{ user.user_id }}">{{ user.full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="addMessageContent">Content</label>
+                            <textarea class="form-control" id="addMessageContent" name="content"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Message Modal -->
+    <div class="modal fade" id="editMessageModal" tabindex="-1" role="dialog" aria-labelledby="editMessageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMessageModalLabel">Edit Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editMessageForm">
+                        {% csrf_token %}
+                        <!-- Hidden input for message ID -->
+                        <input type="hidden" id="editMessageId" name="id">
+
+                        <!-- Sender Selection -->
+                        <div class="form-group">
+                            <label for="editMessageSender">Sender</label>
+                            <select class="form-control" id="editMessageSender" name="sender_id">
+                                <!-- Populate with users -->
+                                {% for user in users %}
+                                <option value="{{ user.user_id }}" {% if user.user_id == selected_sender_id %}selected{% endif %}>{{ user.full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Receiver Selection -->
+                        <div class="form-group">
+                            <label for="editMessageReceiver">Receiver</label>
+                            <select class="form-control" id="editMessageReceiver" name="receiver_id">
+                                <!-- Populate with users -->
+                                {% for user in users %}
+                                <option value="{{ user.user_id }}" {% if user.user_id == selected_receiver_id %}selected{% endif %}>{{ user.full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Message Content -->
+                        <div class="form-group">
+                            <label for="editMessageContent">Content</label>
+                            <textarea class="form-control" id="editMessageContent" name="content"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary">Update Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- base:js -->
     <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#example').DataTable();
+      $(document).ready(function () {
+        // Initialize DataTable
+        $('#example').DataTable();
+
+        // Bind addMessage to the form submit event
+        $('#addMessageForm').submit(function (e) {
+            e.preventDefault();
+            addMessage();
         });
+
+        // Fill in the edit modal with the selected message's data
+        $('#editMessageModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget); // Button that triggered the modal
+          var id = button.data('id');
+          var senderId = button.data('sender');
+          var receiverId = button.data('receiver');
+          var content = button.data('content');
+    
+          var modal = $(this);
+          modal.find('#editMessageId').val(id);
+          modal.find('#editMessageSender').val(senderId); // Set sender ID in the dropdown
+          modal.find('#editMessageReceiver').val(receiverId); // Set receiver ID in the dropdown
+          modal.find('#editMessageContent').val(content);
+      });
+    });
+    
+
+    // Function to delete a message
+    function deleteMessage(messageId) {
+        if (confirm('Are you sure you want to delete this message?')) {
+            const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+            fetch(`/delete-message/${messageId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete message');
+                }
+            });
+        }
+    }
+
+    // Function to add a message
+    function addMessage() {
+        const senderId = document.querySelector('#addMessageSender').value;
+        const receiverId = document.querySelector('#addMessageReceiver').value;
+        const content = document.querySelector('#addMessageContent').value;
+        const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+        fetch('/add-message/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ sender_id: senderId, receiver_id: receiverId, content: content })
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to add message');
+            }
+        });
+    }
+
+    // Function to update a message
+    $('#editMessageForm').submit(function (e) {
+        e.preventDefault();
+
+        const id = document.querySelector('#editMessageId').value;
+        const senderId = document.querySelector('#editMessageSender').value;
+        const receiverId = document.querySelector('#editMessageReceiver').value;
+        const content = document.querySelector('#editMessageContent').value;
+        const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+        fetch(`/update-message/${id}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ sender_id: senderId, receiver_id: receiverId, content: content })
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to update message');
+            }
+        });
+    });
     </script>
-    <!-- endinject -->
-    <!-- Plugin js for this page-->
-    <!-- End plugin js for this page-->
-    <!-- inject:js -->
-    <script src="{% static 'js/off-canvas.js' %}"></script>
-    <script src="{% static 'js/hoverable-collapse.js' %}"></script>
-    <script src="{% static 'js/template.js' %}"></script>
-    <!-- endinject -->
-    <!-- End custom js for this page-->
-  </body>
+</body>
 </html>

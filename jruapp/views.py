@@ -107,12 +107,18 @@ def engagements(request):
 
 def feedbacks(request):
     all_feedbacks = Feedback.objects.all()
-    context = {'feedbacks': all_feedbacks}
+    users = User.objects.all()
+    products = Product.objects.all()
+    context = {'feedbacks': all_feedbacks, 
+        'users': users,
+        'products': products,}
     return render(request, 'views/feedback.html', context)
 
 def messages(request):
     all_messages = Message.objects.all()
-    context = {'messages': all_messages}
+    users = User.objects.all()
+    context = {'messages': all_messages, 
+        'users': users}
     return render(request, 'views/messages.html', context)
 
 def profiles(request):
@@ -162,31 +168,48 @@ def add_feedback(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            user_id = data.get('user_id')
+            user_id = data.get('user')
             content = data.get('content')
             rating = data.get('rating')
+            product_id = data.get('product')  # Get the product_id
+            
             user = User.objects.get(pk=user_id)
-            feedback = Feedback(user=user, content=content, rating=rating)
+            product = Product.objects.get(pk=product_id)  # Get the product
+
+            feedback = Feedback(user=user, comment=content, rating=rating, product=product)  # Include product
             feedback.save()
             return JsonResponse({'status': 'success', 'message': 'Feedback added successfully!'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
+
 @csrf_exempt
 def add_message(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            user_id = data.get('user_id')
+            sender_id = data.get('sender_id')
+            receiver_id = data.get('receiver_id')
             content = data.get('content')
-            user = User.objects.get(pk=user_id)
-            message = Message(user=user, content=content)
+
+            # Debugging output
+            print("Received data:", data)
+
+            sender = User.objects.get(pk=sender_id)
+            receiver = User.objects.get(pk=receiver_id)
+
+            message = Message(sender=sender, receiver=receiver, content=content)
             message.save()
+
             return JsonResponse({'status': 'success', 'message': 'Message added successfully!'})
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Sender or receiver not found'})
         except Exception as e:
+            print("Error:", str(e))  # Debugging output
             return JsonResponse({'status': 'error', 'message': str(e)})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
 
 @csrf_exempt
 def add_profile(request):
@@ -258,26 +281,58 @@ def update_feedback(request, feedback_id):
         try:
             data = json.loads(request.body)
             feedback = Feedback.objects.get(pk=feedback_id)
-            feedback.content = data.get('content', feedback.content)
+
+            user_id = data.get('user')
+            product_id = data.get('product')
+
+            if user_id:
+                feedback.user = User.objects.get(pk=user_id)  # Retrieve the User instance
+
+            if product_id:
+                feedback.product = Product.objects.get(pk=product_id)  # Retrieve the Product instance
+
+            feedback.comment = data.get('content', feedback.comment)
             feedback.rating = data.get('rating', feedback.rating)
+
             feedback.save()
             return JsonResponse({'status': 'success', 'message': 'Feedback updated successfully!'})
         except Feedback.DoesNotExist:
             return JsonResponse({'status': 'fail', 'message': 'Feedback not found.'})
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'fail', 'message': 'User not found.'})
+        except Product.DoesNotExist:
+            return JsonResponse({'status': 'fail', 'message': 'Product not found.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
-
+    
 @csrf_exempt
 def update_message(request, message_id):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             message = Message.objects.get(pk=message_id)
+
+            # Update fields as necessary
             message.content = data.get('content', message.content)
+            if 'sender_id' in data:
+                sender_id = data.get('sender_id')
+                sender = User.objects.get(pk=sender_id)
+                message.sender = sender
+            if 'receiver_id' in data:
+                receiver_id = data.get('receiver_id')
+                receiver = User.objects.get(pk=receiver_id)
+                message.receiver = receiver
+
             message.save()
             return JsonResponse({'status': 'success', 'message': 'Message updated successfully!'})
         except Message.DoesNotExist:
             return JsonResponse({'status': 'fail', 'message': 'Message not found.'})
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Sender or receiver not found'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
 
