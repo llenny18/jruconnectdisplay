@@ -96,8 +96,8 @@
                                                     <td>{{ profile.profile_picture }}</td>
                                                     <td>{{ profile.contact_number }}</td>
                                                     <td>
-                                                        <button class="btn btn-primary m-1" data-toggle="modal" data-target="#editProfileModal" data-id="{{ profile.id }}" data-user="{{ profile.user.full_name }}" data-bio="{{ profile.bio }}" data-picture="{{ profile.profile_picture }}" data-contact="{{ profile.contact_number }}" onclick="dataModal(event)">Edit</button>
-                                                        <button class="btn btn-danger m-1" onclick="deleteProfile({{ profile.id }})">Delete</button>
+                                                        <button class="btn btn-primary m-1" data-toggle="modal" data-target="#editProfileModal" data-id="{{ profile.profile_id }}" data-user="{{ profile.user.full_name }}" data-bio="{{ profile.bio }}" data-picture="{{ profile.profile_picture }}" data-contact="{{ profile.contact_number }}" onclick="dataModal(event)">Edit</button>
+                                                        <button class="btn btn-danger m-1" onclick="deleteProfile({{ profile.profile_id }})">Delete</button>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}

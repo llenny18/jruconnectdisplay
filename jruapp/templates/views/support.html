@@ -2,19 +2,13 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>JRU-Connect - Support Inquiries</title>
     <!-- base:css -->
-    <link
-      rel="stylesheet"
-      href="{% static 'vendors/mdi/css/materialdesignicons.min.css'%}"
-    />
+    <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css'%}" />
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css'%}" />
     <!-- endinject -->
     <!-- inject:css -->
@@ -24,264 +18,286 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    <!-- DataTables Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css">
+</head>
 
-
-
-
-  </head>
-
-  <body>
+<body>
     <div class="container-scroller d-flex">
-      <!-- partial:{% static 'partials/_sidebar.html -->
-      {% include 'views/nav.html' %}
-      <!-- partial -->
-      <div class="container-fluid page-body-wrapper">
-        <!-- partial:./partials/_navbar.html -->
-        <nav
-          class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row"
-          style="height: 120px"
-        >
-          <div
-            class="navbar-menu-wrapper d-flex align-items-center justify-content-end"
-          >
-            <button
-              class="navbar-toggler navbar-toggler align-self-center"
-              type="button"
-              data-toggle="minimize"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-            <div class="navbar-brand-wrapper mr-5"></div>
-            <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">
-              Welcome back, User Name
-            </h4>
-            <ul class="navbar-nav navbar-nav-right">
-              <li class="nav-item">
-                <h4 class="mb-0 font-weight-bold d-none d-xl-block">
-                  August 22, 2024
-                </h4>
-              </li>
-              <li class="nav-item dropdown mr-1">
-                <a
-                  class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
-                  id="messageDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-calendar mx-0"></i>
-                  <span class="count bg-info">2</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="messageDropdown"
-                >
-                  <p class="mb-0 font-weight-normal float-left dropdown-header">
-                    Messages
-                  </p>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face4.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        David Grey
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        The meeting is cancelled
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face2.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        Tim Cook
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        New product launch
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="{% static 'images/faces/face3.jpg' %}"
-                        alt="image"
-                        class="profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content flex-grow">
-                      <h6 class="preview-subject ellipsis font-weight-normal">
-                        Johnson
-                      </h6>
-                      <p class="font-weight-light small-text text-muted mb-0">
-                        Upcoming board meeting
-                      </p>
-                    </div>
-                  </a>
+        {% include 'views/nav.html' %}
+        <div class="container-fluid page-body-wrapper">
+            <nav class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row" style="height: 120px">
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+                    <div class="navbar-brand-wrapper mr-5"></div>
+                    <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, User Name</h4>
+                    <ul class="navbar-nav navbar-nav-right">
+                        <!-- Additional Navbar Items -->
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
                 </div>
-              </li>
-              <li class="nav-item dropdown mr-2">
-                <a
-                  class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
-                  id="notificationDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-email-open mx-0"></i>
-                  <span class="count bg-danger">1</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="notificationDropdown"
-                >
-                  <p class="mb-0 font-weight-normal float-left dropdown-header">
-                    Notifications
-                  </p>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-success">
-                        <i class="mdi mdi-information mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        Application Error
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        Just now
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-warning">
-                        <i class="mdi mdi-settings mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        Settings
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        Private message
-                      </p>
-                    </div>
-                  </a>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-info">
-                        <i class="mdi mdi-account-box mx-0"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">
-                        New user registration
-                      </h6>
-                      <p class="font-weight-light small-text mb-0 text-muted">
-                        2 days ago
-                      </p>
-                    </div>
-                  </a>
-                </div>
-              </li>
-            </ul>
-            <button
-              class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
-              type="button"
-              data-toggle="offcanvas"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-          </div>
-        </nav>
-        <!-- partial -->
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Administrator Table</h4>
+            </nav>
 
-                    <div class="table-responsive pt-3">
-                      <table class="table table-bordered" id="example">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>User</th>
-                                <th>Subject</th>
-                                <th>Message</th>
-                                <th>Status</th>
-                                <th>Date Created</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for inquiry in inquiries %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ inquiry.user.username }}</td>
-                                <td>{{ inquiry.subject }}</td>
-                                <td>{{ inquiry.message }}</td>
-                                <td>{{ inquiry.get_status_display }}</td>
-                                <td>{{ inquiry.date_created }}</td>
-                                <td>
-                                    <a href="" class="btn btn-primary m-1">Edit</a>
-                                    <a href="" class="btn btn-danger m-1">Delete</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    
-                      
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Support Inquiries</h4>
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#addInquiryModal">Add Inquiry</button>
+
+                                    <div class="table-responsive pt-3">
+                                        <table class="table table-bordered" id="inquiriesTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>User</th>
+                                                    <th>Subject</th>
+                                                    <th>Message</th>
+                                                    <th>Status</th>
+                                                    <th>Date Created</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for inquiry in inquiries %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ inquiry.user.username }}</td>
+                                                    <td>{{ inquiry.subject }}</td>
+                                                    <td>{{ inquiry.message }}</td>
+                                                    <td>{{ inquiry.get_status_display }}</td>
+                                                    <td>{{ inquiry.date_created }}</td>
+                                                    <td>
+                                                        <button class="btn btn-primary m-1 edit-btn"data-toggle="modal" data-target="#editInquiryModal" data-id="{{ inquiry.inquiry_id }}" data-user="{{ inquiry.user.user_id }}" data-subject="{{ inquiry.subject }}" data-message="{{ inquiry.message }}" data-status="{{ inquiry.status }}">Edit</button>
+                                                        <button class="btn btn-danger m-1 delete-btn" onclick="deleteInquiry({{ inquiry.inquiry_id }})">Delete</button>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
-            </div>
+
+               <!-- Add Inquiry Modal -->
+<div class="modal fade" id="addInquiryModal" tabindex="-1" role="dialog" aria-labelledby="addInquiryModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="addInquiryModalLabel">Add Inquiry</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
           </div>
-          <!-- content-wrapper ends -->
-          {% include 'views/footer.html' %}
-          <!-- partial -->
-        </div>
-        <!-- main-panel ends -->
+          <div class="modal-body">
+              <form id="addInquiryForm">
+                  <div class="form-group">
+                      <label for="user">User</label>
+                      <select class="form-control" id="user" name="user">
+                          {% for user in users %}
+                              <option value="{{ user.user_id }}">{{ user.username }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="subject">Subject</label>
+                      <input type="text" class="form-control" id="subject" name="subject" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="message">Message</label>
+                      <textarea class="form-control" id="message" name="message" required></textarea>
+                  </div>
+                  <div class="form-group">
+                      <label for="status">Status</label>
+                      <select class="form-control" id="status" name="status">
+                          <option value="open">Open</option>
+                          <option value="closed">Closed</option>
+                      </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Add Inquiry</button>
+              </form>
+          </div>
       </div>
-      <!-- page-body-wrapper ends -->
+  </div>
+</div>
+
+
+              <!-- Edit Inquiry Modal -->
+<div class="modal fade" id="editInquiryModal" tabindex="-1" role="dialog" aria-labelledby="editInquiryModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="editInquiryModalLabel">Edit Inquiry</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form id="editInquiryForm">
+                  <input type="hidden" id="editInquiryId" name="inquiry_id">
+                  <div class="form-group">
+                      <label for="editUser">User</label>
+                      <select class="form-control" id="editUser" name="user">
+                          {% for user in users %}
+                              <option value="{{ user.user_id }}">{{ user.username }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="editSubject">Subject</label>
+                      <input type="text" class="form-control" id="editSubject" name="subject" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="editMessage">Message</label>
+                      <textarea class="form-control" id="editMessage" name="message" required></textarea>
+                  </div>
+                  <div class="form-group">
+                      <label for="editStatus">Status</label>
+                      <select class="form-control" id="editStatus" name="status">
+                          <option value="open">Open</option>
+                          <option value="closed">Closed</option>
+                      </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Update Inquiry</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+                <!-- content-wrapper ends -->
+                {% include 'views/footer.html' %}
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+
     <!-- base:js -->
     <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#example').DataTable();
+            $('#inquiriesTable').DataTable();
+
+            
+
+            // Add Inquiry
+            $('#addInquiryForm').on('submit', function(e) {
+                e.preventDefault();
+                let user = $('#user').val();
+                let subject = $('#subject').val();
+                let message = $('#message').val();
+                let status = $('#status').val();
+
+                fetch("{% url 'add_support_inquiry' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        user_id: user,
+                        subject: subject,
+                        status: status,
+                        message: message
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            });
+
+            // Edit Inquiry
+            $('.edit-btn').on('click', function() {
+              let inquiryId = $(this).data('id');
+              let user = $(this).data('user');
+              let subject = $(this).data('subject');
+              let message = $(this).data('message');
+              let status = $(this).data('status');
+          
+              $('#editInquiryId').val(inquiryId);
+              $('#editUser').val(user);
+              $('#editSubject').val(subject);
+              $('#editMessage').val(message);
+              $('#editStatus').val(status); // Pre-select the current status
+          
+          });
+          
+
+          $('#editInquiryForm').on('submit', function(e) {
+            e.preventDefault();
+            let inquiryId = $('#editInquiryId').val();
+            let user = $('#editUser').val();
+            let subject = $('#editSubject').val();
+            let status = $('#editStatus').val();
+            let message = $('#editMessage').val();
+        
+            fetch(`/update-support-inquiry/${inquiryId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    user: user,
+                    subject: subject,
+                    status: status,
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            });
         });
+        
+        
+          
+
+            // Delete Inquiry
+           
+        });
+
+        function deleteInquiry(inquiryId) {
+          if (confirm("Are you sure you want to delete this inquiry?")) {
+              fetch(`/delete-support-inquiry/${inquiryId}/`, {
+                  method: 'DELETE',
+                  headers: {
+                      'X-CSRFToken': '{{ csrf_token }}'
+                  }
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.status === 'success') {
+                      location.reload();
+                  } else {
+                      alert(data.message);
+                  }
+              });
+          }
+      }
     </script>
-    <!-- endinject -->
-    <!-- Plugin js for this page-->
-    <!-- End plugin js for this page-->
-    <!-- inject:js -->
-    <script src="{% static 'js/off-canvas.js' %}"></script>
-    <script src="{% static 'js/hoverable-collapse.js' %}"></script>
-    <script src="{% static 'js/template.js' %}"></script>
-    <!-- endinject -->
-    <!-- End custom js for this page-->
-  </body>
+</body>
 </html>

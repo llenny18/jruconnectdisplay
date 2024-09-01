@@ -130,7 +130,9 @@ def profiles(request):
 
 def support_inquiries(request):
     all_inquiries = SupportInquiry.objects.all()
-    context = {'inquiries': all_inquiries}
+    users = User.objects.all()
+    context = {'inquiries': all_inquiries, 
+        'users': users}
     return render(request, 'views/support.html', context)
 
 # Create Views
@@ -219,9 +221,10 @@ def add_profile(request):
         try:
             data = json.loads(request.body)
             user_id = data.get('user_id')
+            contact_number = data.get('contact')
             bio = data.get('bio')
             user = User.objects.get(pk=user_id)
-            profile = Profile(user=user, bio=bio)
+            profile = Profile(user=user, bio=bio, contact_number=contact_number)
             profile.save()
             return JsonResponse({'status': 'success', 'message': 'Profile added successfully!'})
         except Exception as e:
@@ -234,9 +237,11 @@ def add_support_inquiry(request):
         try:
             data = json.loads(request.body)
             user_id = data.get('user_id')
-            inquiry = data.get('inquiry')
+            subject = data.get('subject')
+            status = data.get('status')
+            message = data.get('message')
             user = User.objects.get(pk=user_id)
-            support_inquiry = SupportInquiry(user=user, inquiry=inquiry)
+            support_inquiry = SupportInquiry(user=user, subject=subject, message=message, status=status)
             support_inquiry.save()
             return JsonResponse({'status': 'success', 'message': 'Support Inquiry added successfully!'})
         except Exception as e:
@@ -340,11 +345,11 @@ def update_message(request, message_id):
     
 @csrf_exempt
 def update_profile(request, profile_id):
-    if request.method == 'POST':
+    if request.method in ['POST', 'PUT']:
         try:
             data = json.loads(request.body)
             profile = Profile.objects.get(pk=profile_id)
-            profile.contact_number = data.get('contact_number', profile.contact_number)
+            profile.contact_number = data.get('contact', profile.contact_number)
             profile.bio = data.get('bio', profile.bio)
             profile.save()
             return JsonResponse({'status': 'success', 'message': 'Profile updated successfully!'})
@@ -352,21 +357,37 @@ def update_profile(request, profile_id):
             return JsonResponse({'status': 'fail', 'message': 'Profile not found.'})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
-
 @csrf_exempt
 def update_support_inquiry(request, inquiry_id):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             support_inquiry = SupportInquiry.objects.get(pk=inquiry_id)
-            support_inquiry.inquiry = data.get('inquiry', support_inquiry.inquiry)
+
+            # Update fields
+            if 'subject' in data:
+                support_inquiry.subject = data['subject']
+            if 'message' in data:
+                support_inquiry.message = data['message']
+            if 'status' in data:
+                support_inquiry.status = data['status']
+            if 'user' in data:
+                try:
+                    new_user = User.objects.get(pk=data['user'])
+                    support_inquiry.user = new_user
+                except User.DoesNotExist:
+                    return JsonResponse({'status': 'fail', 'message': 'User not found.'})
+
             support_inquiry.save()
             return JsonResponse({'status': 'success', 'message': 'Support Inquiry updated successfully!'})
         except SupportInquiry.DoesNotExist:
             return JsonResponse({'status': 'fail', 'message': 'Support Inquiry not found.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'fail', 'message': 'Invalid JSON.'})
+        except Exception as e:
+            return JsonResponse({'status': 'fail', 'message': str(e)})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
-
 # Delete Views
 @csrf_exempt
 def delete_user(request, user_id):
