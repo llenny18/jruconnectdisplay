@@ -47,6 +47,7 @@
                                                     <th>User</th>
                                                     <th>Product</th>
                                                     <th>Feedback</th>
+                                                    <th>Rate</th>
                                                     <th>Date Created</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -58,6 +59,7 @@
                                                     <td>{{ feedback.user.username }}</td>
                                                     <td>{{ feedback.product.title }}</td> <!-- Display product name -->
                                                     <td>{{ feedback.comment }}</td> <!-- Updated field name -->
+                                                    <td>{{ feedback.rating }}</td> <!-- Updated field name -->
                                                     <td>{{ feedback.date_created }}</td>
                                                     <td>
                                                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editFeedbackModal" data-id="{{ feedback.feedback_id }}" data-user="{{ feedback.user.user_id }}" data-product="{{ feedback.product.product_id }}" data-text="{{ feedback.comment }}" data-rating="{{ feedback.rating }}">Edit</button>
@@ -180,7 +182,9 @@
   </div>
 </div>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
     <!-- base:js -->
     <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
     <!-- endinject -->
@@ -192,6 +196,9 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <!-- DataTables Bootstrap JS -->
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
+
+
+    
     <script>
         $(document).ready(function () {
             $('#example').DataTable();

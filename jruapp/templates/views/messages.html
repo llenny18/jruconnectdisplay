@@ -57,7 +57,9 @@
                                                     <td>{{ message.content }}</td>
                                                     <td>{{ message.date_sent }}</td>
                                                     <td>
-                                                        <button class="btn btn-primary m-1" data-toggle="modal" data-target="#editMessageModal" 
+                                                        <button class="btn btn-primary m-1"
+                                                        onclick="dataModal(event)"
+                                                        data-toggle="modal" data-target="#editMessageModal" 
                                                                 data-id="{{ message.message_id }}" 
                                                                 data-content="{{ message.content }}" 
                                                                 data-sender="{{ message.sender_id }}" 
@@ -172,12 +174,15 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
     <!-- base:js -->
     <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
+    
     <script>
       $(document).ready(function () {
         // Initialize DataTable
@@ -189,20 +194,7 @@
             addMessage();
         });
 
-        // Fill in the edit modal with the selected message's data
-        $('#editMessageModal').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget); // Button that triggered the modal
-          var id = button.data('id');
-          var senderId = button.data('sender');
-          var receiverId = button.data('receiver');
-          var content = button.data('content');
-    
-          var modal = $(this);
-          modal.find('#editMessageId').val(id);
-          modal.find('#editMessageSender').val(senderId); // Set sender ID in the dropdown
-          modal.find('#editMessageReceiver').val(receiverId); // Set receiver ID in the dropdown
-          modal.find('#editMessageContent').val(content);
-      });
+        
     });
     
 
@@ -278,6 +270,25 @@
             }
         });
     });
+
+
+    // Fill in the edit modal with the selected message's data
+    function dataModal(event) {
+        var button = $(event.target); // Use target instead of relatedTarget
+        var id = button.data('id');
+        var senderId = button.data('sender');
+        var receiverId = button.data('receiver');
+        var content = button.data('content');
+    
+        console.log({ id, senderId, receiverId, content });
+    
+        // Populate the form fields
+        $('#editMessageId').val(id);
+        $('#editMessageSender').val(senderId);
+        $('#editMessageReceiver').val(receiverId);
+        $('#editMessageContent').val(content);
+    }
+    
     </script>
 </body>
 </html>

@@ -123,7 +123,9 @@ def messages(request):
 
 def profiles(request):
     all_profiles = Profile.objects.all()
-    context = {'profiles': all_profiles}
+    users = User.objects.all()
+    context = {'profiles': all_profiles, 
+        'users': users}
     return render(request, 'views/profiles.html', context)
 
 def support_inquiries(request):
@@ -306,10 +308,9 @@ def update_feedback(request, feedback_id):
             return JsonResponse({'status': 'error', 'message': str(e)})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
-    
 @csrf_exempt
 def update_message(request, message_id):
-    if request.method == 'POST':
+    if request.method in ['POST', 'PUT']:
         try:
             data = json.loads(request.body)
             message = Message.objects.get(pk=message_id)
@@ -335,13 +336,15 @@ def update_message(request, message_id):
             return JsonResponse({'status': 'error', 'message': str(e)})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
-
+    
+    
 @csrf_exempt
 def update_profile(request, profile_id):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             profile = Profile.objects.get(pk=profile_id)
+            profile.contact_number = data.get('contact_number', profile.contact_number)
             profile.bio = data.get('bio', profile.bio)
             profile.save()
             return JsonResponse({'status': 'success', 'message': 'Profile updated successfully!'})
