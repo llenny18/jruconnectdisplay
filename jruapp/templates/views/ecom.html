@@ -97,25 +97,31 @@
     <!-- base:js -->
     <script>
       function recordEngagement(productId, type) {
-          const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-          fetch('/record_engagement/', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRFToken': csrftoken
-              },
-              body: JSON.stringify({
-                  'product_id': productId,
-                  'type': type
-              })
-          }).then(response => response.json())
-          .then(data => {
-              console.log('Success:', data);
-          }).catch((error) => {
-              console.error('Error:', error);
-          });
-      }
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+        fetch('/record_engagement/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                'product_id': productId,
+                'type': type
+            })
+        })
+        .then(response => {
+            console.log('Raw response:', response);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    
     </script>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

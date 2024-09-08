@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 28, 2024 at 05:09 PM
--- Server version: 11.4.3-MariaDB
+-- Generation Time: Sep 01, 2024 at 09:59 AM
+-- Server version: 11.5.2-MariaDB
 -- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -70,7 +70,8 @@ INSERT INTO `engagement` (`engagement_id`, `product_id`, `user_id`, `type`, `dat
 (2, 2, 3, 'click', '2024-08-27 12:05:00'),
 (3, 3, 4, 'like', '2024-08-27 12:10:00'),
 (4, 4, 1, 'click', '2024-08-27 12:15:00'),
-(5, 5, 5, 'like', '2024-08-27 12:20:00');
+(5, 5, 5, 'like', '2024-08-27 12:20:00'),
+(6, 4, 4, 'like', '2024-09-01 04:04:19');
 
 -- --------------------------------------------------------
 
@@ -96,7 +97,8 @@ INSERT INTO `feedback` (`feedback_id`, `product_id`, `user_id`, `rating`, `comme
 (2, 2, 3, 4, 'Good value for money.', '2024-08-27 13:05:00'),
 (3, 3, 4, 3, 'Average quality.', '2024-08-27 13:10:00'),
 (4, 4, 1, 2, 'Not as expected.', '2024-08-27 13:15:00'),
-(5, 5, 5, 1, 'Very disappointed.', '2024-08-27 13:20:00');
+(5, 5, 5, 1, 'Very disappointed.', '2024-08-27 13:20:00'),
+(6, 3, 4, 5, 'fdgdfg', '2024-09-01 04:04:27');
 
 -- --------------------------------------------------------
 
@@ -117,7 +119,7 @@ CREATE TABLE `messages` (
 --
 
 INSERT INTO `messages` (`message_id`, `sender_id`, `receiver_id`, `content`, `date_sent`) VALUES
-(1, 1, 2, 'Hello, how are you?', '2024-08-27 14:00:00'),
+(1, 5, 4, 'Hello, how are youewrewr', '2024-08-27 14:00:00'),
 (2, 2, 3, 'Can you send me the details?', '2024-08-27 14:05:00'),
 (3, 3, 4, 'Thank you for your help!', '2024-08-27 14:10:00'),
 (4, 4, 1, 'When can we meet?', '2024-08-27 14:15:00'),
@@ -136,6 +138,7 @@ CREATE TABLE `products` (
   `description` text NOT NULL,
   `category` varchar(50) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
+  `stock` int(15) NOT NULL,
   `location` varchar(100) DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `date_posted` datetime DEFAULT current_timestamp()
@@ -145,12 +148,12 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `user_id`, `title`, `description`, `category`, `price`, `location`, `image_url`, `date_posted`) VALUES
-(1, 1, 'Laptop', 'High-performance laptop', 'Electronics', 999.99, 'New York, NY', 'http://example.com/laptop.jpg', '2024-08-27 15:00:00'),
-(2, 2, 'Smartphone', 'Latest model smartphone', 'Electronics', 799.99, 'Los Angeles, CA', 'http://example.com/smartphone.jpg', '2024-08-27 15:05:00'),
-(3, 3, 'Bicycle', 'Mountain bike', 'Sports', 499.99, 'Chicago, IL', 'http://example.com/bicycle.jpg', '2024-08-27 15:10:00'),
-(4, 4, 'Desk', 'Office desk', 'Furniture', 199.99, 'Houston, TX', 'http://example.com/desk.jpg', '2024-08-27 15:15:00'),
-(5, 5, 'Chair', 'Ergonomic office chair', 'Furniture', 149.99, 'Phoenix, AZ', 'http://example.com/chair.jpg', '2024-08-27 15:20:00');
+INSERT INTO `products` (`product_id`, `user_id`, `title`, `description`, `category`, `price`, `stock`, `location`, `image_url`, `date_posted`) VALUES
+(1, 1, 'Laptop', 'High-performance laptop', 'Electronics', 999.99, 0, 'New York, NY', 'http://example.com/laptop.jpg', '2024-08-27 15:00:00'),
+(2, 2, 'Smartphone', 'Latest model smartphone', 'Electronics', 799.99, 0, 'Los Angeles, CA', 'http://example.com/smartphone.jpg', '2024-08-27 15:05:00'),
+(3, 3, 'Bicycle', 'Mountain bike', 'Sports', 499.99, 0, 'Chicago, IL', 'http://example.com/bicycle.jpg', '2024-08-27 15:10:00'),
+(4, 4, 'Desk', 'Office desk', 'Furniture', 199.99, 0, 'Houston, TX', 'http://example.com/desk.jpg', '2024-08-27 15:15:00'),
+(5, 5, 'Chair', 'Ergonomic office chair', 'Furniture', 149.99, 0, 'Phoenix, AZ', 'http://example.com/chair.jpg', '2024-08-27 15:20:00');
 
 -- --------------------------------------------------------
 
@@ -163,6 +166,7 @@ CREATE TABLE `product_engagement_summary` (
 ,`user_id` int(11)
 ,`title` varchar(100)
 ,`description` text
+,`stock` int(15)
 ,`category` varchar(50)
 ,`price` decimal(10,2)
 ,`location` varchar(100)
@@ -192,8 +196,8 @@ CREATE TABLE `profiles` (
 
 INSERT INTO `profiles` (`profile_id`, `user_id`, `bio`, `profile_picture`, `contact_number`) VALUES
 (1, 1, 'Tech enthusiast', 'http://example.com/profile1.jpg', '123-456-7890'),
-(2, 2, 'Gadget lover', 'http://example.com/profile2.jpg', '234-567-8901'),
-(3, 3, 'Sports fan', 'http://example.com/profile3.jpg', '345-678-9012'),
+(2, 2, 'Gadget loverasdasasdasdas', 'http://example.com/profile2.jpg', '234-567-8901'),
+(3, 3, 'Sports fanss', 'http://example.com/profile3.jpg', '345-678-9012s'),
 (4, 4, 'Furniture designer', 'http://example.com/profile4.jpg', '456-789-0123'),
 (5, 5, 'Office worker', 'http://example.com/profile5.jpg', '567-890-1234');
 
@@ -217,8 +221,8 @@ CREATE TABLE `support_inquiries` (
 --
 
 INSERT INTO `support_inquiries` (`inquiry_id`, `user_id`, `subject`, `message`, `status`, `date_created`) VALUES
-(3, 1, 'Issue with order', 'I haven\'t received my order yet.', 'open', '2024-08-27 16:00:00'),
-(4, 2, 'Account problem', 'Unable to log in.', 'open', '2024-08-27 16:05:00'),
+(3, 5, 'Issue with orderass', 'I haven\'t received my order yet.sss', 'open', '2024-08-27 16:00:00'),
+(4, 2, 'Account problems', 'Unable to log in.', 'open', '2024-08-27 16:05:00'),
 (5, 3, 'Payment error', 'My payment was declined.', 'open', '2024-08-27 16:10:00'),
 (6, 4, 'Shipping delay', 'My package is delayed.', 'open', '2024-08-27 16:15:00'),
 (7, 5, 'Wrong item received', 'I received the wrong product.', 'open', '2024-08-27 16:20:00');
@@ -250,7 +254,8 @@ INSERT INTO `users` (`user_id`, `username`, `password_hash`, `email`, `full_name
 (2, 'janedoe', 'passwordhash2', 'janedoe@example.com', 'Jane Doe', 'student', 0, NULL, '2024-08-27 09:05:00'),
 (3, 'admin1', 'passwordhash3', 'admin1@example.com', 'Admin One', 'admin', 1, '2024-08-27 11:00:00', '2024-08-27 09:10:00'),
 (4, 'student1', 'passwordhash4', 'student1@example.com', 'Student One', 'student', 0, NULL, '2024-08-27 09:15:00'),
-(5, 'student2', 'passwordhash5', 'student2@example.com', 'Student Two', 'student', 1, '2024-08-27 12:00:00', '2024-08-27 09:20:00');
+(5, 'student2', 'passwordhash5', 'student2@example.com', 'Student Two', 'admin', 1, '2024-08-27 12:00:00', '2024-08-27 09:20:00'),
+(13, 'dsfds', 'dfdsf', 'sdfsdfs@gmail.com', 'fdsf', 'admin', 0, NULL, '2024-09-01 07:48:39');
 
 -- --------------------------------------------------------
 
@@ -259,7 +264,7 @@ INSERT INTO `users` (`user_id`, `username`, `password_hash`, `email`, `full_name
 --
 DROP TABLE IF EXISTS `product_engagement_summary`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `product_engagement_summary`  AS SELECT `p`.`product_id` AS `product_id`, `p`.`user_id` AS `user_id`, `p`.`title` AS `title`, `p`.`description` AS `description`, `p`.`category` AS `category`, `p`.`price` AS `price`, `p`.`location` AS `location`, `p`.`image_url` AS `image_url`, `p`.`date_posted` AS `date_posted`, coalesce(`fb`.`feedback_count`,0) AS `purchase_count`, coalesce(`e`.`likes_count`,0) AS `likes_count` FROM ((`products` `p` left join (select `feedback`.`product_id` AS `product_id`,count(0) AS `feedback_count` from `feedback` group by `feedback`.`product_id`) `fb` on(`p`.`product_id` = `fb`.`product_id`)) left join (select `engagement`.`product_id` AS `product_id`,count(0) AS `likes_count` from `engagement` where `engagement`.`type` = 'like' group by `engagement`.`product_id`) `e` on(`p`.`product_id` = `e`.`product_id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `product_engagement_summary`  AS SELECT `p`.`product_id` AS `product_id`, `p`.`user_id` AS `user_id`, `p`.`title` AS `title`, `p`.`description` AS `description`, `p`.`stock` AS `stock`, `p`.`category` AS `category`, `p`.`price` AS `price`, `p`.`location` AS `location`, `p`.`image_url` AS `image_url`, `p`.`date_posted` AS `date_posted`, coalesce(`fb`.`feedback_count`,0) AS `purchase_count`, coalesce(`e`.`likes_count`,0) AS `likes_count` FROM ((`products` `p` left join (select `feedback`.`product_id` AS `product_id`,count(0) AS `feedback_count` from `feedback` group by `feedback`.`product_id`) `fb` on(`p`.`product_id` = `fb`.`product_id`)) left join (select `engagement`.`product_id` AS `product_id`,count(0) AS `likes_count` from `engagement` where `engagement`.`type` = 'like' group by `engagement`.`product_id`) `e` on(`p`.`product_id` = `e`.`product_id`)) ;
 
 --
 -- Indexes for dumped tables
@@ -350,19 +355,19 @@ ALTER TABLE `django_migrations`
 -- AUTO_INCREMENT for table `engagement`
 --
 ALTER TABLE `engagement`
-  MODIFY `engagement_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `engagement_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -374,19 +379,19 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `profiles`
 --
 ALTER TABLE `profiles`
-  MODIFY `profile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `profile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `support_inquiries`
 --
 ALTER TABLE `support_inquiries`
-  MODIFY `inquiry_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `inquiry_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables

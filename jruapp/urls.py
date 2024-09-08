@@ -4,9 +4,11 @@ from jruapp import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('home', views.home, name='home'),
     path('products/', views.products, name='products'),
+    path('login/', views.login, name='login'),
     path('ecom/', views.ecom, name='ecom'),
-    path('record_engagement/', views.engagements, name='record_engagement'),
+    path('record_engagement/', views.record_engagement, name='record_engagement'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
     path('add_product/', views.add_product, name='add_product'),
     

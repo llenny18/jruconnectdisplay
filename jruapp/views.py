@@ -1,6 +1,9 @@
+from datetime import timezone
 from django.http import JsonResponse, HttpResponseForbidden
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary
 import json
 
@@ -11,6 +14,25 @@ def home(request):
 
 def view(request):
     return render(request, 'views/view.html')
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        # Query the user by username
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return render(request, 'views/login.html', {'error': 'Invalid credentials'})
+        
+        # Check password (assuming password_hash is a hashed password)
+        if user.password_hash == password:  # Ideally, use a password hashing library
+            request.session['admin_id'] = user.user_id  # Set session variable
+            return redirect('home')
+        else:
+            return render(request, 'views/login.html', {'error': 'Invalid credentials'})
+    return render(request, 'views/login.html')
 
 def products(request):
     all_products = Product.objects.all()
@@ -408,6 +430,35 @@ def delete_user(request, user_id):
             return JsonResponse({'status': 'error', 'message': 'User not found'})
     else:
         return HttpResponseForbidden()
+
+@csrf_exempt  # If you're not using the CSRF token, use this decorator
+def record_engagement(request):
+    if request.method == 'POST':
+        try:
+            # Parse the request body (assuming JSON format)
+            data = json.loads(request.body)
+            product_id = data.get('product_id')
+            engagement_type = data.get('type')
+
+            # Example logic (you would replace this with your own logic)
+            if product_id and engagement_type:
+                new_engagement = Engagement.objects.create(
+                        product_id=product_id,
+                        user_id=1,
+                        type=engagement_type
+                    )
+
+                    # Save the record (optional since create() automatically saves)
+                new_engagement.save()
+                return JsonResponse({'status': 'success', 'message': 'Engagement recorded'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Missing parameters'}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
 
 @csrf_exempt
 def delete_engagement(request, engagement_id):
