@@ -10,7 +10,11 @@ import json
 
 
 def home(request):
-    return render(request, 'views/index.html')
+    full_name = request.session.get('full_name', 'Guest')
+    context = {
+        'full_name': full_name
+    }
+    return render(request, 'views/index.html', context)
 
 def view(request):
     return render(request, 'views/view.html')
@@ -29,21 +33,26 @@ def login(request):
         # Check password (assuming password_hash is a hashed password)
         if user.password_hash == password:  # Ideally, use a password hashing library
             request.session['admin_id'] = user.user_id  # Set session variable
+            request.session['full_name'] = user.full_name  # Set session variable
             return redirect('home')
         else:
             return render(request, 'views/login.html', {'error': 'Invalid credentials'})
     return render(request, 'views/login.html')
 
 def products(request):
+    full_name = request.session.get('full_name', 'Guest')
+   
     all_products = Product.objects.all()
-    context = {'products': all_products}
+    context = {'products': all_products, 'full_name': full_name}
     return render(request, 'views/products.html', context)
 
 
 
 def ecom(request):
+    full_name = request.session.get('full_name', 'Guest')
+    
     all_products = ProductEngagementSummary.objects.all()
-    context = {'products': all_products}
+    context = {'products': all_products, 'full_name': full_name}
     return render(request, 'views/ecom.html', context)
 
     
@@ -111,11 +120,13 @@ def add_product(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 def users(request):
+    full_name = request.session.get('full_name', 'Guest')
     all_users = User.objects.all()
-    context = {'users': all_users}
+    context = {'users': all_users, 'full_name': full_name}
     return render(request, 'views/users.html', context)
 
 def engagements(request):
+    full_name = request.session.get('full_name', 'Guest')
     all_engagements = Engagement.objects.all()
     users = User.objects.all()
     products = Product.objects.all()
@@ -123,38 +134,43 @@ def engagements(request):
         'engagements': all_engagements,
         'users': users,
         'products': products,
+        'full_name': full_name
     }
     return render(request, 'views/engagement.html', context)
 
 
 def feedbacks(request):
+    full_name = request.session.get('full_name', 'Guest')
     all_feedbacks = Feedback.objects.all()
     users = User.objects.all()
     products = Product.objects.all()
     context = {'feedbacks': all_feedbacks, 
         'users': users,
-        'products': products,}
+        'products': products, 'full_name': full_name}
     return render(request, 'views/feedback.html', context)
 
 def messages(request):
+    full_name = request.session.get('full_name', 'Guest')
     all_messages = Message.objects.all()
     users = User.objects.all()
     context = {'messages': all_messages, 
-        'users': users}
+        'users': users, 'full_name': full_name}
     return render(request, 'views/messages.html', context)
 
 def profiles(request):
+    full_name = request.session.get('full_name', 'Guest')
     all_profiles = Profile.objects.all()
     users = User.objects.all()
     context = {'profiles': all_profiles, 
-        'users': users}
+        'users': users, 'full_name': full_name}
     return render(request, 'views/profiles.html', context)
 
 def support_inquiries(request):
+    full_name = request.session.get('full_name', 'Guest')
     all_inquiries = SupportInquiry.objects.all()
     users = User.objects.all()
     context = {'inquiries': all_inquiries, 
-        'users': users}
+        'users': users, 'full_name': full_name}
     return render(request, 'views/support.html', context)
 
 # Create Views

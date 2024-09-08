@@ -79,3 +79,12 @@
         
     </ul>
 </nav>
+
+<script>
+    let username = '{{ full_name }}';
+    
+
+    if (username === null || username === '') {
+    window.location.href = '{% url 'login' %}';
+    }
+</script>
