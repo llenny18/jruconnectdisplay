@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Spica Admin</title>
+    <title>JRU-Connect - Users</title>
     <!-- base:css -->
     <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css'%}" />
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css'%}" />
@@ -124,7 +124,7 @@
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Administrator Table</h4>
+                                    <h4 class="card-title">Users Table</h4>
                                     <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal">Add User</button>
                                     <div class="table-responsive pt-3">
                                         <table class="table table-bordered" id="example">
@@ -137,7 +137,7 @@
                                                     <th>Role</th>
                                                     <th>Verified</th>
                                                     <th>Last Login</th>
-                                                    <th>Date Created</th>
+                                                    <th>User</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -151,7 +151,7 @@
                                                     <td>{{ user.get_role_display }}</td>
                                                     <td>{{ user.verified }}</td>
                                                     <td>{{ user.last_login }}</td>
-                                                    <td>{{ user.date_created }}</td>
+                                                    <td><img src="{% if user.profile_url %}{% static user.profile_url %}{% else %}{% static 'images/default.png' %}{% endif %}" style="width: 70px; height: 70px; " alt="image" ></td>
                                                     <td>
                                                         <button class="btn btn-primary m-1 edit-btn" data-id="{{ user.user_id }}" data-username="{{ user.username }}" data-password="{{ user.password_hash }}" data-fullname="{{ user.full_name }}" data-email="{{ user.email }}" data-role="{{ user.role }}" data-verified="{{ user.verified }}" data-toggle="modal" data-target="#editUserModal">Edit</button>
                                                         <button class="btn btn-danger m-1 delete-btn" data-id="{{ user.user_id }}">Delete</button>
@@ -172,7 +172,7 @@
             </div>
 
 
-           <!-- Add User Modal -->
+        <!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -183,7 +183,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="addUserForm">
+        <form id="addUserForm" enctype="multipart/form-data">
           <div class="form-group">
             <label for="addUsername">Username</label>
             <input type="text" class="form-control" id="addUsername" name="username" required>
@@ -209,7 +209,11 @@
           </div>
           <div class="form-group">
             <label for="addVerified">Verified</label>
-            <input type="checkbox" checked="false"  id="addVerified" name="verified">
+            <input type="checkbox" id="addVerified" name="verified">
+          </div>
+          <div class="form-group">
+            <label for="addProfileImage">Profile Image</label>
+            <input type="file"  accept=".jpg, .jpeg, .png"  class="form-control-file" id="addProfileImage" name="profile_image">
           </div>
           <button type="submit" class="btn btn-primary">Add User</button>
         </form>
@@ -282,41 +286,28 @@
             // Initialize DataTable
             $('#example').DataTable();
 
-            // Add User
-           // Add User
-$('#addUserForm').on('submit', function(e) {
-  e.preventDefault();
-  let username = $('#addUsername').val();
-  let fullName = $('#addFullName').val();
-  let email = $('#addEmail').val();
-  let password = $('#addPassword').val();
-  let role = $('#addRole').val();
-  let verified = $('#addVerified').is(':checked');
-
-  fetch("{% url 'add_user' %}", {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token }}'
-      },
-      body: JSON.stringify({
-          username: username,
-          full_name: fullName,
-          email: email,
-          password: password,
-          role: role,
-          verified: verified
-      })
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (data.status === 'success') {
-          location.reload();
-      } else {
-          alert(data.message);
-      }
-  });
-});
+            $('#addUserForm').on('submit', function(e) {
+              e.preventDefault();
+              
+              let formData = new FormData(this); // Use FormData to handle file uploads
+              
+              fetch("{% url 'add_user' %}", {
+                  method: 'POST',
+                  body: formData,
+                  headers: {
+                      'X-CSRFToken': '{{ csrf_token }}'
+                  }
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.status === 'success') {
+                      location.reload();
+                  } else {
+                      alert(data.message);
+                  }
+              });
+            });
+            
 
 
             // Edit User

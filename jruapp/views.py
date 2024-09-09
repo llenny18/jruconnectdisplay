@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponseForbidden
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from jruconnect import settings
 from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary
@@ -272,23 +272,86 @@ def support_inquiries(request):
         'users': users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/support.html', context)
 
-# Create Views
+
+
+@csrf_exempt
+def update_profile_image(request):
+    if request.method == 'POST':
+        try:
+            user_id = request.POST.get('user_id')
+            user = get_object_or_404(User, pk=user_id)
+
+            # Handle image upload
+            image = request.FILES.get('profile_image')
+            if image:
+                # Use STATICFILES_DIRS or a specific directory inside the static folder
+                image_folder = os.path.join(settings.BASE_DIR, 'staticfiles', 'profile_images')
+                if not os.path.exists(image_folder):
+                    os.makedirs(image_folder)
+
+                # Generate the file path using a unique name
+                image_name = f"{user_id}_{image.name}"
+                image_path = os.path.join(image_folder, image_name)
+
+                # Save the image to the static/images folder
+                with open(image_path, 'wb+') as destination:
+                    for chunk in image.chunks():
+                        destination.write(chunk)
+
+                # Build the image URL relative to the static folder
+                image_url = f"/profile_images/{image_name}"
+
+                # Update the user's profile_image_url
+                user.profile_url = image_url
+                user.save()
+                
+
+                return JsonResponse({'status': 'success', 'message': 'Profile image updated successfully!'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'No image file provided.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+
 @csrf_exempt
 def add_user(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            username = data.get('username')
-            email = data.get('email')
-            password = data.get('password')
-            full_name = data.get('full_name')
-            role = data.get('role')
-            user = User(username=username, email=email, password_hash=password, full_name=full_name, role=role)
+            # Handle file upload
+            profile_image = request.FILES.get('profile_image')
+            if profile_image:
+                # Ensure correct handling of binary file
+                image_path = os.path.join(settings.BASE_DIR, 'staticfiles','profile_images', profile_image.name)
+                with open(image_path, 'wb+') as destination:
+                    for chunk in profile_image.chunks():
+                        destination.write(chunk)
+                
+                # Save the file path in the database
+                profile_image_url = os.path.join('profile_images', profile_image.name)
+            else:
+                profile_image_url = None
+
+            # Create user object and save
+            user = User(
+                username=request.POST.get('username'),
+                full_name=request.POST.get('full_name'),
+                email=request.POST.get('email'),
+                password_hash=request.POST.get('password'),
+                role=request.POST.get('role'),
+                verified=request.POST.get('verified') == 'on',
+                profile_url=profile_image_url
+            )
             user.save()
+
             return JsonResponse({'status': 'success', 'message': 'User added successfully!'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+
+
+
 
 @csrf_exempt
 def add_engagement(request):

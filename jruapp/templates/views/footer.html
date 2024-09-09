@@ -50,7 +50,7 @@
 
 
 
-<!-- Edit User Modal -->
+<!-- Edit Icon Modal -->
 <div class="modal fade" id="editUserIconnav" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -61,22 +61,19 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="editFormnav" enctype="multipart/form">
+        <form id="editFormnav" enctype="multipart/form-data">
           <input type="hidden" id="editUserId" value="{{ admin_user.user_id }}" name="user_id">
           <div class="form-group">
-            <label for="editUsername">Profile Image</label>
-            <input type="file" class="form-control" id="editUsername" name="username" required>
+            <label for="editProfileImage">Profile Image</label>
+            <input type="file"  accept=".jpg, .jpeg, .png"  class="form-control" id="editProfileImage" name="profile_image" required>
           </div>
-         
-          
-          </div>
-       
           <button type="submit" class="btn btn-primary">Update User</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
 
 <footer class="footer">
     <div class="card">
@@ -101,3 +98,34 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('editFormnav').addEventListener('submit', function(event) {
+        event.preventDefault();
+    
+        var formData = new FormData(this);
+    
+        fetch('/update-profile-image/', { // URL to your Django view
+          method: 'POST',
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert(data.message);
+            $('#editUserIconnav').modal('hide'); // Hide the modal
+            window.location.href = window.location.href;
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      });
+    });
+    
+
+
+  </script>
