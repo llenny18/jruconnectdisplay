@@ -1,4 +1,8 @@
 {% load static %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+
+
+
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item sidebar-category">
@@ -72,19 +76,7 @@
                 <span class="menu-title">Support Inquiries</span>
             </a>
         </li>
-        <li class="nav-item sidebar-category">
-            <p>Account</p>
-            <span></span>
-            <a class="nav-link" href="#">
-                <i class="mdi mdi-help-circle menu-icon"></i>
-                <button class="btn btn-primary m-1 edit-btn" data-id="{{ admin_user.user_id }}" data-username="{{ admin_user.username }}" data-password="{{ admin_user.password_hash }}" data-fullname="{{ admin_user.full_name }}" data-email="{{ admin_user.email }}" data-role="{{ admin_user.role }}" data-verified="{{ admin_user.verified }}" data-toggle="modal" data-target="#editUserModalnav">Edit</button>
-            </a>
-            
-            <a class="nav-link" href="{% url 'support_inquiries' %}">
-                <i class="mdi mdi-help-circle menu-icon"></i>
-                <span class="menu-title">Logout</span>
-            </a>
-        </li>
+   
         
     </ul>
 </nav>
