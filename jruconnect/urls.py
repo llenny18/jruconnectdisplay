@@ -47,6 +47,9 @@ urlpatterns = [
     path('add-support-inquiry/', views.add_support_inquiry, name='add_support_inquiry'),
     path('update-support-inquiry/<int:inquiry_id>/', views.update_support_inquiry, name='update_support_inquiry'),
     path('delete-support-inquiry/<int:inquiry_id>/', views.delete_support_inquiry, name='delete_support_inquiry'),
+       
+    # Logout URL
+    path('logout/', views.logout_view, name='logout'),
     
     path('admin/', admin.site.urls),
 ]

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.contrib.auth import logout
 from jruconnect import settings
 from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary
 import json
@@ -312,6 +312,10 @@ def update_profile_image(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+def logout_view(request):
+    logout(request)  # This will clear the session data and log out the user
+    return redirect('login')  # Redirect to the login page
 
 
 @csrf_exempt
