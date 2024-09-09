@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <!-- DataTables Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css '%}">
 </head>
 <body>
     <div class="container-scroller d-flex">
@@ -39,7 +40,7 @@
                     <li class="nav-item">
                         <h6
                           id="date-time"
-                          class="mb-0 font-weight-bold d-none d-xl-block m-5"
+                          class="mb-0 font-weight-bold d-none d-xl-block "
                         >
                           Loading...
                         </h6>
@@ -104,7 +105,7 @@
           <i class="mdi mdi-logout-variant menu-icon text-primary"  style="font-size: 30px;"></i>
         </div>
         <div class="preview-item-content flex-grow">
-          <button class="btn btn-primary m-1 edit-btn" data-id="{{ admin_user.user_id }}" data-username="{{ admin_user.username }}" data-password="{{ admin_user.password_hash }}" data-fullname="{{ admin_user.full_name }}" data-email="{{ admin_user.email }}" data-role="{{ admin_user.role }}" data-verified="{{ admin_user.verified }}" data-toggle="modal" data-target="#editUserModalnav">Change Profile Picture</button>
+          <button class="btn btn-primary m-1 edit-btn"  data-toggle="modal" data-target="#editUserIconnav">Change Profile Picture</button>
 
         </div>
       </a>
