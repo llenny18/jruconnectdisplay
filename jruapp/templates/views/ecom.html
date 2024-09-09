@@ -82,7 +82,7 @@
                     <div class="col-md-3 grid-margin stretch-card">
                       <div class="card shadow-sm" style="border: 3px solid #283c9c; border-radius: 20px;">
                         <div class="card-body text-center">
-                          <img src="{% if product.image_url %}{{ product.image_url }}{% else %}{% static 'images/default.png' %}{% endif %}" class="img-fluid rounded mb-3" style="height: 200px; width: auto;" alt="{{ product.title }}" />
+                          <img src="{% if product.image_url %}{% static product.image_url %}{% else %}{% static 'images/default.png' %}{% endif %}" class="img-fluid rounded mb-3" style="height: 200px; width: auto;" alt="{{ product.title }}" />
                           <h4 class="font-weight-bold text-dark mb-2">{{ product.title }} : PHP {{ product.price }}</h4>
                           <h6 class="text-muted mb-1">Likes: <strong>{{ product.likes_count }}</strong></h6>
                           <h6 class="text-muted mb-3">Purchases: <strong>{{ product.purchase_count }}</strong></h6>

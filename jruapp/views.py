@@ -4,9 +4,11 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect, render
+
+from jruconnect import settings
 from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary
 import json
-
+import os
 
 
 def home(request):
@@ -114,27 +116,51 @@ def delete_product(request, product_id):
     else:
         return HttpResponseForbidden()
 
-    
 @csrf_exempt
 def add_product(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            title = data.get('title')
-            description = data.get('description')
-            category = data.get('category')
-            price = data.get('price')
-            stock = data.get('stock')
-            location = data.get('location')
+            # Get form data
+            title = request.POST.get('title')
+            description = request.POST.get('description')
+            user_id = request.POST.get('user_id')
+            category = request.POST.get('category')
+            price = request.POST.get('price')
+            stock = request.POST.get('stock')
+            location = request.POST.get('location')
+
+            # Handle image upload
+            image = request.FILES.get('image')
+            if image:
+                # Use STATICFILES_DIRS or a specific directory inside the static folder
+                image_folder = os.path.join(settings.BASE_DIR, 'staticfiles', 'images')
+                if not os.path.exists(image_folder):
+                    os.makedirs(image_folder)
+
+                # Generate the file path using the product title
+                image_name = f"{title.replace(' ', '_')}_{image.name}"
+                image_path = os.path.join(image_folder, image_name)
+
+                # Save the image to the static/images folder
+                with open(image_path, 'wb+') as destination:
+                    for chunk in image.chunks():
+                        destination.write(chunk)
+
+                # Build the image URL relative to the static folder
+                image_url = f"/images/{image_name}"
+            else:
+                image_url = None
 
             # Create a new Product object and save it
             product = Product(
                 title=title,
+                user_id=user_id,
                 description=description,
                 category=category,
                 price=price,
                 stock=stock,
-                location=location
+                location=location,
+                image_url=image_url
             )
             product.save()
 
@@ -142,6 +168,7 @@ def add_product(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
 
 def users(request):
     full_name = request.session.get('full_name', 'Guest')

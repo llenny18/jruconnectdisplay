@@ -118,14 +118,16 @@
               <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 >Products Table <button
-                      class="btn btn-success m-3"
-                      data-toggle="modal"
-                      data-target="#addProductModal"
-                    >
-                      + Add Product
-                    </button></h4>
-                    
+                    <h4>
+                      Products Table
+                      <button
+                        class="btn btn-success m-3"
+                        data-toggle="modal"
+                        data-target="#addProductModal"
+                      >
+                        + Add Product
+                      </button>
+                    </h4>
 
                     <div class="table-responsive pt-3">
                       <table class="table table-bordered" id="example">
@@ -164,7 +166,12 @@
                                 >Edit</a
                               >
 
-                              <a href="#" class="btn btn-danger m-1" onclick="deleteProduct({{ product.product_id }})">Delete</a>
+                              <a
+                                href="#"
+                                class="btn btn-danger m-1"
+                                onclick="deleteProduct({{ product.product_id }})"
+                                >Delete</a
+                              >
                             </td>
                           </tr>
                           {% endfor %}
@@ -312,64 +319,42 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <form id="addProductForm" method="POST">
+                              <form id="addProductForm" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                  <label for="new_title">Title</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="new_title"
-                                    name="title"
-                                  />
+                                  <label for="user_id">User ID</label>
+                                  <input type="text" class="form-control" value="{{admin_user.user_id}}" style="display: none;" id="user_id" name="user_id" required>
+                              </div>
+                                <div class="form-group">
+                                    <label for="new_title">Title</label>
+                                    <input type="text" class="form-control" id="new_title" name="title" required>
                                 </div>
                                 <div class="form-group">
-                                  <label for="new_description"
-                                    >Description</label
-                                  >
-                                  <textarea
-                                    class="form-control"
-                                    id="new_description"
-                                    name="description"
-                                  ></textarea>
+                                    <label for="new_description">Description</label>
+                                    <textarea class="form-control" id="new_description" name="description" required></textarea>
                                 </div>
                                 <div class="form-group">
-                                  <label for="new_category">Category</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="new_category"
-                                    name="category"
-                                  />
+                                    <label for="new_category">Category</label>
+                                    <input type="text" class="form-control" id="new_category" name="category" required>
                                 </div>
                                 <div class="form-group">
-                                  <label for="new_price">Price</label>
-                                  <input
-                                    type="number"
-                                    class="form-control"
-                                    id="new_price"
-                                    name="price"
-                                  />
+                                    <label for="new_price">Price</label>
+                                    <input type="number" class="form-control" id="new_price" name="price" required>
                                 </div>
                                 <div class="form-group">
-                                  <label for="new_stock">Stock</label>
-                                  <input
-                                    type="number"
-                                    class="form-control"
-                                    id="new_stock"
-                                    name="stock"
-                                  />
+                                    <label for="new_stock">Stock</label>
+                                    <input type="number" class="form-control" id="new_stock" name="stock" required>
                                 </div>
                                 <div class="form-group">
-                                  <label for="new_location">Location</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="new_location"
-                                    name="location"
-                                  />
+                                    <label for="new_location">Location</label>
+                                    <input type="text" class="form-control" id="new_location" name="location" required>
                                 </div>
-                              </form>
+                                <div class="form-group">
+                                    <label for="new_image">Upload Image</label>
+                                    <input type="file" class="form-control" id="new_image" name="image" required>
+                                </div>
+                            </form>
+                            
                             </div>
                             <div class="modal-footer">
                               <button
@@ -412,66 +397,54 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
-
       function deleteProduct(productId) {
-        if (confirm('Are you sure you want to delete this product?')) {
-          const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+        if (confirm("Are you sure you want to delete this product?")) {
+          const csrftoken = document.querySelector(
+            "[name=csrfmiddlewaretoken]"
+          ).value;
 
           fetch(`/delete_product/${productId}/`, {
-            method: 'DELETE',
+            method: "DELETE",
             headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': csrftoken
-            }
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+            },
           })
-          .then(response => {
-            if (response.ok) {
-              window.location.reload(); // Reload the page to see the changes
-            } else {
-              alert('Error deleting product.');
-            }
-          })
-          .catch(error => console.error('Error:', error));
+            .then((response) => {
+              if (response.ok) {
+                window.location.reload(); // Reload the page to see the changes
+              } else {
+                alert("Error deleting product.");
+              }
+            })
+            .catch((error) => console.error("Error:", error));
         }
       }
 
-
       function addProduct() {
-        const title = document.getElementById("new_title").value;
-        const description = document.getElementById("new_description").value;
-        const category = document.getElementById("new_category").value;
-        const price = document.getElementById("new_price").value;
-        const stock = document.getElementById("new_stock").value;
-        const location = document.getElementById("new_location").value;
-        const csrftoken = document.querySelector(
-          "[name=csrfmiddlewaretoken]"
-        ).value;
-
+        const form = document.getElementById('addProductForm');
+        const formData = new FormData(form);  // Use FormData to gather form inputs, including the file
+    
+        const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+    
         fetch("/add_product/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken,
-          },
-          body: JSON.stringify({
-            title: title,
-            description: description,
-            category: category,
-            price: price,
-            stock: stock,
-            location: location,
-          }),
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            body: formData  // Send the FormData object
         })
-          .then((response) => response.json())
-          .then((data) => {
+        .then(response => response.json())
+        .then(data => {
             if (data.status === "success") {
-              window.location.href = ""; // Reload the page to see the changes
+                window.location.href = "";  // Reload the page to see the changes
             } else {
-              alert("Error adding product: " + data.message);
+                alert("Error adding product: " + data.message);
             }
-          })
-          .catch((error) => console.error("Error:", error));
-      }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+    
 
       $(document).ready(function () {
         $("#example").DataTable();
