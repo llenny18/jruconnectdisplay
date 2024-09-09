@@ -11,8 +11,16 @@ import json
 
 def home(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
     context = {
-        'full_name': full_name
+        'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user 
     }
     return render(request, 'views/index.html', context)
 
@@ -41,18 +49,34 @@ def login(request):
 
 def products(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
    
     all_products = Product.objects.all()
-    context = {'products': all_products, 'full_name': full_name}
+    context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/products.html', context)
 
 
 
 def ecom(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
     
     all_products = ProductEngagementSummary.objects.all()
-    context = {'products': all_products, 'full_name': full_name}
+    context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/ecom.html', context)
 
     
@@ -121,12 +145,28 @@ def add_product(request):
 
 def users(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
     all_users = User.objects.all()
-    context = {'users': all_users, 'full_name': full_name}
+    context = {'users': all_users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/users.html', context)
 
 def engagements(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
     all_engagements = Engagement.objects.all()
     users = User.objects.all()
     products = Product.objects.all()
@@ -134,43 +174,75 @@ def engagements(request):
         'engagements': all_engagements,
         'users': users,
         'products': products,
-        'full_name': full_name
+        'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user 
     }
     return render(request, 'views/engagement.html', context)
 
 
 def feedbacks(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
     all_feedbacks = Feedback.objects.all()
     users = User.objects.all()
     products = Product.objects.all()
     context = {'feedbacks': all_feedbacks, 
         'users': users,
-        'products': products, 'full_name': full_name}
+        'products': products, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/feedback.html', context)
 
 def messages(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
     all_messages = Message.objects.all()
     users = User.objects.all()
     context = {'messages': all_messages, 
-        'users': users, 'full_name': full_name}
+        'users': users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/messages.html', context)
 
 def profiles(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
     all_profiles = Profile.objects.all()
     users = User.objects.all()
     context = {'profiles': all_profiles, 
-        'users': users, 'full_name': full_name}
+        'users': users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/profiles.html', context)
 
 def support_inquiries(request):
     full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
     all_inquiries = SupportInquiry.objects.all()
     users = User.objects.all()
     context = {'inquiries': all_inquiries, 
-        'users': users, 'full_name': full_name}
+        'users': users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/support.html', context)
 
 # Create Views
