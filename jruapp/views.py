@@ -9,11 +9,13 @@ from jruconnect import settings
 from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary, ViewEngagementsByType, ViewProductEngagementOverTime, ViewFeedbackByRating, ViewSupportInquiriesByStatus
 import json
 import os
+from django.db.models import Q
 
 
 def home(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
     # Fetch the admin user based on admin_id
     view_engagements_by_type = ViewEngagementsByType.objects.all()
     view_feedback_by_rating = ViewFeedbackByRating.objects.all()
@@ -26,7 +28,7 @@ def home(request):
         except User.DoesNotExist:
             admin_user = None  # Handle case where no admin user is found
     context = {
-        'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user , 'view_engagements_by_type': view_engagements_by_type, 'view_feedback_by_rating': view_feedback_by_rating,   'view_product_engagement_over_time': view_product_engagement_over_time,   'view_support_inquiries_by_status': view_support_inquiries_by_status
+        'full_name': full_name, 'role':role,'admin_id' : admin_id, 'admin_user': admin_user , 'view_engagements_by_type': view_engagements_by_type, 'view_feedback_by_rating': view_feedback_by_rating,   'view_product_engagement_over_time': view_product_engagement_over_time,   'view_support_inquiries_by_status': view_support_inquiries_by_status
     }
     return render(request, 'views/index.html', context)
 
@@ -70,6 +72,7 @@ def login(request):
         if user.password_hash == password:  # Ideally, use a password hashing library
             request.session['admin_id'] = user.user_id  # Set session variable
             request.session['full_name'] = user.full_name  # Set session variable
+            request.session['role'] = user.role  # Set session variable
             return redirect('home')
         else:
             return render(request, 'views/login.html', {'error': 'Invalid credentials'})
@@ -297,6 +300,48 @@ def support_inquiries(request):
     context = {'inquiries': all_inquiries, 
         'users': users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/support.html', context)
+
+
+def chat_message(request, user_id):
+    full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
+
+    # Ensure admin_user exists before filtering messages
+    if admin_user:
+        # Filter messages where admin_id is either the sender or receiver and user_id is involved
+        all_messages = Message.objects.filter(
+            Q(sender_id=admin_id) | Q(receiver_id=admin_id),
+            Q(sender_id=user_id) | Q(receiver_id=user_id)
+        ).order_by('date_sent')  # Order by date ascending
+    else:
+        all_messages = Message.objects.none()  # Return an empty QuerySet if admin_user is not found
+
+    # Separate users into senders and receivers
+    senders = User.objects.filter(user_id=admin_id).distinct()
+    receivers = User.objects.filter(user_id=user_id).distinct()
+    sender_id = admin_id
+
+    users = User.objects.all()
+
+    context = {
+        'sender_id': sender_id,
+        'all_messages': all_messages,
+        'senders': senders,
+        'receivers': receivers,
+        'users': users,
+        'full_name': full_name,
+        'admin_id': admin_id,
+        'admin_user': admin_user
+    }
+    return render(request, 'views/chatmessage.html', context)
 
 
 

@@ -24,6 +24,9 @@
                 <span class="menu-title">Buy and Sell</span>
             </a>
         </li>
+        {% if role == "admin" %}
+       
+    
         <li class="nav-item sidebar-category">
             <p>Management</p>
             <span></span>
@@ -76,7 +79,8 @@
                 <span class="menu-title">Support Inquiries</span>
             </a>
         </li>
-   
+    <!-- Content for admin role goes here -->
+    {% endif %}
         
     </ul>
 </nav>

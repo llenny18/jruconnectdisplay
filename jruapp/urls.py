@@ -53,6 +53,7 @@ urlpatterns = [
     path('get_support_inquiries_by_status/', views.get_support_inquiries_by_status, name='get_support_inquiries_by_status'),
     path('get_product_engagement_over_time/', views.get_product_engagement_over_time, name='get_product_engagement_over_time'),
     path('get_feedback_by_rating/', views.get_feedback_by_rating, name='get_feedback_by_rating'),
+    path('chat_message/', views.chat_message, name='chat_message'),
     # Logout URL
      
     # Logout URL
