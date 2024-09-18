@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import logout
 from jruconnect import settings
-from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary
+from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary, ViewEngagementsByType, ViewProductEngagementOverTime, ViewFeedbackByRating, ViewSupportInquiriesByStatus
 import json
 import os
 
@@ -15,6 +15,10 @@ def home(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
     # Fetch the admin user based on admin_id
+    view_engagements_by_type = ViewEngagementsByType.objects.all()
+    view_feedback_by_rating = ViewFeedbackByRating.objects.all()
+    view_product_engagement_over_time = ViewProductEngagementOverTime.objects.all()
+    view_support_inquiries_by_status = ViewSupportInquiriesByStatus.objects.all()
     admin_user = None
     if admin_id:
         try:
@@ -22,9 +26,31 @@ def home(request):
         except User.DoesNotExist:
             admin_user = None  # Handle case where no admin user is found
     context = {
-        'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user 
+        'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user , 'view_engagements_by_type': view_engagements_by_type, 'view_feedback_by_rating': view_feedback_by_rating,   'view_product_engagement_over_time': view_product_engagement_over_time,   'view_support_inquiries_by_status': view_support_inquiries_by_status
     }
     return render(request, 'views/index.html', context)
+
+
+from django.http import JsonResponse
+from .models import ViewEngagementsByType, ViewFeedbackByRating, ViewProductEngagementOverTime, ViewSupportInquiriesByStatus
+
+def get_engagements_by_type(request):
+    data = list(ViewEngagementsByType.objects.values('year', 'month', 'engagement_count', 'type'))
+    return JsonResponse(data, safe=False)
+
+def get_feedback_by_rating(request):
+    data = list(ViewFeedbackByRating.objects.values('year', 'month', 'rating_count', 'rating'))
+    return JsonResponse(data, safe=False)
+
+def get_product_engagement_over_time(request):
+    data = list(ViewProductEngagementOverTime.objects.values('year', 'month', 'engagement_count', 'product_id'))
+    return JsonResponse(data, safe=False)
+
+def get_support_inquiries_by_status(request):
+    data = list(ViewSupportInquiriesByStatus.objects.values('year', 'month', 'status_count', 'status'))
+    return JsonResponse(data, safe=False)
+
+
 
 def view(request):
     return render(request, 'views/view.html')

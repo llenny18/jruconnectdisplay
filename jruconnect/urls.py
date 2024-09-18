@@ -47,7 +47,12 @@ urlpatterns = [
     path('add-support-inquiry/', views.add_support_inquiry, name='add_support_inquiry'),
     path('update-support-inquiry/<int:inquiry_id>/', views.update_support_inquiry, name='update_support_inquiry'),
     path('delete-support-inquiry/<int:inquiry_id>/', views.delete_support_inquiry, name='delete_support_inquiry'),
-       
+       # Data fetching URLs
+    path('get_engagements_by_type/', views.get_engagements_by_type, name='get_engagements_by_type'),
+    path('get_support_inquiries_by_status/', views.get_support_inquiries_by_status, name='get_support_inquiries_by_status'),
+    path('get_product_engagement_over_time/', views.get_product_engagement_over_time, name='get_product_engagement_over_time'),
+    path('get_feedback_by_rating/', views.get_feedback_by_rating, name='get_feedback_by_rating'),
+    # Logout URL
     # Logout URL
     path('logout/', views.logout_view, name='logout'),
     

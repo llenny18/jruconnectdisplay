@@ -17,6 +17,52 @@ class ProductEngagementSummary(models.Model):
     class Meta:
         managed = False
         db_table = 'product_engagement_summary'
+        
+        
+
+
+class ViewEngagementsByType(models.Model):
+    year = models.IntegerField()
+    month = models.IntegerField()
+    engagement_count = models.IntegerField()
+    type = models.CharField(max_length=10)
+
+    class Meta:
+        managed = False
+        db_table = 'view_engagements_by_type'
+
+
+class ViewFeedbackByRating(models.Model):
+    year = models.IntegerField()
+    month = models.IntegerField()
+    rating_count = models.IntegerField()
+    rating = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'view_feedback_by_rating'
+
+
+class ViewProductEngagementOverTime(models.Model):
+    year = models.IntegerField()
+    month = models.IntegerField()
+    engagement_count = models.IntegerField()
+    product_id = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'view_product_engagement_over_time'
+
+
+class ViewSupportInquiriesByStatus(models.Model):
+    year = models.IntegerField()
+    month = models.IntegerField()
+    status_count = models.IntegerField()
+    status = models.CharField(max_length=10)
+
+    class Meta:
+        managed = False
+        db_table = 'view_support_inquiries_by_status'
 
 class User(models.Model):
     USER_ROLES = [
