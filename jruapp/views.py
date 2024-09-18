@@ -328,11 +328,14 @@ def chat_message(request, user_id):
     senders = User.objects.filter(user_id=admin_id).distinct()
     receivers = User.objects.filter(user_id=user_id).distinct()
     sender_id = admin_id
+    
+    receiver_id = user_id
 
     users = User.objects.all()
 
     context = {
         'sender_id': sender_id,
+        'receiver_id': receiver_id,
         'all_messages': all_messages,
         'senders': senders,
         'receivers': receivers,
