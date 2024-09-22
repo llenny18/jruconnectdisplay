@@ -10,27 +10,125 @@ from .models import Product, User, Engagement, Feedback, Message, Profile, Suppo
 import json
 import os
 from django.db.models import Q
+from sklearn.neighbors import NearestNeighbors
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from django.db.models import Count
+
+
+
+
+def product_engagement_trends():
+    return (
+        Engagement.objects
+        .values('product_id')
+        .annotate(engagement_count=Count('engagement_id'))
+        .order_by('-engagement_count')
+    )
+
+def create_interaction_matrix():
+    engagements = Engagement.objects.all()
+    data = {
+        'user_id': [engagement.user_id for engagement in engagements],
+        'product_id': [engagement.product_id for engagement in engagements],
+        'engagement_type': [engagement.type for engagement in engagements],
+    }
+    df = pd.DataFrame(data)
+    interaction_matrix = df.pivot_table(index='user_id', columns='product_id', values='engagement_type', aggfunc='count', fill_value=0)
+    return interaction_matrix
+
+def recommend_products(user_id, interaction_matrix):
+    model = NearestNeighbors(metric='cosine')
+    model.fit(interaction_matrix.values)
+    user_index = interaction_matrix.index.get_loc(user_id)
+    distances, indices = model.kneighbors(interaction_matrix.iloc[user_index, :].values.reshape(1, -1), n_neighbors=5)
+    recommended_products = interaction_matrix.columns[indices.flatten()]
+    return recommended_products
+
+def create_product_profiles():
+    products = Product.objects.all()
+    product_descriptions = [f"{product.title} {product.description}" for product in products]
+    tfidf = TfidfVectorizer()
+    tfidf_matrix = tfidf.fit_transform(product_descriptions)
+    return tfidf_matrix, products
+
+def recommend_similar_products(product_id, tfidf_matrix):
+    cosine_sim = cosine_similarity(tfidf_matrix)
+    similar_indices = cosine_sim[product_id].argsort()[-6:-1][::-1]  # Top 5 similar products
+    return similar_indices
+
+def recommend_for_user(user_id):
+    interaction_matrix = create_interaction_matrix()
+    recommended_collab = recommend_products(user_id, interaction_matrix)
+
+    # Example: recommend similar products for a specific product_id
+    product_id = 1  # Replace with actual logic to get a relevant product_id
+    tfidf_matrix, products = create_product_profiles()
+    recommended_content = recommend_similar_products(product_id, tfidf_matrix)
+
+    return {
+        "collab_recommendations": recommended_collab,
+        "content_recommendations": [products[i] for i in recommended_content],
+    }
+
+def recommendations_view(request):
+    if request.user.is_authenticated:
+        user_id = request.user.user_id
+        recommendations = recommend_for_user(user_id)
+        
+        return render(request, 'recommendations.html', {
+            'collab_recommendations': recommendations['collab_recommendations'],
+            'content_recommendations': recommendations['content_recommendations'],
+            'engagement_trends': product_engagement_trends(),
+        })
+    else:
+        return render(request, 'recommendations.html', {
+            'message': 'Please log in to see recommendations.'
+        })
+
 
 
 def home(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
     role = request.session.get('role', '')
-    # Fetch the admin user based on admin_id
+
+    # Fetch data from the database
     view_engagements_by_type = ViewEngagementsByType.objects.all()
     view_feedback_by_rating = ViewFeedbackByRating.objects.all()
     view_product_engagement_over_time = ViewProductEngagementOverTime.objects.all()
     view_support_inquiries_by_status = ViewSupportInquiriesByStatus.objects.all()
+    
+    # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
         try:
             admin_user = User.objects.get(user_id=admin_id)
         except User.DoesNotExist:
             admin_user = None  # Handle case where no admin user is found
+
+    # Recommendations
+    recommendations = {}
+    if request.user.is_authenticated:
+        user_id = admin_id
+        recommendations = recommend_for_user(user_id)  # Call the recommendation function
+
+    # Prepare context
     context = {
-        'full_name': full_name, 'role':role,'admin_id' : admin_id, 'admin_user': admin_user , 'view_engagements_by_type': view_engagements_by_type, 'view_feedback_by_rating': view_feedback_by_rating,   'view_product_engagement_over_time': view_product_engagement_over_time,   'view_support_inquiries_by_status': view_support_inquiries_by_status
+        'full_name': full_name,
+        'role': role,
+        'admin_id': admin_id,
+        'admin_user': admin_user,
+        'view_engagements_by_type': view_engagements_by_type,
+        'view_feedback_by_rating': view_feedback_by_rating,
+        'view_product_engagement_over_time': view_product_engagement_over_time,
+        'view_support_inquiries_by_status': view_support_inquiries_by_status,
+        'collab_recommendations': recommendations.get('collab_recommendations', []),
+        'content_recommendations': recommendations.get('content_recommendations', []),
     }
+
     return render(request, 'views/index.html', context)
+
 
 
 from django.http import JsonResponse

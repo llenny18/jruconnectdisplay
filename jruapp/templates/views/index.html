@@ -168,6 +168,25 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-6 grid-margin stretch-card">
+          <div class="card">
+              <div class="card-body">
+                  <p class="card-title">Collaborative Recommendations</p>
+                  <canvas height="200" id="collab-recommendations-chart"></canvas>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6 grid-margin stretch-card">
+          <div class="card">
+              <div class="card-body">
+                  <p class="card-title">Content Recommendations</p>
+                  <canvas height="200" id="content-recommendations-chart"></canvas>
+              </div>
+          </div>
+      </div>
+  </div>
+  
     
     <!-- row end -->
   </div>
@@ -302,8 +321,48 @@
               responsive: true
           }
       });
-  
-  });
+
+    // Function to initialize a chart
+    function initializeChart(ctx, labels, data, title) {
+        new Chart(ctx, {
+            type: 'bar', // or 'pie', 'line', etc.
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: title,
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Prepare data for collaborative recommendations chart
+    const collabRecommendations = {{ collab_recommendations|safe }};
+    const collabLabels = collabRecommendations.map(item => item.title || `Product ${item.product_id}`); // Customize as needed
+    const collabData = collabRecommendations.map(item => item.engagement_count || 1); // Default to 1 if no count
+
+    const collabCtx = document.getElementById('collab-recommendations-chart').getContext('2d');
+    initializeChart(collabCtx, collabLabels, collabData, 'Collaborative Recommendations');
+
+    // Prepare data for content recommendations chart
+    const contentRecommendations = {{ content_recommendations|safe }};
+    const contentLabels = contentRecommendations.map(item => item.title || `Product ${item.product_id}`); // Customize as needed
+    const contentData = contentRecommendations.map(item => item.engagement_count || 1); // Default to 1 if no count
+
+    const contentCtx = document.getElementById('content-recommendations-chart').getContext('2d');
+    initializeChart(contentCtx, contentLabels, contentData, 'Content Recommendations');
+});
+
   
   </script>
   
