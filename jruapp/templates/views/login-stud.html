@@ -27,7 +27,7 @@
               <div class="brand-logo d-flex justify-content-center">
                 <img src="{% static 'images/favicon.png' %}" alt="logo">
               </div>
-              <h4 class="text-center">LOGIN AS ADMINISTRATOR</h4>
+              <h4 class="text-center">LOGIN AS STUDENT</h4>
               <hr>
               <form class="pt-3" method="post">
                 {% csrf_token %}
@@ -46,8 +46,19 @@
                 </div>
                 <br>
                 <hr>
-                <a href="{% url 'student' %}" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">SWITCH TO STUDENT LOGIN</a>
-
+                <div class="row">
+                  <div class="col-md-8">
+                    <a href="{% url 'adminlog' %}" class="btn btn-primary btn-lg font-weight-medium auth-form-btn btn-block text-center">
+                      SWITCH TO ADMIN LOGIN
+                    </a>
+                  </div>
+                  <div class="col-md-4">
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg font-weight-medium auth-form-btn btn-block text-center">
+                      REGISTER
+                    </a>
+                  </div>
+                </div>
+                
                 {% if error %}
                   <p class="text-danger">{{ error }}</p>
                 {% endif %}

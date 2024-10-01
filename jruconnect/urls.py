@@ -4,8 +4,10 @@ from jruapp import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('register/', views.register, name='register'),
     path('home', views.home, name='home'),
-    path('login/', views.login, name='login'),
+    path('adminlog/', views.loginadmin, name='adminlog'),
+    path('student/', views.loginstud, name='student'),
     path('products/', views.products, name='products'),
     path('ecom/', views.ecom, name='ecom'),
     path('record_engagement/', views.record_engagement, name='record_engagement'),

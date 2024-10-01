@@ -150,7 +150,45 @@ def get_support_inquiries_by_status(request):
     data = list(ViewSupportInquiriesByStatus.objects.values('year', 'month', 'status_count', 'status'))
     return JsonResponse(data, safe=False)
 
+@csrf_exempt
+def register(request):
+    if request.method == 'POST':
+        try:
+            # Handle file upload
+            profile_image = request.FILES.get('profile_image')
+            if profile_image:
+                # Ensure correct handling of binary file
+                image_folder = os.path.join(settings.BASE_DIR, 'staticfiles', 'profile_images')
+                if not os.path.exists(image_folder):
+                    os.makedirs(image_folder)
+                image_path = os.path.join(image_folder, profile_image.name)
+                with open(image_path, 'wb+') as destination:
+                    for chunk in profile_image.chunks():
+                        destination.write(chunk)
+                
+                # Save the file path in the database
+                profile_image_url = os.path.join('profile_images', profile_image.name)
+            else:
+                profile_image_url = None
 
+            # Create user object and save
+            user = User(
+                stud_id=request.POST.get('user_id'),
+                username=request.POST.get('username'),
+                full_name=request.POST.get('full_name'),
+                email=request.POST.get('email'),
+                password_hash=request.POST.get('password'),  # Hash the password appropriately
+                role=request.POST.get('role'),  # This should be 'student'
+                verified=request.POST.get('verified') == 'on',
+                profile_url=profile_image_url
+            )
+            user.save()
+
+            return redirect('student')  # Redirect to login page after successful registration
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    
+    return render(request, 'views/register.html')
 
 def view(request):
     return render(request, 'views/view.html')
@@ -176,9 +214,56 @@ def login(request):
             return render(request, 'views/login.html', {'error': 'Invalid credentials'})
     return render(request, 'views/login.html')
 
+
+
+def loginstud(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        # Query the user by username
+        try:
+            user = User.objects.get(username=username, verified=1, role="student")
+        except User.DoesNotExist:
+            return render(request, 'views/login.html', {'error': 'Invalid credentials'})
+        
+        # Check password (assuming password_hash is a hashed password)
+        if user.password_hash == password:  # Ideally, use a password hashing library
+            request.session['admin_id'] = user.user_id  # Set session variable
+            request.session['full_name'] = user.full_name  # Set session variable
+            request.session['role'] = user.role  # Set session variable
+            return redirect('home')
+        else:
+            return render(request, 'views/login.html', {'error': 'Invalid credentials'})
+    return render(request, 'views/login-stud.html')
+
+
+def loginadmin(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        # Query the user by username
+        try:
+            user = User.objects.get(username=username, role="admin")
+        except User.DoesNotExist:
+            return render(request, 'views/login.html', {'error': 'Invalid credentials'})
+        
+        # Check password (assuming password_hash is a hashed password)
+        if user.password_hash == password:  # Ideally, use a password hashing library
+            request.session['admin_id'] = user.user_id  # Set session variable
+            request.session['full_name'] = user.full_name  # Set session variable
+            request.session['role'] = user.role  # Set session variable
+            return redirect('home')
+        else:
+            return render(request, 'views/login.html', {'error': 'Invalid credentials'})
+    return render(request, 'views/login.html')
+
 def products(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
+
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -188,7 +273,7 @@ def products(request):
             admin_user = None  # Handle case where no admin user is found
    
     all_products = Product.objects.all()
-    context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
+    context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'role': role, 'admin_user': admin_user }
     return render(request, 'views/products.html', context)
 
 
@@ -196,6 +281,7 @@ def products(request):
 def ecom(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -205,7 +291,7 @@ def ecom(request):
             admin_user = None  # Handle case where no admin user is found
     
     all_products = ProductEngagementSummary.objects.all()
-    context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
+    context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user, 'role': role, }
     return render(request, 'views/ecom.html', context)
 
     
@@ -222,12 +308,19 @@ def update_product(request, product_id):
             product.price = data.get('price', product.price)
             product.stock = data.get('stock', product.stock)
             product.location = data.get('location', product.location)
+            
+            # Update the new fields
+            product.ad_link = data.get('ad_link', product.ad_link)
+            product.fb_link = data.get('fb_link', product.fb_link)
+            product.ins_link = data.get('ins_link', product.ins_link)
+
             product.save()
             return JsonResponse({'status': 'success', 'message': 'Product updated successfully.'})
         except Product.DoesNotExist:
             return JsonResponse({'status': 'fail', 'message': 'Product not found.'})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
+
     
 
 
@@ -255,6 +348,11 @@ def add_product(request):
             price = request.POST.get('price')
             stock = request.POST.get('stock')
             location = request.POST.get('location')
+
+            # Get the new fields
+            ad_link = request.POST.get('ad_link')
+            fb_link = request.POST.get('fb_link')
+            ins_link = request.POST.get('ins_link')
 
             # Handle image upload
             image = request.FILES.get('image')
@@ -287,7 +385,10 @@ def add_product(request):
                 price=price,
                 stock=stock,
                 location=location,
-                image_url=image_url
+                image_url=image_url,
+                ad_link=ad_link,
+                fb_link=fb_link,
+                ins_link=ins_link
             )
             product.save()
 
@@ -297,9 +398,11 @@ def add_product(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
+
 def users(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -308,12 +411,13 @@ def users(request):
         except User.DoesNotExist:
             admin_user = None  # Handle case where no admin user is found
     all_users = User.objects.all()
-    context = {'users': all_users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
+    context = {'users': all_users, 'full_name': full_name, 'admin_id' : admin_id,'role': role, 'admin_user': admin_user }
     return render(request, 'views/users.html', context)
 
 def engagements(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -327,6 +431,7 @@ def engagements(request):
     context = {
         'engagements': all_engagements,
         'users': users,
+        'role': role,
         'products': products,
         'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user 
     }
@@ -336,6 +441,7 @@ def engagements(request):
 def feedbacks(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -348,12 +454,14 @@ def feedbacks(request):
     products = Product.objects.all()
     context = {'feedbacks': all_feedbacks, 
         'users': users,
+        'role': role,
         'products': products, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/feedback.html', context)
 
 def messages(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -364,12 +472,14 @@ def messages(request):
     all_messages = Message.objects.all()
     users = User.objects.all()
     context = {'messages': all_messages, 
-        'users': users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
+        'users': users, 'full_name': full_name, 
+        'role': role,'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/messages.html', context)
 
 def profiles(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -380,12 +490,13 @@ def profiles(request):
     all_profiles = Profile.objects.all()
     users = User.objects.all()
     context = {'profiles': all_profiles, 
-        'users': users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
+        'users': users, 'full_name': full_name, 'role': role, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/profiles.html', context)
 
 def support_inquiries(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -396,13 +507,14 @@ def support_inquiries(request):
     all_inquiries = SupportInquiry.objects.all()
     users = User.objects.all()
     context = {'inquiries': all_inquiries, 
-        'users': users, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user }
+        'users': users, 'full_name': full_name,'role': role, 'admin_id' : admin_id, 'admin_user': admin_user }
     return render(request, 'views/support.html', context)
 
 
 def chat_message(request, user_id):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
 
     # Fetch the admin user based on admin_id
     admin_user = None
@@ -436,6 +548,7 @@ def chat_message(request, user_id):
         'receiver_id': receiver_id,
         'all_messages': all_messages,
         'senders': senders,
+        'role': role,
         'receivers': receivers,
         'users': users,
         'full_name': full_name,
@@ -487,7 +600,7 @@ def update_profile_image(request):
 
 def logout_view(request):
     logout(request)  # This will clear the session data and log out the user
-    return redirect('login')  # Redirect to the login page
+    return redirect('adminlog')  # Redirect to the login page
 
 
 @csrf_exempt

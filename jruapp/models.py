@@ -74,6 +74,7 @@ class User(models.Model):
     ]
 
     user_id = models.AutoField(primary_key=True)
+    stud_id = models.CharField(max_length=255, null=True, blank=True)
     username = models.CharField(max_length=50, unique=True)
     password_hash = models.CharField(max_length=255)
     email = models.EmailField(max_length=100, unique=True)
@@ -102,6 +103,8 @@ class Product(models.Model):
     location = models.CharField(max_length=100, null=True, blank=True)
     image_url = models.URLField(max_length=255, null=True, blank=True)
     ad_link = models.URLField(max_length=255, null=True, blank=True)
+    fb_link = models.URLField(max_length=255, null=True, blank=True)
+    ins_link = models.URLField(max_length=255, null=True, blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

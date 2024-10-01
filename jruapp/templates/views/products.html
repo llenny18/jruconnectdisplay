@@ -179,6 +179,9 @@
                             <th>Price</th>
                             <th>Stock</th>
                             <th>Location</th>
+                            <th>Advertisement</th>
+                            <th>Facebook</th>
+                            <th>Instagram </th>
                             <th>Date Posted</th>
                             <th>Action</th>
                           </tr>
@@ -193,6 +196,9 @@
                             <td>${{ product.price }}</td>
                             <td>{{ product.stock }}</td>
                             <td>{{ product.location }}</td>
+                            <td>{{ product.ad_link }}</td>
+                            <td>{{ product.fb_link }}</td>
+                            <td>{{ product.ins_link }}</td>
                             <td>
                               {{ product.date_posted|date:"Y-m-d H:i:s" }}
                             </td>
@@ -217,203 +223,317 @@
                         </tbody>
                       </table>
                       <!-- Edit Product Modal -->
-                      {% for product in products %}
-                      <div
-                        class="modal fade"
-                        id="editModal{{ product.product_id }}"
-                        tabindex="-1"
-                        role="dialog"
-                        aria-labelledby="editModalLabel{{ product.product_id }}"
-                        aria-hidden="true"
-                      >
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5
-                                class="modal-title"
-                                id="editModalLabel{{ product.product_id }}"
-                              >
-                                Edit Product: {{ product.title }}
-                              </h5>
-                              <button
-                                type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Close"
-                              >
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <form
-                                id="editForm{{ product.product_id }}"
-                                method="POST"
-                              >
-                                {% csrf_token %}
-                                <div class="form-group">
-                                  <label for="title">Title</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="title{{ product.product_id }}"
-                                    name="title"
-                                    value="{{ product.title }}"
-                                  />
-                                </div>
-                                <div class="form-group">
-                                  <label for="description">Description</label>
-                                  <textarea
-                                    class="form-control"
-                                    id="description{{ product.product_id }}"
-                                    name="description"
-                                  >
-{{ product.description }}</textarea
-                                  >
-                                </div>
-                                <div class="form-group">
-                                  <label for="category">Category</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="category{{ product.product_id }}"
-                                    name="category"
-                                    value="{{ product.category }}"
-                                  />
-                                </div>
-                                <div class="form-group">
-                                  <label for="price">Price</label>
-                                  <input
-                                    type="number"
-                                    class="form-control"
-                                    id="price{{ product.product_id }}"
-                                    name="price"
-                                    value="{{ product.price }}"
-                                  />
-                                </div>
-                                <div class="form-group">
-                                  <label for="stock">Stock</label>
-                                  <input
-                                    type="number"
-                                    class="form-control"
-                                    id="stock{{ product.product_id }}"
-                                    name="stock"
-                                    value="{{ product.stock }}"
-                                  />
-                                </div>
-                                <div class="form-group">
-                                  <label for="location">Location</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="location{{ product.product_id }}"
-                                    name="location"
-                                    value="{{ product.location }}"
-                                  />
-                                </div>
-                              </form>
-                            </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-dismiss="modal"
-                              >
-                                Close
-                              </button>
-                              <button
-                                type="button"
-                                class="btn btn-primary"
-                                onclick="updateProduct({{ product.product_id }})"
-                              >
-                                Save changes
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      {% endfor %}
+                      <!-- Edit Product Modal -->
+{% for product in products %}
+<div
+  class="modal fade"
+  id="editModal{{ product.product_id }}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="editModalLabel{{ product.product_id }}"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel{{ product.product_id }}">
+          Edit Product: {{ product.title }}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm{{ product.product_id }}" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title{{ product.product_id }}"
+              name="title"
+              value="{{ product.title }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+              class="form-control"
+              id="description{{ product.product_id }}"
+              name="description"
+            >{{ product.description }}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <input
+              type="text"
+              class="form-control"
+              id="category{{ product.product_id }}"
+              name="category"
+              value="{{ product.category }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input
+              type="number"
+              class="form-control"
+              id="price{{ product.product_id }}"
+              name="price"
+              value="{{ product.price }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="stock">Stock</label>
+            <input
+              type="number"
+              class="form-control"
+              id="stock{{ product.product_id }}"
+              name="stock"
+              value="{{ product.stock }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input
+              type="text"
+              class="form-control"
+              id="location{{ product.product_id }}"
+              name="location"
+              value="{{ product.location }}"
+            />
+          </div>
+
+          <!-- New fields for ad_link, fb_link, and ins_link -->
+          <div class="form-group">
+            <label for="ad_link">Advertisement Link</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ad_link{{ product.product_id }}"
+              name="ad_link"
+              value="{{ product.ad_link }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="fb_link">Facebook Link</label>
+            <input
+              type="text"
+              class="form-control"
+              id="fb_link{{ product.product_id }}"
+              name="fb_link"
+              value="{{ product.fb_link }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="ins_link">Instagram Link</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ins_link{{ product.product_id }}"
+              name="ins_link"
+              value="{{ product.ins_link }}"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="updateProduct({{ product.product_id }})"
+        >
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
 
                       <!-- Add Product Modal -->
-                      <div
-                        class="modal fade"
-                        id="addProductModal"
-                        tabindex="-1"
-                        role="dialog"
-                        aria-labelledby="addProductModalLabel"
-                        aria-hidden="true"
-                      >
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="addProductModalLabel">
-                                Add New Product
-                              </h5>
-                              <button
-                                type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Close"
-                              >
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <form id="addProductForm" method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                  <label for="user_id">User ID</label>
-                                  <input type="text" class="form-control" value="{{admin_user.user_id}}" style="display: none;" id="user_id" name="user_id" required>
-                              </div>
-                                <div class="form-group">
-                                    <label for="new_title">Title</label>
-                                    <input type="text" class="form-control" id="new_title" name="title" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new_description">Description</label>
-                                    <textarea class="form-control" id="new_description" name="description" required></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new_category">Category</label>
-                                    <input type="text" class="form-control" id="new_category" name="category" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new_price">Price</label>
-                                    <input type="number" class="form-control" id="new_price" name="price" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new_stock">Stock</label>
-                                    <input type="number" class="form-control" id="new_stock" name="stock" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new_location">Location</label>
-                                    <input type="text" class="form-control" id="new_location" name="location" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new_image">Upload Image</label>
-                                    <input type="file"  accept=".jpg, .jpeg, .png"  class="form-control" id="new_image" name="image" required>
-                                </div>
-                            </form>
-                            
-                            </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-dismiss="modal"
-                              >
-                                Close
-                              </button>
-                              <button
-                                type="button"
-                                class="btn btn-primary"
-                                onclick="addProduct()"
-                              >
-                                Add Product
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <!-- Add Product Modal -->
+<div
+class="modal fade"
+id="addProductModal"
+tabindex="-1"
+role="dialog"
+aria-labelledby="addProductModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="addProductModalLabel">
+        Add New Product
+      </h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="addProductForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="user_id">User ID</label>
+          <input
+            type="text"
+            class="form-control"
+            value="{{admin_user.user_id}}"
+            style="display: none;"
+            id="user_id"
+            name="user_id"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="new_title">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            id="new_title"
+            name="title"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="new_description">Description</label>
+          <textarea
+            class="form-control"
+            id="new_description"
+            name="description"
+            required
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="new_category">Category</label>
+          <select class="form-control" id="new_category" name="category" required>
+            <option value="Electronics">Electronics</option>
+            <option value="Office Supplies">Office Supplies</option>
+            <option value="Clothing &amp; Apparel">Clothing &amp; Apparel</option>
+            <option value="Home &amp; Kitchen">Home &amp; Kitchen</option>
+            <option value="Beauty &amp; Personal Care">Beauty &amp; Personal Care</option>
+            <option value="Health &amp; Wellness">Health &amp; Wellness</option>
+            <option value="Books &amp; Stationery">Books &amp; Stationery</option>
+            <option value="Sports &amp; Outdoors">Sports &amp; Outdoors</option>
+            <option value="Toys &amp; Games">Toys &amp; Games</option>
+            <option value="Groceries &amp; Food">Groceries &amp; Food</option>
+            <option value="Furniture &amp; Decor">Furniture &amp; Decor</option>
+            <option value="Automotive &amp; Accessories">Automotive &amp; Accessories</option>
+            <option value="Pets &amp; Pet Supplies">Pets &amp; Pet Supplies</option>
+            <option value="Jewelry &amp; Accessories">Jewelry &amp; Accessories</option>
+            <option value="Arts &amp; Crafts">Arts &amp; Crafts</option>
+            <option value="Home Cleaning Services">Home Cleaning Services</option>
+            <option value="Personal Training">Personal Training</option>
+            <option value="Tutoring &amp; Education">Tutoring &amp; Education</option>
+            <option value="Legal Consultation">Legal Consultation</option>
+            <option value="Financial Services">Financial Services</option>
+            <option value="Event Planning">Event Planning</option>
+            <option value="Photography &amp; Videography">Photography &amp; Videography</option>
+            <option value="Graphic Design">Graphic Design</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Plumbing &amp; Electrical">Plumbing &amp; Electrical</option>
+            <option value="Car Repair &amp; Maintenance">Car Repair &amp; Maintenance</option>
+            <option value="Delivery &amp; Courier Services">Delivery &amp; Courier Services</option>
+            <option value="Beauty &amp; Wellness (Haircuts, Massages)">Beauty &amp; Wellness (Haircuts, Massages)</option>
+            <option value="Fitness Classes">Fitness Classes</option>
+            <option value="Childcare Services">Childcare Services</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="new_price">Price</label>
+          <input
+            type="number"
+            class="form-control"
+            id="new_price"
+            name="price"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="new_stock">Stock</label>
+          <input
+            type="number"
+            class="form-control"
+            id="new_stock"
+            name="stock"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="new_location">Location</label>
+          <input
+            type="text"
+            class="form-control"
+            id="new_location"
+            name="location"
+            required
+          />
+        </div>
+
+        <!-- New fields for ad_link, fb_link, and ins_link -->
+        <div class="form-group">
+          <label for="new_ads">Advertisement Link</label>
+          <input
+            type="text"
+            class="form-control"
+            id="new_ads"
+            name="ad_link"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="new_fb">Facebook Link</label>
+          <input
+            type="text"
+            class="form-control"
+            id="new_fb"
+            name="fb_link"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="new_ins">Instagram Link</label>
+          <input
+            type="text"
+            class="form-control"
+            id="new_ins"
+            name="ins_link"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="new_image">Upload Image</label>
+          <input
+            type="file"
+            accept=".jpg, .jpeg, .png"
+            class="form-control"
+            id="new_image"
+            name="image"
+            required
+          />
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        Close
+      </button>
+      <button type="button" class="btn btn-primary" onclick="addProduct()">
+        Add Product
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+
                     </div>
                   </div>
                 </div>
@@ -491,17 +611,17 @@
 
       function updateProduct(productId) {
         const title = document.getElementById(`title${productId}`).value;
-        const description = document.getElementById(
-          `description${productId}`
-        ).value;
+        const description = document.getElementById(`description${productId}`).value;
         const category = document.getElementById(`category${productId}`).value;
         const price = document.getElementById(`price${productId}`).value;
         const stock = document.getElementById(`stock${productId}`).value;
         const location = document.getElementById(`location${productId}`).value;
-        const csrftoken = document.querySelector(
-          "[name=csrfmiddlewaretoken]"
-        ).value;
-
+        const ad_link = document.getElementById(`ad_link${productId}`).value;
+        const fb_link = document.getElementById(`fb_link${productId}`).value;
+        const ins_link = document.getElementById(`ins_link${productId}`).value;
+        
+        const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+      
         fetch(`/update_product/${productId}/`, {
           method: "POST",
           headers: {
@@ -515,18 +635,22 @@
             price: price,
             stock: stock,
             location: location,
+            ad_link: ad_link,
+            fb_link: fb_link,
+            ins_link: ins_link
           }),
         })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              window.location.href = ""; // Reload the page to see the changes
-            } else {
-              alert("Error updating product: " + data.message);
-            }
-          })
-          .catch((error) => console.error("Error:", error));
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            window.location.href = ""; // Reload the page to see the changes
+          } else {
+            alert("Error updating product: " + data.message);
+          }
+        })
+        .catch((error) => console.error("Error:", error));
       }
+      
 
       $(document).ready(function () {
         $("#example").DataTable();

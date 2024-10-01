@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>JRU-Connect Student Registration</title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+  <!-- endinject -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+  
+  <!-- Load Bad Words Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bad-words@4.0.0/dist/index.min.js"></script> 
+  <script>
+    // Create a new instance of the BadWords filter
+    const filter = new Filter();
+
+    function validateInput() {
+      const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
+      for (const input of inputs) {
+        if (filter.isProfane(input.value)) {
+          alert("Your input contains prohibited words. Please remove them.");
+          input.value = ''; // Clear the input field
+          input.focus(); // Focus back on the input field
+          return false; // Prevent form submission
+        }
+      }
+      return true; // Allow form submission if no bad words
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container-scroller d-flex">
+    <div class="container-fluid page-body-wrapper full-page-wrapper d-flex">
+      <div class="content-wrapper d-flex align-items-center auth px-0">
+        <div class="row w-100 mx-0">
+          <div class="col-lg-4 mx-auto">
+            <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+              <div class="brand-logo d-flex justify-content-center">
+                <img src="{% static 'images/favicon.png' %}" alt="logo">
+              </div>
+              <h4 class="text-center">REGISTER AS STUDENT</h4>
+              <hr>
+              <form class="pt-3" method="post" enctype="multipart/form-data" onsubmit="return validateInput()">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="user_id">User ID (Format XX-XXXXXXXX)</label>
+                  <input type="text" class="form-control form-control-lg" pattern="\d{2}-\d{8}" name="user_id" placeholder="User ID" required>
+                </div>
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input type="text" class="form-control form-control-lg" name="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                  <label for="full_name">Full Name</label>
+                  <input type="text" class="form-control form-control-lg" name="full_name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control form-control-lg" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                  <span toggle="#password" class="mdi mdi-eye-outline position-absolute" id="toggle-password" style="top: 38px; right: 15px; cursor: pointer;"></span>
+                </div>
+                <div class="form-group">
+                  <label for="profile_image">Profile Image</label>
+                  <input type="file" class="form-control" name="profile_image" accept="image/*">
+                </div>
+                <div class="form-group">
+                  <label for="role">Role</label>
+                  <input type="text" class="form-control" name="role" value="student" readonly>
+                </div>
+                
+                <div class="mt-3">
+                  <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">REGISTER</button>
+                </div>
+                {% if error %}
+                  <p class="text-danger">{{ error }}</p>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+
+  <!-- container-scroller -->
+  <!-- base:js -->
+  <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+  <!-- endinject -->
+  <!-- inject:js -->
+  <script src="{% static 'js/off-canvas.js' %}"></script>
+  <script src="{% static 'js/hoverable-collapse.js' %}"></script>
+  <script src="{% static 'js/template.js' %}"></script>
+  <!-- endinject -->
+</body>
+
+</html>
