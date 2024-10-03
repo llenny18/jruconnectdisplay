@@ -277,11 +277,45 @@ def products(request):
     return render(request, 'views/products.html', context)
 
 
+def user_profile(request, user_profile_id):
+    # Fetch session values
+    full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id')  # No default '0', treat it as None if absent
+    role = request.session.get('role', '')
+
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
+
+    # Fetch all products related to the admin user
+    
+    user_detail = User.objects.filter(user_id=user_profile_id) if user_profile_id else []
+    
+    all_products = Product.objects.filter(user_id=user_profile_id) if user_profile_id else []
+
+    context = {
+        'products': all_products,
+        'full_name': full_name,
+        'admin_id': admin_id,
+        'role': role,
+        'admin_user': admin_user,
+        'user_detail' : user_detail
+    }
+
+    return render(request, 'views/u-profile.html', context)
+
+
+from django.db.models import Q
 
 def ecom(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
     role = request.session.get('role', '')
+    
     # Fetch the admin user based on admin_id
     admin_user = None
     if admin_id:
@@ -290,8 +324,32 @@ def ecom(request):
         except User.DoesNotExist:
             admin_user = None  # Handle case where no admin user is found
     
-    all_products = ProductEngagementSummary.objects.all()
-    context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'admin_user': admin_user, 'role': role, }
+    # Fetch the first 10 products normally
+    all_products = ProductEngagementSummary.objects.all()[:20]
+    
+    # Fetch categories of products that the admin has engaged with (liked or clicked)
+    engaged_categories = Engagement.objects.filter(
+        user_id=admin_id,
+        type__in=['like', 'click']
+    ).values_list('product__category', flat=True).distinct()
+    
+    # Fetch recommended products based on the engaged categories (excluding products already engaged with)
+    recommended_products = Product.objects.filter(
+        category__in=engaged_categories
+    ).exclude(
+        engagement__user_id=admin_id
+    ).distinct()
+
+    # Pass both the normal products and recommended products to the template
+    context = {
+        'products': all_products,
+        'recommended_products': recommended_products,
+        'full_name': full_name,
+        'admin_id': admin_id,
+        'admin_user': admin_user,
+        'role': role,
+    }
+
     return render(request, 'views/ecom.html', context)
 
     
@@ -900,6 +958,7 @@ def delete_user(request, user_id):
 
 @csrf_exempt  # If you're not using the CSRF token, use this decorator
 def record_engagement(request):
+    admin_id = request.session.get('admin_id', '0')
     if request.method == 'POST':
         try:
             # Parse the request body (assuming JSON format)
@@ -911,7 +970,7 @@ def record_engagement(request):
             if product_id and engagement_type:
                 new_engagement = Engagement.objects.create(
                         product_id=product_id,
-                        user_id=1,
+                        user_id=admin_id,
                         type=engagement_type
                     )
 

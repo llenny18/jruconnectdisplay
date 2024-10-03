@@ -12,6 +12,15 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <!-- endinject -->
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+<!-- Bootstrap CSS -->
+
+<!-- Bootstrap Bundle JS (with Popper) -->
+
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
       .filter-section {
@@ -45,6 +54,90 @@
       .hidden {
         display: none;
       }
+
+      body{
+        background:#eee;
+    }
+    
+    .card{
+        border:none;
+    
+        position:relative;
+        overflow:hidden;
+        border-radius:8px;
+        cursor:pointer;
+    }
+    
+    .card:before{
+        
+        content:"";
+        position:absolute;
+        left:0;
+        top:0;
+        width:4px;
+        height:100%;
+        background-color:#E1BEE7;
+        transform:scaleY(1);
+        transition:all 0.5s;
+        transform-origin: bottom
+    }
+    
+    .card:after{
+        
+        content:"";
+        position:absolute;
+        left:0;
+        top:0;
+        width:4px;
+        height:100%;
+        background-color:#8E24AA;
+        transform:scaleY(0);
+        transition:all 0.5s;
+        transform-origin: bottom
+    }
+    
+    .card:hover::after{
+        transform:scaleY(1);
+    }
+    
+    
+    .fonts{
+        font-size:11px;
+    }
+    
+    .social-list{
+        display:flex;
+        list-style:none;
+        justify-content:center;
+        padding:0;
+    }
+    
+    .social-list li{
+        padding:10px;
+        color:#8E24AA;
+        font-size:19px;
+    }
+    
+    
+    .buttons button:nth-child(1){
+           border:1px solid #8E24AA !important;
+           color:#8E24AA;
+           height:40px;
+    }
+    
+    .buttons button:nth-child(1):hover{
+           border:1px solid #8E24AA !important;
+           color:#fff;
+           height:40px;
+           background-color:#8E24AA;
+    }
+    
+    .buttons button:nth-child(2){
+           border:1px solid #8E24AA !important;
+           background-color:#8E24AA;
+           color:#fff;
+            height:40px;
+    }
     </style>
   </head>
   <body>
@@ -133,131 +226,55 @@
         <div class="container-fluid" style="width: 100%; margin-left: 0px;">
           <div class="main-panel">
             <div class="content-wrapper">
-              <div class="main-content">
-                <!-- Filter Section -->
-                <div class="filter-section">
-                  <h3>Filter by Category</h3>
-                  <div id="category-container">
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Electronics" />Electronics</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Office Supplies" />Office Supplies</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Clothing & Apparel" />Clothing & Apparel</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Home & Kitchen" />Home & Kitchen</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Beauty & Personal Care" />Beauty & Personal Care</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Health & Wellness" />Health & Wellness</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Books & Stationery" />Books & Stationery</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Sports & Outdoors" />Sports & Outdoors</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Toys & Games" />Toys & Games</label>
-                    </div>
-                    <div class="category">
-                      <label><input type="checkbox" class="category-filter" value="Groceries & Food" />Groceries & Food</label>
-                    </div>
+              {% for detail in user_detail %}      
+              
+    <div class="container mt-5">
 
-                    <div class="hidden" id="extra-categories">
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Furniture & Decor" />Furniture & Decor</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Automotive & Accessories" />Automotive & Accessories</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Pets & Pet Supplies" />Pets & Pet Supplies</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Jewelry & Accessories" />Jewelry & Accessories</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Arts & Crafts" />Arts & Crafts</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Home Cleaning Services" />Home Cleaning Services</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Personal Training" />Personal Training</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Tutoring & Education" />Tutoring & Education</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Legal Consultation" />Legal Consultation</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Financial Services" />Financial Services</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Event Planning" />Event Planning</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Photography & Videography" />Photography & Videography</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Graphic Design" />Graphic Design</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Web Development" />Web Development</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Plumbing & Electrical" />Plumbing & Electrical</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Car Repair & Maintenance" />Car Repair & Maintenance</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Delivery & Courier Services" />Delivery & Courier Services</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Beauty & Wellness (Haircuts, Massages)" />Beauty & Wellness (Haircuts, Massages)</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Fitness Classes" />Fitness Classes</label>
-                      </div>
-                      <div class="category">
-                        <label><input type="checkbox" class="category-filter" value="Childcare Services" />Childcare Services</label>
-                      </div>
-                    </div>
+      <div class="row d-flex justify-content-center">
+          
+          <div class="col-md-12">
+              
+              <div class="card p-3 py-4">
+                  
+                  <div class="text-center">
+                      <img src="{% if admin_user.profile_url %}
+                      {% static admin_user.profile_url %}
+                    {% else %}
+                      {% static 'images/default.png' %}
+                    {% endif %}" width="200" class="rounded-circle">
                   </div>
-
-                  <button id="show-more" class="btn btn-primary m-2">Show All Categories</button>
-                  <hr />
-                  <script>
-                    document.getElementById('show-more').addEventListener('click', function () {
-                      var extraCategories = document.getElementById('extra-categories')
-                      extraCategories.classList.toggle('hidden')
+                  
+                  <div class="text-center mt-3">
+                      <span class="bg-secondary p-1 px-4 rounded text-white text-uppercase">{{ detail.role }}</span>
+                      <h5 class="mt-2 mb-0">{{ detail.full_name }}</h5>
+                      <span>{{ detail.username }}</span>
+               
+                      
+                       <ul class="social-list">
+                          <li><i class="fa fa-heart"> Likes: </i></li>
+                          <li><i class="fa fa-envelope"> Email: {{ detail.email }}</i></li>
+                          <li><i class="fa fa-check-square"> Verified</i></li>
                     
-                      // Change button text based on visibility
-                      if (extraCategories.classList.contains('hidden')) {
-                        this.textContent = 'Show All Categories'
-                      } else {
-                        this.textContent = 'Show Less Categories'
-                      }
-                    })
-                  </script>
-
-                  <!-- Add more categories as needed -->
-
-                  <h3>Filter by Price</h3>
-                  <label>Min:<input type="number" id="min-price" placeholder="0" class="form-control" /></label><br />
-                  <label>Max:<input type="number" id="max-price" placeholder="1000" class="form-control" /></label><br />
-                  <button onclick="filterProducts()" class="btn btn-success">Filter</button>
-                </div>
-
-             
+                      </ul>
+                
+                      
+                      
+                  </div>
+                  
+                 
+                  
+                  
+              </div>
+              
+          </div>
+          
+      </div>
+      
+  </div>
+  
+    {% endfor %}
+              <div class="main-content">
+              
                 <!-- Product List -->
                 <div class="product-container col-md-12">
                   {% for product in products %}
@@ -346,40 +363,7 @@
                     </div>
                     <!-- End of Product Modal -->
                   {% endfor %}
-                  {% for product in recommended_products  %}
-                  <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">
-                    <div class="card shadow-sm">
-                      <div class="card-body">
-                        <div class="text-center">
-                          <img src="{% if product.image_url %}
-                              {% static product.image_url %}
-                            {% else %}
-                              {% static 'images/default.png' %}
-                            {% endif %}"
-                            class="img-fluid rounded mb-3"
-                            style="height: 200px; object-fit: cover;"
-                            alt="{{ product.title }}" />
-                        </div>
-                        <h6 class="text-dark mb-2">{{ product.title }}</h6>
-                        <p>
-                          <strong>Category:</strong> {{ product.category }}
-                        </p>
-                        <div class="d-flex justify-content-center mb-3 mt-4">
-                          <div class="p-2 mr-2">
-                            <h6>PHP {{ product.price }}</h6>
-                          </div>
-                          <div class="p-2 mr-2" style="border: 1px solid darkred; color: darkred; font-size: 13px; height: 35px;">
-                            <i class="mdi mdi-heart"></i> <strong>{{ product.likes_count }} Likes</strong>
-                          </div>
-                          <div class="p-2" style="border: 1px solid darkblue; font-size: 13px; height: 35px;">
-                            <strong><i class="mdi mdi-package-check"></i> {{ product.purchase_count }} Sold</strong>
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#productModal{{ product.product_id }}"><i class="mdi mdi-eye"></i> VIEW</button>
-                      </div>
-                    </div>
-                  </div>
-                  {% endfor %} 
+               
 
               
                 </div>
