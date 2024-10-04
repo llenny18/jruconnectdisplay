@@ -334,10 +334,10 @@
                             </div>
                           </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" onclick="recordEngagement({{ product.product_id }}, 'like')">Like</button>
                             <a href="{{ product.ad_link }}" target="_blank" class="btn btn-success">View Advertisement</a>
                             <a href="{% url 'chat_message' user_id=product.user_id %}" class="btn btn-success">Message Seller</a>
+                            <a href="{% url 'user_profile' user_profile_id=product.user_id %}" class="btn btn-success">View Seller Profile</a>
                             <a href="{{ product.fb_link }}" target="_blank" class="btn btn-success"><i class="mdi mdi-facebook"></i></a>
                             <a href="{{ product.ins_link }}" target="_blank" class="btn btn-success"><i class="mdi mdi-instagram"></i></a>
                           </div>
