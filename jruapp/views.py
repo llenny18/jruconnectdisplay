@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import logout
 from jruconnect import settings
-from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary, ViewEngagementsByType, ViewProductEngagementOverTime, ViewFeedbackByRating, ViewSupportInquiriesByStatus
+from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary, ViewEngagementsByType, ViewProductEngagementOverTime, ViewFeedbackByRating, ViewSupportInquiriesByStatus, UserLikes
 import json
 import os
 from django.db.models import Q
@@ -200,7 +200,7 @@ def login(request):
         
         # Query the user by username
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(username=username, verified=1)
         except User.DoesNotExist:
             return render(request, 'views/login.html', {'error': 'Invalid credentials'})
         
@@ -245,7 +245,7 @@ def loginadmin(request):
         
         # Query the user by username
         try:
-            user = User.objects.get(username=username, role="admin")
+            user = User.objects.get(username=username, role="admin", verified=1)
         except User.DoesNotExist:
             return render(request, 'views/login.html', {'error': 'Invalid credentials'})
         
@@ -276,6 +276,9 @@ def products(request):
     context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'role': role, 'admin_user': admin_user }
     return render(request, 'views/products.html', context)
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import User, Product, UserLikes
 
 def user_profile(request, user_profile_id):
     # Fetch session values
@@ -292,10 +295,22 @@ def user_profile(request, user_profile_id):
             admin_user = None  # Handle case where no admin user is found
 
     # Fetch all products related to the admin user
-    
     user_detail = User.objects.filter(user_id=user_profile_id) if user_profile_id else []
-    
     all_products = Product.objects.filter(user_id=user_profile_id) if user_profile_id else []
+    like_tbl = UserLikes.objects.all()
+    
+    # Count likes for the user profile
+    count_likes = UserLikes.objects.filter(user_id=user_profile_id).count() if user_profile_id else 0
+
+    if request.method == 'POST':
+        liker_id = request.POST.get('liker_id')  # Get the liker ID from the form data
+
+        if liker_id:
+            # Create a new like entry
+            new_like = UserLikes(user_id=user_profile_id, liker_id=admin_id)  # assuming the logged-in user is the liker
+            new_like.save()
+            # Optionally, redirect to the same profile page after saving
+            return redirect('user_profile', user_profile_id=user_profile_id)
 
     context = {
         'products': all_products,
@@ -303,13 +318,17 @@ def user_profile(request, user_profile_id):
         'admin_id': admin_id,
         'role': role,
         'admin_user': admin_user,
-        'user_detail' : user_detail
+        'user_detail': user_detail,
+        'count_likes': count_likes,
+        'like_tbl': like_tbl
     }
 
     return render(request, 'views/u-profile.html', context)
 
 
 from django.db.models import Q
+
+
 
 def ecom(request):
     full_name = request.session.get('full_name', 'Guest')
@@ -326,6 +345,8 @@ def ecom(request):
     
     # Fetch the first 10 products normally
     all_products = ProductEngagementSummary.objects.all()[:20]
+    all_User = User.objects.all()
+    all_eng = Engagement.objects.all()
     
     # Fetch categories of products that the admin has engaged with (liked or clicked)
     engaged_categories = Engagement.objects.filter(
@@ -347,7 +368,9 @@ def ecom(request):
         'full_name': full_name,
         'admin_id': admin_id,
         'admin_user': admin_user,
+        'user_list': all_User,
         'role': role,
+        'all_eng': all_eng
     }
 
     return render(request, 'views/ecom.html', context)

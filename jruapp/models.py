@@ -67,6 +67,17 @@ class ViewSupportInquiriesByStatus(models.Model):
         managed = False
         db_table = 'view_support_inquiries_by_status'
 
+
+class UserLikes(models.Model):
+    like_id = models.AutoField(primary_key=True)  # Use AutoField for auto-incrementing primary key
+    user_id = models.IntegerField()
+    liker_id = models.IntegerField()
+    date_created = models.DateTimeField(auto_now_add=True)  # Automatically set the field to now when the object is created
+
+    class Meta:
+        db_table = 'user_likes'
+        managed = False  # Set to True if you want Django to manage this table
+
 class User(models.Model):
     USER_ROLES = [
         ('student', 'Student'),

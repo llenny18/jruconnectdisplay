@@ -248,15 +248,19 @@
                       <span class="bg-secondary p-1 px-4 rounded text-white text-uppercase">{{ detail.role }}</span>
                       <h5 class="mt-2 mb-0">{{ detail.full_name }}</h5>
                       <span>{{ detail.username }}</span>
-               
                       
                        <ul class="social-list">
-                          <li><i class="fa fa-heart"> Likes: </i></li>
+                          <li><i class="fa fa-heart"> Likes:  {{count_likes}}</i></li>
                           <li><i class="fa fa-envelope"> Email: {{ detail.email }}</i></li>
-                          <li><i class="fa fa-check-square"> Verified</i></li>
+                          <li><i class="fa fa-{% if detail.verified %}check-square{% endif %}{% if detail.verified == 0 %}times{% endif %}"> Verified</i></li>
                     
                       </ul>
-                
+                      <hr>
+                      <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="liker_id" value="{{ admin_id }}">  <!-- Assuming user_detail has an id -->
+                        <button type="submit" {% for like_data in like_tbl %}{% if detail.user_id == like_data.user_id  and like_data.liker_id == admin_id %} disabled {% endif %}{% endfor %}  class="btn btn-primary">Like{% for like_data in like_tbl %}{% if detail.user_id == like_data.user_id  and like_data.liker_id == admin_id %}d{% endif %}{% endfor %}</button>
+                    </form>
                       
                       
                   </div>
