@@ -33,7 +33,15 @@ SECRET_KEY = 'django-insecure-3urs3vn5)md7+5p@s+1+nj2-qsj_si4z^w@fmr2jrp^&*j3s(b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['jruconnect.com', 'www.jruconnect.com', '127.0.0.1']
+
+USE_X_FORWARDED_HOST = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://jruconnect.com',
+    'https://www.jruconnect.com',
+    'http://jruconnect.com',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -83,10 +91,10 @@ WSGI_APPLICATION = 'jruconnect.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'jruconnect',
-        'USER': 'Neo',          # Correct key for database user
-        'PASSWORD': '',  # Add your database password here
-        'HOST': 'localhost',
+        'NAME': 'u739510386_jruconnect',
+        'USER': 'u739510386_jruuser',          # Correct key for database user
+        'PASSWORD': 'Jrupassword#123',  # Add your database password here
+        'HOST': '193.203.166.209',
         'PORT': '3306',
     }
 }
