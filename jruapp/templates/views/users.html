@@ -153,7 +153,8 @@
                                                     <td>{{ user.last_login }}</td>
                                                     <td><img src="{% if user.profile_url %}{% static user.profile_url %}{% else %}{% static 'images/default.png' %}{% endif %}" style="width: 70px; height: 70px; " alt="image" ></td>
                                                     <td>
-                                                        <button class="btn btn-primary m-1 edit-btn" data-id="{{ user.user_id }}" data-username="{{ user.username }}" data-password="{{ user.password_hash }}" data-fullname="{{ user.full_name }}" data-email="{{ user.email }}" data-role="{{ user.role }}" data-verified="{{ user.verified }}" data-toggle="modal" data-target="#editUserModal">Edit</button>
+                                                      <button class="btn btn-primary m-1 edit-btn" data-target="#editUserModal{{user.user_id}}" data-id="{{ user.user_id }}" data-username="{{ user.username }}" data-password="{{ user.password_hash }}" data-fullname="{{ user.full_name }}" data-email="{{ user.email }}" data-role="{{ user.role }}" data-verified="{{ user.verified }}" data-toggle="modal" >Edit</button>
+
                                                         <button class="btn btn-danger m-1 delete-btn" data-id="{{ user.user_id }}">Delete</button>
                                                     </td>
                                                 </tr>
@@ -222,9 +223,9 @@
   </div>
 </div>
 
-
+{% for user in users %}
 <!-- Edit User Modal -->
-<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="editUserModal{{user.user_id}}" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -234,34 +235,34 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="editUserForm">
-          <input type="hidden" id="editUserId" name="user_id">
+        <form id="editUserForm{{user.user_id}}">
+          <input type="hidden" id="editUserId{{user.user_id}}" value="{{user.user_id}}" name="user_id">
           <div class="form-group">
             <label for="editUsername">Username</label>
-            <input type="text" class="form-control" id="editUsername" name="username" required>
+            <input type="text" class="form-control" value="{{user.username}}" id="editUsername{{user.user_id}}" name="username" required>
           </div>
           <div class="form-group">
             <label for="editFullName">Full Name</label>
-            <input type="text" class="form-control" id="editFullName" name="full_name" required>
+            <input type="text" class="form-control" value="{{user.full_name}}" id="editFullName{{user.user_id}}" name="full_name" required>
           </div>
           <div class="form-group">
             <label for="editEmail">Email</label>
-            <input type="email" class="form-control" id="editEmail" name="email" required>
+            <input type="email" class="form-control" value="{{user.email}}"  id="editEmail{{user.user_id}}" name="email" required>
           </div>
           <div class="form-group">
             <label for="editPassword">Password</label>
-            <input type="text" class="form-control" id="editPassword" name="password">
+            <input type="text" class="form-control" value="{{user.password_hash}}" id="editPassword{{user.user_id}}" name="password">
           </div>
           <div class="form-group">
             <label for="editRole">Role</label>
-            <select class="form-control" id="editRole" name="role">
-              <option value="student">Student</option>
-              <option value="admin">Admin</option>
+            <select class="form-control" id="editRole{{user.user_id}}" name="role">
+              <option {% if user.role == "student" %} selected {%endif%} value="student">Student</option>
+              <option {% if user.role == "admin" %} selected {%endif%} value="admin">Admin</option>
             </select>
           </div>
           <div class="form-group">
             <label for="editVerified">Verified</label>
-            <input type="checkbox" id="editVerified" name="verified">
+            <input {% if user.verified %} checked {%endif%} type="checkbox" id="editVerified{{user.user_id}}" name="verified" >
           </div>
           <button type="submit" class="btn btn-primary">Update User</button>
         </form>
@@ -269,7 +270,7 @@
     </div>
   </div>
 </div>
-
+{% endfor %}
             <!-- main-panel ends -->
         </div>
         <!-- page-body-wrapper ends -->
@@ -312,35 +313,37 @@
 
             // Edit User
             $('.edit-btn').on('click', function() {
-                let userId = $(this).data('id');
-                let username = $(this).data('username');
-                let fullName = $(this).data('fullname');
-                let email = $(this).data('email');
-                let role = $(this).data('role');
-                let verified = $(this).data('verified');
-                let password = $(this).data('password');
-
-                
-
-                $('#editPassword').val(password);
-                $('#editUserId').val(userId);
-                $('#editUsername').val(username);
-                $('#editFullName').val(fullName);
-                $('#editEmail').val(email);
-                $('#editRole').val(role);
-                $('#editVerified').prop('checked', verified);
-            });
+              let userId = $(this).data('id');
+              let username = $(this).data('username');
+              let fullName = $(this).data('fullname');
+              let email = $(this).data('email');
+              let role = $(this).data('role');
+              let verified = $(this).data('verified');
+              let password = $(this).data('password');
+          
+              // Populate the form inputs
+              $('#editUserId').val(userId);
+              $('#editUsername').val(username);
+              $('#editFullName').val(fullName);
+              $('#editEmail').val(email);
+              $('#editPassword').val(password);
+              $('#editRole').val(role);
+              $('#editVerified').prop('checked', verified);
+          });
+          
+          
+          {% for user in users %}
 
             // Edit User
-$('#editUserForm').on('submit', function(e) {
+$('#editUserForm{{user.user_id}}').on('submit', function(e) {
   e.preventDefault();
-  let userId = $('#editUserId').val();
-  let username = $('#editUsername').val();
-  let fullName = $('#editFullName').val();
-  let email = $('#editEmail').val();
-  let password = $('#editPassword').val(); // Optional
-  let role = $('#editRole').val();
-  let verified = $('#editVerified').is(':checked');
+  let userId = $('#editUserId{{user.user_id}}').val();
+  let username = $('#editUsername{{user.user_id}}').val();
+  let fullName = $('#editFullName{{user.user_id}}').val();
+  let email = $('#editEmail{{user.user_id}}').val();
+  let password = $('#editPassword{{user.user_id}}').val(); // Optional
+  let role = $('#editRole{{user.user_id}}').val();
+  let verified = $('#editVerified{{user.user_id}}').is(':checked');
 
   fetch(`/update-user/${userId}/`, {
       method: 'POST',
@@ -367,6 +370,7 @@ $('#editUserForm').on('submit', function(e) {
   });
 });
 
+{% endfor %}
 
             // Delete User
             $('.delete-btn').on('click', function() {
