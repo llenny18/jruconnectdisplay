@@ -177,7 +177,6 @@
                             <th>Description</th>
                             <th>Category</th>
                             <th>Price</th>
-                            <th>Stock</th>
                             <th>Location</th>
                             <th>Advertisement</th>
                             <th>Facebook</th>
@@ -194,7 +193,6 @@
                             <td>{{ product.description }}</td>
                             <td>{{ product.category }}</td>
                             <td>${{ product.price }}</td>
-                            <td>{{ product.stock }}</td>
                             <td>{{ product.location }}</td>
                             <td>{{ product.ad_link }}</td>
                             <td>{{ product.fb_link }}</td>
@@ -284,16 +282,7 @@
               value="{{ product.price }}"
             />
           </div>
-          <div class="form-group">
-            <label for="stock">Stock</label>
-            <input
-              type="number"
-              class="form-control"
-              id="stock{{ product.product_id }}"
-              name="stock"
-              value="{{ product.stock }}"
-            />
-          </div>
+          
           <div class="form-group">
             <label for="location">Location</label>
             <input
@@ -455,15 +444,7 @@ aria-hidden="true"
             required
           />
         </div>
-        <div class="form-group">
-          <label for="new_stock">Stock</label>
-          <input
-            type="number"
-            class="form-control"
-            id="new_stock"
-            name="stock"
-            required
-          />
+      
         </div>
         <div class="form-group">
           <label for="new_location">Location</label>
@@ -614,7 +595,6 @@ aria-hidden="true"
         const description = document.getElementById(`description${productId}`).value;
         const category = document.getElementById(`category${productId}`).value;
         const price = document.getElementById(`price${productId}`).value;
-        const stock = document.getElementById(`stock${productId}`).value;
         const location = document.getElementById(`location${productId}`).value;
         const ad_link = document.getElementById(`ad_link${productId}`).value;
         const fb_link = document.getElementById(`fb_link${productId}`).value;
@@ -633,7 +613,6 @@ aria-hidden="true"
             description: description,
             category: category,
             price: price,
-            stock: stock,
             location: location,
             ad_link: ad_link,
             fb_link: fb_link,

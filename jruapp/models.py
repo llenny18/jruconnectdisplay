@@ -159,6 +159,44 @@ class Feedback(models.Model):
         managed = False
         db_table = 'feedback'
 
+class UserProductFeedbackView(models.Model):
+    user_id = models.IntegerField()
+    stud_id = models.IntegerField()
+    username = models.CharField(max_length=50)
+    email = models.CharField(max_length=100)
+    full_name = models.CharField(max_length=100)
+    role = models.CharField(max_length=7, choices=[('student', 'Student'), ('admin', 'Admin')])
+    verified = models.BooleanField(default=False)
+    profile_url = models.CharField(max_length=255)
+    last_login = models.DateTimeField(null=True, blank=True)
+    user_date_created = models.DateTimeField()
+    
+    product_id = models.IntegerField()
+    title = models.CharField(max_length=455)
+    description = models.TextField()
+    category = models.CharField(max_length=100, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    stock = models.IntegerField()
+    ad_link = models.CharField(max_length=255)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    image_url = models.CharField(max_length=255, null=True, blank=True)
+    date_posted = models.DateTimeField()
+    fb_link = models.CharField(max_length=255)
+    ins_link = models.CharField(max_length=255)
+
+    feedback_id = models.IntegerField()
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    feedback_date_created = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'user_product_feedback_view'
+
+    def __str__(self):
+        return f'User {self.username} - Product: {self.title} - Rating: {self.rating}'
+
+
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)

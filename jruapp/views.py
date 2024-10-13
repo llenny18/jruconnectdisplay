@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import logout
 from jruconnect import settings
-from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary, ViewEngagementsByType, ViewProductEngagementOverTime, ViewFeedbackByRating, ViewSupportInquiriesByStatus, UserLikes
+from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary, ViewEngagementsByType, ViewProductEngagementOverTime, ViewFeedbackByRating, ViewSupportInquiriesByStatus, UserLikes, UserProductFeedbackView
 import json
 import os
 from django.db.models import Q
@@ -324,6 +324,67 @@ def user_profile(request, user_profile_id):
     }
 
     return render(request, 'views/u-profile.html', context)
+
+
+def view_product(request, product_id):
+    # Fetch session values
+    full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id')  # No default '0', treat it as None if absent
+    role = request.session.get('role', '')
+
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
+
+    # Fetch the product by product_id
+    try:
+        product = Product.objects.get(product_id=product_id)
+        category = product.category  # Get the category of the current product
+    except Product.DoesNotExist:
+        product = None
+        category = None
+
+    # Fetch products that belong to the same category
+    products = ProductEngagementSummary.objects.filter(category=category) if category else []
+
+    # Fetch product engagement details (e.g., likes)
+    engagement_summary = ProductEngagementSummary.objects.filter(product_id=product_id)
+    feedback = UserProductFeedbackView.objects.filter(product_id=product_id)
+    is_liked = Engagement.objects.filter(user_id=admin_id, type="like").exists()
+    user_list = User.objects.all()
+
+    # Handle like submission
+    if request.method == 'POST':
+        liker_id = request.POST.get('liker_id')  # Get the liker ID from the form data
+
+        if liker_id and product:
+            # Create a new like entry
+            new_like = UserLikes(product_id=product_id, liker_id=admin_id)  # assuming the logged-in user is the liker
+            new_like.save()
+            # Optionally, redirect to the same product page after saving
+            return redirect('view_product', product_id=product_id)
+
+    context = {
+        'products': products,  # Products filtered by the same category
+        'full_name': full_name,
+        'feedback': feedback,
+        'admin_id': admin_id,
+        'user_list' : user_list,
+        'role': role,
+        'is_liked': is_liked,
+        'product_id' : product_id,
+        'admin_user': admin_user,
+        'engagement_summary': engagement_summary,
+        'current_product': product  # Current product being viewed
+    }
+
+    return render(request, 'views/view-product.html', context)
+
+
 
 
 from django.db.models import Q
