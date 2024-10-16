@@ -95,6 +95,7 @@ class User(models.Model):
     last_login = models.DateTimeField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     profile_url = models.URLField(max_length=255, null=True, blank=True)
+    enrollment_url = models.URLField(max_length=455, null=True, blank=True)
 
     def __str__(self):
         return f'{self.full_name} ({self.username})'

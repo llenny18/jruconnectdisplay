@@ -137,7 +137,8 @@
                                                     <th>Role</th>
                                                     <th>Verified</th>
                                                     <th>Last Login</th>
-                                                    <th>User</th>
+                                                    <th>User Icon</th>
+                                                    <th>Enrollment <br>Form</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -151,7 +152,10 @@
                                                     <td>{{ user.get_role_display }}</td>
                                                     <td>{{ user.verified }}</td>
                                                     <td>{{ user.last_login }}</td>
-                                                    <td><img src="{% if user.profile_url %}{% static user.profile_url %}{% else %}{% static 'images/default.png' %}{% endif %}" style="width: 70px; height: 70px; " alt="image" ></td>
+                                                    <td><img src="{% if user.profile_url %}{% static user.profile_url %}{% else %}{% static 'images/default.png' %}{% endif %}" style="width: 100px; height: 100px; " alt="image" ></td>
+                                                    <td><iframe src="{% if user.enrollment_url %}{% static user.enrollment_url %}{% else %}{% static 'images/default.png' %}{% endif %}" width="400px" height="200px"></iframe><br><a href="{% if user.enrollment_url %}{% static user.enrollment_url %}{% else %}{% static 'images/default.png' %}{% endif %}" download="{{ user.full_name }}.pdf">
+                                                      <button type="button" class="btn btn-success">Download PDF</button>
+                                                    </a></td>
                                                     <td>
                                                       <button class="btn btn-primary m-1 edit-btn" data-target="#editUserModal{{user.user_id}}" data-id="{{ user.user_id }}" data-username="{{ user.username }}" data-password="{{ user.password_hash }}" data-fullname="{{ user.full_name }}" data-email="{{ user.email }}" data-role="{{ user.role }}" data-verified="{{ user.verified }}" data-toggle="modal" >Edit</button>
 

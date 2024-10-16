@@ -233,10 +233,10 @@ display: inline-block;
               <div class="modal-body">
                   <form id="addFeedbackForm">
                       {% csrf_token %}
-                      <div class="form-group">
+                      <div class="form-group" style="display: none">
                           <label for="new_user">User</label>
-                          <select class="form-control" id="new_user" name="user" required>
-                            <option value="">Select User</option>
+                          <select class="form-control" id="new_user" name="user" required >
+                            <option value="" >Select User</option>
                             {% for user in user_list %}
                                 <option {% if user.user_id == admin_id %} selected {% endif %} value="{{ user.user_id }}" {% if user.user_id == admin_id %} selected {% endif %}>
                                     {{ user.full_name }}

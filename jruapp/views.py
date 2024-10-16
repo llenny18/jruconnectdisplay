@@ -149,15 +149,13 @@ def get_product_engagement_over_time(request):
 def get_support_inquiries_by_status(request):
     data = list(ViewSupportInquiriesByStatus.objects.values('year', 'month', 'status_count', 'status'))
     return JsonResponse(data, safe=False)
-
 @csrf_exempt
 def register(request):
     if request.method == 'POST':
         try:
-            # Handle file upload
+            # Handle profile image upload
             profile_image = request.FILES.get('profile_image')
             if profile_image:
-                # Ensure correct handling of binary file
                 image_folder = os.path.join(settings.BASE_DIR, 'staticfiles', 'profile_images')
                 if not os.path.exists(image_folder):
                     os.makedirs(image_folder)
@@ -165,11 +163,23 @@ def register(request):
                 with open(image_path, 'wb+') as destination:
                     for chunk in profile_image.chunks():
                         destination.write(chunk)
-                
-                # Save the file path in the database
                 profile_image_url = os.path.join('profile_images', profile_image.name)
             else:
                 profile_image_url = None
+
+            # Handle enrollment form PDF upload
+            enrollment_form = request.FILES.get('enrollment_form')
+            if enrollment_form:
+                enrollment_folder = os.path.join(settings.BASE_DIR, 'staticfiles', 'enrollment_forms')
+                if not os.path.exists(enrollment_folder):
+                    os.makedirs(enrollment_folder)
+                enrollment_path = os.path.join(enrollment_folder, enrollment_form.name)
+                with open(enrollment_path, 'wb+') as destination:
+                    for chunk in enrollment_form.chunks():
+                        destination.write(chunk)
+                enrollment_form_url = os.path.join('enrollment_forms', enrollment_form.name)
+            else:
+                enrollment_form_url = None
 
             # Create user object and save
             user = User(
@@ -178,13 +188,14 @@ def register(request):
                 full_name=request.POST.get('full_name'),
                 email=request.POST.get('email'),
                 password_hash=request.POST.get('password'),  # Hash the password appropriately
-                role=request.POST.get('role'),  # This should be 'student'
+                role=request.POST.get('role'),
                 verified=request.POST.get('verified') == 'on',
-                profile_url=profile_image_url
+                profile_url=profile_image_url,
+                enrollment_url=enrollment_form_url
             )
             user.save()
 
-            return redirect('student')  # Redirect to login page after successful registration
+            return redirect('student')  # Redirect after successful registration
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
     
@@ -275,6 +286,26 @@ def products(request):
     all_products = Product.objects.all()
     context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'role': role, 'admin_user': admin_user }
     return render(request, 'views/products.html', context)
+
+
+
+def products_student(request):
+    full_name = request.session.get('full_name', 'Guest')
+    admin_id = request.session.get('admin_id', '0')
+    role = request.session.get('role', '')
+
+    # Fetch the admin user based on admin_id
+    admin_user = None
+    if admin_id:
+        try:
+            admin_user = User.objects.get(user_id=admin_id)
+        except User.DoesNotExist:
+            admin_user = None  # Handle case where no admin user is found
+   
+    all_products = Product.objects.filter(user_id=admin_id)
+    context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'role': role, 'admin_user': admin_user }
+    return render(request, 'views/products.html', context)
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
