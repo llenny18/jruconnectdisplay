@@ -11,7 +11,10 @@ urlpatterns = [
     path('products_student/', views.products_student, name='products_student'),
     path('products/', views.products, name='products'),
     path('view_product/<int:product_id>/', views.view_product, name='view_product'),
-    path('ecom/', views.ecom, name='ecom'),
+    path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('advertisements/', views.ecom, name='advertisements'),
+    path('user/<int:user_id>/update-verified/',  views.update_user_verified, name='update_user_verified'),
+
     path('user_profile/<int:user_profile_id>/', views.user_profile, name='user_profile'),
     path('record_engagement/', views.record_engagement, name='record_engagement'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),

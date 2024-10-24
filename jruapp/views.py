@@ -385,7 +385,7 @@ def view_product(request, product_id):
     # Fetch product engagement details (e.g., likes)
     engagement_summary = ProductEngagementSummary.objects.filter(product_id=product_id)
     feedback = UserProductFeedbackView.objects.filter(product_id=product_id)
-    is_liked = Engagement.objects.filter(user_id=admin_id, type="like").exists()
+    is_liked = Engagement.objects.filter(user_id=admin_id, type="like", product_id=product_id).exists()
     user_list = User.objects.all()
 
     # Handle like submission
@@ -881,6 +881,18 @@ def add_message(request):
 
 
 @csrf_exempt
+def delete_product(request, product_id):
+    if request.method == 'DELETE':
+        try:
+            product = Product.objects.get(pk=product_id)
+            product.delete()
+            return JsonResponse({'status': 'success'})
+        except Product.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Product not found'})
+    else:
+        return HttpResponseForbidden()
+
+@csrf_exempt
 def add_profile(request):
     if request.method == 'POST':
         try:
@@ -933,6 +945,34 @@ def update_user(request, user_id):
             return JsonResponse({'status': 'fail', 'message': 'User not found.'})
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
+    
+    
+    
+# Update Only the 'verified' Column
+@csrf_exempt
+def update_user_verified(request, user_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user = User.objects.get(pk=user_id)
+
+            # Update only the 'verified' field
+            if 'verified' in data:
+                user.verified = data['verified']
+                user.save()
+
+                return JsonResponse({'status': 'success', 'message': 'User verification status updated successfully!'})
+            else:
+                return JsonResponse({'status': 'fail', 'message': 'Verification status not provided.'})
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'fail', 'message': 'User not found.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'fail', 'message': 'Invalid JSON data.'})
+    else:
+        return JsonResponse({'status': 'fail', 'message': 'Invalid request method.'})
+
+    
+    
 @csrf_exempt
 def update_engagement(request, engagement_id):
     if request.method == 'POST':

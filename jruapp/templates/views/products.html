@@ -215,6 +215,7 @@
                                 onclick="deleteProduct({{ product.product_id }})"
                                 >Delete</a
                               >
+                            
                             </td>
                           </tr>
                           {% endfor %}
@@ -445,7 +446,7 @@ aria-hidden="true"
           />
         </div>
       
-        </div>
+      
         <div class="form-group">
           <label for="new_location">Location</label>
           <input
@@ -560,6 +561,8 @@ aria-hidden="true"
             .catch((error) => console.error("Error:", error));
         }
       }
+
+
 
       function addProduct() {
         const form = document.getElementById('addProductForm');

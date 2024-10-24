@@ -316,7 +316,7 @@
         const receiverId = document.querySelector('#addMessageReceiver').value;
         const content = document.querySelector('#addMessageContent').value;
         const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-
+    
         fetch('/add-message/', {
             method: 'POST',
             headers: {
@@ -331,9 +331,10 @@
             } else {
                 alert('Failed to add message');
             }
-        });
+        })
+        .catch(error => console.error('Error:', error));
     }
-
+    
     // Function to update a message
     $('#editMessageForm').submit(function (e) {
         e.preventDefault();
