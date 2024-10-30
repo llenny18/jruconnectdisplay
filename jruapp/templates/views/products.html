@@ -129,15 +129,21 @@
 
         </div>
       </a>
+      <a class="dropdown-item preview-item" href="" data-toggle="modal" data-target="#changePasswordModal" data-user-id="{{ admin_id }}">
+        <div class="preview-thumbnail"> 
+          <i class="mdi mdi-lock-reset text-danger"  style="font-size: 30px;"></i>
+        </div>
+        
+        <div class="preview-item-content flex-grow">
+                <button class="btn btn-danger m-1 edit-btn" >Change Password</button>
+
+        </div>
+      </a>
       <a class="dropdown-item preview-item" href="{% url 'logout' %}" >
         <div class="preview-thumbnail"> 
           <i class="mdi mdi-logout-variant menu-icon text-danger"  style="font-size: 30px;"></i>
         </div>
-        <div class="preview-item-content flex-grow">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal" data-user-id="{{ user.user_id }}">
-            Change Password
-        </button>
-      </div>
+        
         <div class="preview-item-content flex-grow">
                 <button class="btn btn-danger m-1 edit-btn" >Logout</button>
 
@@ -215,6 +221,15 @@
                                 onclick="deleteProduct({{ product.product_id }})"
                                 >Delete</a
                               >
+                              {% if product.is_sold == 0 %}
+                              <hr>
+                              <button
+                               
+                                class="btn btn-success m-1"
+                                 onclick="markAsSold({{ product.product_id }})"
+                                >Mark as Sold</button>
+
+                                {% endif %}
                             
                             </td>
                           </tr>
@@ -429,13 +444,26 @@ aria-hidden="true"
 
 
         <div class="form-group">
-          <label for="new_image">Upload Image</label>
+          <label for="new_image">Product Picture</label>
           <input
             type="file"
             accept=".jpg, .jpeg, .png"
             class="form-control"
             id="new_image"
             name="image"
+            required
+          />
+        </div>
+
+        
+        <div class="form-group">
+          <label for="new_ads">Product Advertisement</label>
+          <input
+            type="file"
+            accept=".jpg, .jpeg, .png"
+            class="form-control"
+            id="new_ads"
+            name="new_ads"
             required
           />
         </div>
@@ -571,6 +599,32 @@ aria-hidden="true"
         $("#example").DataTable();
       });
     </script>
+
+    <script>
+      function markAsSold(productId) {
+          const csrfToken = '{{ csrf_token }}'; // CSRF token for POST request
+
+          $.ajax({
+              url: `/product/mark_as_sold/${productId}/`,
+              type: 'POST',
+              headers: {
+                  'X-CSRFToken': csrfToken,
+              },
+              success: function(response) {
+                  if (response.success) {
+                      alert(response.message);
+                      // Optionally, reload the product list or update the UI as needed
+                      location.reload(); // Reloads the page
+                  } else {
+                      alert(response.message);
+                  }
+              },
+              error: function(xhr) {
+                  alert('An error occurred: ' + xhr.statusText);
+              }
+          });
+      }
+  </script>
     <!-- endinject -->
     <!-- Plugin js for this page-->
     <!-- End plugin js for this page-->

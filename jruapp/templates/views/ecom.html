@@ -13,6 +13,9 @@
     <!-- endinject -->
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
 
+    <script src="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/scripts/verify.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+
     <style>
       .filter-section {
         width: 400px;
@@ -113,6 +116,16 @@
                     </div>
                     <div class="preview-item-content flex-grow">
                       <button class="btn btn-primary m-1 edit-btn" data-toggle="modal" data-target="#editUserIconnav">Change Profile Picture</button>
+                    </div>
+                  </a>
+                  <a class="dropdown-item preview-item" href="" data-toggle="modal" data-target="#changePasswordModal" data-user-id="{{ admin_id }}">
+                    <div class="preview-thumbnail"> 
+                      <i class="mdi mdi-lock-reset text-danger"  style="font-size: 30px;"></i>
+                    </div>
+                    
+                    <div class="preview-item-content flex-grow">
+                            <button class="btn btn-danger m-1 edit-btn" >Change Password</button>
+            
                     </div>
                   </a>
                   <a class="dropdown-item preview-item" href="{% url 'logout' %}">
@@ -257,17 +270,36 @@
                   <button onclick="filterProducts()" class="btn btn-success">Filter</button>
                 </div>
 
-             
+                
+
+
                 <!-- Product List -->
                 <div class="product-container col-md-12">
-                  {% for product in products %}
+                  {% for product in top_products %}
                     <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">
                       <div class="card shadow-sm">
                         <div class="card-body">
                           <div class="text-center">
-                            {% for engagement in all_eng %}{% if product.product_id == engagement.product_id and engagement.type == 'like' and engagement.user_id == admin_id %}<p class=" text-right" ><i class="mdi mdi-heart text-danger"  style="font-size: 2em;"></i></p>{% endif %}{% endfor %}
+                           
                             <br>
-                            <img src="{% if product.image_url %}
+                         
+
+
+                              <div id="carouselExampleControls{{ product.product_id }}" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                  <div class="carousel-item active">
+                                    <img src="{% if product.image_url %}
+                                {% static product.ads_url %}
+                              {% else %}
+                                {% static 'images/default.png' %}
+                              {% endif %}"
+                             onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
+                              class="img-fluid rounded mb-3"
+                              style="height: 200px; object-fit: cover;"
+                              alt="{{ product.title }}"  class="d-block w-100" />
+                                  </div>
+                                  <div class="carousel-item">
+                                    <img src="{% if product.image_url %}
                                 {% static product.image_url %}
                               {% else %}
                                 {% static 'images/default.png' %}
@@ -275,7 +307,19 @@
                              onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
                               class="img-fluid rounded mb-3"
                               style="height: 200px; object-fit: cover;"
-                              alt="{{ product.title }}" />
+                              alt="{{ product.title }}"  class="d-block w-100" />
+                                  </div>
+                               
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls{{ product.product_id }}" role="button" data-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"  style="color: black;"></span>
+                                  <span class="sr-only"  style="color: black;">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls{{ product.product_id }}" role="button" data-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"  style="color: black;"></span>
+                                  <span class="sr-only"  style="color: black;">Next</span>
+                                </a>
+                              </div>
                           </div>
                           <h6 class="text-dark mb-2">{{ product.title }}</h6>
                           <p>
@@ -286,87 +330,108 @@
                               <h6>PHP {{ product.price }}</h6>
                             </div>
                             <div class="p-2 mr-2" style="border: 1px solid darkred; color: darkred; font-size: 13px; height: 35px;">
-                              <i class="mdi mdi-heart"></i> <strong>{{ product.likes_count }} Likes</strong>
+                              <i class="mdi mdi-heart"></i> <strong>{{ product.like_count }} Likes</strong>
                             </div>
-                            <div class="p-2" style="border: 1px solid darkblue; font-size: 13px; height: 35px;">
-                              <strong><i class="mdi mdi-package-check"></i> {{ product.purchase_count }} Sold</strong>
+                            {% for engagement in all_eng %}{% if product.product_id == engagement.product_id and engagement.type == 'like' and engagement.user_id == admin_id %}
+                          <div class="p-2" style="border: 1px solid darkblue; font-size: 13px; height: 35px;">
+                            <strong><i class="mdi mdi-thumb-up"></i> {{ product.purchase_count }} Liked</strong>
+                          </div>
+                          {% endif %}{% endfor %}
+                           
+                          </div>
+                          {% if product.is_sold == 0 %}
+                          <button type="button" class="btn btn-primary w-100"  onclick="recordEngagement({{ product.product_id }}, 'click')"><i class="mdi mdi-eye"></i> VIEW</button>
+                          {% endif %}
+                          
+                          {% if product.is_sold == 1 %}
+                          <button type="button" class="btn btn-danger w-100"  disabled><i class="mdi mdi-cart-off"></i> PRODUCT IS SOLD</button>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+
+                   
+                    <!-- End of Product Modal -->
+                  {% endfor %}
+
+
+                <!-- Product List -->
+                <div class="product-container col-md-12">
+                  {% for product in products %}
+                    <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">
+                      <div class="card shadow-sm">
+                        <div class="card-body">
+                          <div class="text-center">
+                           
+                            <br>
+                         
+
+
+                              <div id="carouselExampleControls{{ product.product_id }}" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                  <div class="carousel-item active">
+                                    <img src="{% if product.image_url %}
+                                {% static product.ads_url %}
+                              {% else %}
+                                {% static 'images/default.png' %}
+                              {% endif %}"
+                             onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
+                              class="img-fluid rounded mb-3"
+                              style="height: 200px; object-fit: cover;"
+                              alt="{{ product.title }}"  class="d-block w-100" />
+                                  </div>
+                                  <div class="carousel-item">
+                                    <img src="{% if product.image_url %}
+                                {% static product.image_url %}
+                              {% else %}
+                                {% static 'images/default.png' %}
+                              {% endif %}"
+                             onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
+                              class="img-fluid rounded mb-3"
+                              style="height: 200px; object-fit: cover;"
+                              alt="{{ product.title }}"  class="d-block w-100" />
+                                  </div>
+                               
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls{{ product.product_id }}" role="button" data-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"  style="color: black;"></span>
+                                  <span class="sr-only"  style="color: black;">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls{{ product.product_id }}" role="button" data-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"  style="color: black;"></span>
+                                  <span class="sr-only"  style="color: black;">Next</span>
+                                </a>
+                              </div>
+                          </div>
+                          <h6 class="text-dark mb-2">{{ product.title }}</h6>
+                          <p>
+                            <strong>Category:</strong> {{ product.category }}
+                          </p>
+                          <div class="d-flex justify-content-center mb-3 mt-4">
+                            <div class="p-2 mr-2">
+                              <h6>PHP {{ product.price }}</h6>
                             </div>
+                            <div class="p-2 mr-2" style="border: 1px solid darkred; color: darkred; font-size: 13px; height: 35px;">
+                              <i class="mdi mdi-heart"></i> <strong>{{ product.like_count }} Likes</strong>
+                            </div>
+                            {% for engagement in all_eng %}{% if product.product_id == engagement.product_id and engagement.type == 'like' and engagement.user_id == admin_id %}
+                          <div class="p-2" style="border: 1px solid darkblue; font-size: 13px; height: 35px;">
+                            <strong><i class="mdi mdi-thumb-up"></i> {{ product.purchase_count }} Liked</strong>
+                          </div>
+                          {% endif %}{% endfor %}
+                           
                           </div>
                           <button type="button" class="btn btn-primary w-100"  onclick="recordEngagement({{ product.product_id }}, 'click')"><i class="mdi mdi-eye"></i> VIEW</button>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Product Modal -->
-                    <div class="modal fade" id="productModal{{ product.product_id }}" tabindex="-1" role="dialog" aria-labelledby="productModalLabel{{ product.product_id }}" aria-hidden="true">
-                      <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h4 class="modal-title" id="productModalLabel{{ product.product_id }}">{{ product.title }}</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                          </div>
-                          <div class="modal-body">
-                            
-                            <div class="row">
-                              <div class="col-md-6">
-                                <img src="{% if product.image_url %}
-                                    {% static product.image_url %}
-                                  {% else %}
-                                    {% static 'images/default.png' %}
-                                  {% endif %}"
-                                  class="img-fluid rounded mb-3"
-                                  alt="{{ product.title }}" />
-                              </div>
-                              <div class="col-md-6">
-                                <div style="background: #f3f3f3; padding: 10px; margin: 10px; color: darkblue; font-weight: bold;">
-                                  <h1>PHP {{ product.price }}</h1>
-                                </div>
-                                <p>{{ product.description }}</p>
-                                <p>
-                                  <strong>Category:</strong> {{ product.category }}
-                                </p>
-                              
-                                <p>
-                                  <strong>Location:</strong> {{ product.location }}
-                                </p>
-                                <p>
-                                  <strong>Date Posted:</strong> {{ product.date_posted }}
-                                </p>
-                                <hr>
-                                <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addFeedbackModal" onclick="changeByValue('{{ product.product_id }}')">Review Product</button>
-
-
-                              </div>
-                            </div>
-                          </div>
-                          <div class="modal-footer">
-
-
-                            <button type="button"
-                            {% for engagement in all_eng %}
-                                {% if product.product_id == engagement.product_id and engagement.type == 'like' and engagement.user_id == admin_id %}
-                                    disabled
-                                    
-                                {% endif %}
-                            {% endfor %}
-                            class="btn btn-primary"
-                            onclick="recordEngagement({{ product.product_id }}, 'like')">
-                            Like{% for engagement in all_eng %}{% if product.product_id == engagement.product_id and engagement.type == 'like' and engagement.user_id == admin_id %}d{% endif %}{% endfor %}
-                        </button>
-                        
-
-
-                            <a href="{{ product.ad_link }}" target="_blank" class="btn btn-primary">View Advertisement</a>
-                            <a href="{% url 'chat_message' user_id=product.user_id %}" class="btn btn-primary">Message Seller</a>
-                            <a href="{% url 'user_profile' user_profile_id=product.user_id %}" class="btn btn-primary">View Seller Profile</a>
-                            <a href="{{ product.fb_link }}" target="_blank" class="btn btn-primary"><i class="mdi mdi-facebook"></i></a>
-                            <a href="{{ product.ins_link }}" target="_blank" class="btn btn-primary"><i class="mdi mdi-instagram"></i></a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                   
                     <!-- End of Product Modal -->
                   {% endfor %}
+
+
+
                   {% for product in recommended_products  %}
                   <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">
                     <div class="card shadow-sm">
@@ -375,15 +440,41 @@
                         <div class="text-center">
                           {% for engagement in all_eng %}{% if product.product_id == engagement.product_id and engagement.type == 'like' and engagement.user_id == admin_id %}<p class=" text-right" ><i class="mdi mdi-heart text-danger"  style="font-size: 2em;"></i></p>{% endif %}{% endfor %}
                           <br>
-                          <img src="{% if product.image_url %}
-                              {% static product.image_url %}
-                            {% else %}
-                              {% static 'images/default.png' %}
-                            {% endif %}"
+                          <div id="carouselExampleControls{{ product.product_id }}" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                  <div class="carousel-item active">
+                                    <img src="{% if product.image_url %}
+                                {% static product.ads_url %}
+                              {% else %}
+                                {% static 'images/default.png' %}
+                              {% endif %}"
                              onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
-                            class="img-fluid rounded mb-3"
-                            style="height: 200px; object-fit: cover;"
-                            alt="{{ product.title }}" />
+                              class="img-fluid rounded mb-3"
+                              style="height: 200px; object-fit: cover;"
+                              alt="{{ product.title }}"  class="d-block w-100" />
+                                  </div>
+                                  <div class="carousel-item">
+                                    <img src="{% if product.image_url %}
+                                {% static product.image_url %}
+                              {% else %}
+                                {% static 'images/default.png' %}
+                              {% endif %}"
+                             onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
+                              class="img-fluid rounded mb-3"
+                              style="height: 200px; object-fit: cover;"
+                              alt="{{ product.title }}"  class="d-block w-100" />
+                                  </div>
+                               
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls{{ product.product_id }}" role="button" data-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"  style="color: black;"></span>
+                                  <span class="sr-only"  style="color: black;">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls{{ product.product_id }}" role="button" data-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"  style="color: black;"></span>
+                                  <span class="sr-only"  style="color: black;">Next</span>
+                                </a>
+                              </div>
                         </div>
                         <h6 class="text-dark mb-2">{{ product.title }}</h6>
                         <p>
@@ -394,13 +485,17 @@
                             <h6>PHP {{ product.price }}</h6>
                           </div>
                           <div class="p-2 mr-2" style="border: 1px solid darkred; color: darkred; font-size: 13px; height: 35px;">
-                            <i class="mdi mdi-heart"></i> <strong>{{ product.likes_count }} Likes</strong>
+                            <i class="mdi mdi-heart"></i> <strong>{{ product.like_count }} Likes</strong>
                           </div>
+                          {% for engagement in all_eng %}{% if product.product_id == engagement.product_id and engagement.type == 'like' and engagement.user_id == admin_id %}
                           <div class="p-2" style="border: 1px solid darkblue; font-size: 13px; height: 35px;">
-                            <strong><i class="mdi mdi-package-check"></i> {{ product.purchase_count }} Sold</strong>
+                            <strong><i class="mdi mdi-thumb-up"></i> {{ product.purchase_count }} Liked</strong>
                           </div>
+                          {% endif %}{% endfor %}
+                          
+                          
                         </div>
-                        <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#productModal{{ product.product_id }}"><i class="mdi mdi-eye"></i> VIEW</button>
+                        <button type="button" class="btn btn-primary w-100"  onclick="recordEngagement({{ product.product_id }}, 'click')"><i class="mdi mdi-eye"></i> VIEW</button>
                       </div>
                     </div>
                   </div>

@@ -96,15 +96,21 @@
 
         </div>
       </a>
+      <a class="dropdown-item preview-item" href="" data-toggle="modal" data-target="#changePasswordModal" data-user-id="{{ admin_id }}">
+        <div class="preview-thumbnail"> 
+          <i class="mdi mdi-lock-reset text-danger"  style="font-size: 30px;"></i>
+        </div>
+        
+        <div class="preview-item-content flex-grow">
+                <button class="btn btn-danger m-1 edit-btn" >Change Password</button>
+
+        </div>
+      </a>
       <a class="dropdown-item preview-item" href="{% url 'logout' %}" >
         <div class="preview-thumbnail"> 
           <i class="mdi mdi-logout-variant menu-icon text-danger"  style="font-size: 30px;"></i>
         </div>
-        <div class="preview-item-content flex-grow">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal" data-user-id="{{ user.user_id }}">
-            Change Password
-        </button>
-      </div>
+        
         <div class="preview-item-content flex-grow">
                 <button class="btn btn-danger m-1 edit-btn" >Logout</button>
 

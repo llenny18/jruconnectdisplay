@@ -181,13 +181,13 @@ fetch(`/update-user/${userId}/`, {
     
 </script>
 
-
+{% csrf_token %}
 <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"> X </button>
             </div>
             <div class="modal-body">
                 <form id="changePasswordForm">
@@ -207,6 +207,25 @@ fetch(`/update-user/${userId}/`, {
 
 <script>
     $(document).ready(function () {
+        // Get the CSRF token from the cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Check if this cookie string begins with the name we want
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
         $('#changePasswordModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
             var userId = button.data('user-id'); // Extract info from data-* attributes
@@ -226,6 +245,9 @@ fetch(`/update-user/${userId}/`, {
                 type: 'POST',
                 url: '/change-password/' + formData.user_id + '/',
                 data: formData,
+                headers: {
+                    'X-CSRFToken': csrftoken // Include CSRF token in the request headers
+                },
                 success: function (response) {
                     if (response.success) {
                         alert(response.message);

@@ -16,6 +16,7 @@ urlpatterns = [
     path('record_engagement/', views.record_engagement, name='record_engagement'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
     path('add_product/', views.add_product, name='add_product'),
+    path('product/mark_as_sold/<int:product_id>/', views.mark_product_as_sold, name='mark_product_as_sold'),
     path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
     path('update-profile-image/', views.update_profile_image, name='update_profile_image'),
     path('user/<int:user_id>/update-verified/', views.update_user_verified, name='update_user_verified'),

@@ -19,12 +19,14 @@ urlpatterns = [
     path('record_engagement/', views.record_engagement, name='record_engagement'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
     path('add_product/', views.add_product, name='add_product'),
+    path('product/mark_as_sold/<int:product_id>/', views.mark_product_as_sold, name='mark_product_as_sold'),
     path('update-profile-image/', views.update_profile_image, name='update_profile_image'),
     # User-related URLs
     path('users/', views.users, name='users'),
     path('add-user/', views.add_user, name='add_user'),
     path('update-user/<int:user_id>/', views.update_user, name='update_user'),
     path('delete-user/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('change-password/<int:user_id>/', views.change_password, name='change_password'),
     
     # Engagement-related URLs
     path('engagements/', views.engagements, name='engagements'),

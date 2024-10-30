@@ -438,6 +438,7 @@ def change_password(request, user_id):
 from django.db.models import Q
 
 
+from django.db.models import Count
 
 def ecom(request):
     full_name = request.session.get('full_name', 'Guest')
@@ -452,17 +453,17 @@ def ecom(request):
         except User.DoesNotExist:
             admin_user = None  # Handle case where no admin user is found
     
-    # Fetch the first 10 products normally
-    all_products = ProductEngagementSummary.objects.all()[:20]
-    all_User = User.objects.all()
-    all_eng = Engagement.objects.all()
-    
+    # Count likes for each product, order by likes, and select the top 20 unique products
+    top_products = Product.objects.annotate(
+        like_count=Count('engagement', filter=Q(engagement__type='like'))
+    ).order_by('-like_count')[:20]
+
     # Fetch categories of products that the admin has engaged with (liked or clicked)
     engaged_categories = Engagement.objects.filter(
         user_id=admin_id,
         type__in=['like', 'click']
     ).values_list('product__category', flat=True).distinct()
-    
+
     # Fetch recommended products based on the engaged categories (excluding products already engaged with)
     recommended_products = Product.objects.filter(
         category__in=engaged_categories
@@ -470,21 +471,29 @@ def ecom(request):
         engagement__user_id=admin_id
     ).distinct()
 
-    # Pass both the normal products and recommended products to the template
+    # Pass both the top products and recommended products to the template
     context = {
-        'products': all_products,
+        'top_products': top_products,
         'recommended_products': recommended_products,
         'full_name': full_name,
         'admin_id': admin_id,
         'admin_user': admin_user,
-        'user_list': all_User,
+        'user_list': User.objects.all(),
         'role': role,
-        'all_eng': all_eng
+        'all_eng': Engagement.objects.all()
     }
 
     return render(request, 'views/ecom.html', context)
 
-    
+
+
+def mark_product_as_sold(request, product_id):
+    if request.method == "POST":
+        product = get_object_or_404(Product, product_id=product_id)
+        product.is_sold = 1
+        product.save()
+        return JsonResponse({'success': True, 'message': 'Product marked as sold.'})
+    return JsonResponse({'success': False, 'message': 'Invalid request.'})
     
 @csrf_exempt
 def update_product(request, product_id):
@@ -521,6 +530,26 @@ def delete_product(request, product_id):
     else:
         return HttpResponseForbidden()
 
+
+def save_image(image, title):
+    """Helper function to save an uploaded image and return the image URL."""
+    if image:
+        image_folder = os.path.join(settings.BASE_DIR, 'staticfiles', 'images')
+        os.makedirs(image_folder, exist_ok=True)
+
+        # Generate the file path using the product title
+        image_name = f"{title.replace(' ', '_')}_{image.name}"
+        image_path = os.path.join(image_folder, image_name)
+
+        # Save the image to the static/images folder
+        with open(image_path, 'wb+') as destination:
+            for chunk in image.chunks():
+                destination.write(chunk)
+
+        # Build the image URL relative to the static folder
+        return f"/images/{image_name}"
+    return None
+
 @csrf_exempt
 def add_product(request):
     if request.method == 'POST':
@@ -531,30 +560,21 @@ def add_product(request):
             user_id = request.POST.get('user_id')
             category = request.POST.get('category')
             price = request.POST.get('price')
-            stock = request.POST.get('stock')
             location = request.POST.get('location')
 
-            # Handle image upload
-            image = request.FILES.get('image')
-            if image:
-                # Use STATICFILES_DIRS or a specific directory inside the static folder
-                image_folder = os.path.join(settings.BASE_DIR, 'staticfiles', 'images')
-                if not os.path.exists(image_folder):
-                    os.makedirs(image_folder)
+            # Validate required fields
+            if not all([title, description, user_id, category, price,  location]):
+                return JsonResponse({'status': 'error', 'message': 'All fields are required.'})
 
-                # Generate the file path using the product title
-                image_name = f"{title.replace(' ', '_')}_{image.name}"
-                image_path = os.path.join(image_folder, image_name)
+            # Convert price and stock to appropriate data types
+            try:
+                price = float(price)  # Ensure price is a float
+            except ValueError:
+                return JsonResponse({'status': 'error', 'message': 'Invalid price or stock value.'})
 
-                # Save the image to the static/images folder
-                with open(image_path, 'wb+') as destination:
-                    for chunk in image.chunks():
-                        destination.write(chunk)
-
-                # Build the image URL relative to the static folder
-                image_url = f"/images/{image_name}"
-            else:
-                image_url = None
+            # Handle image uploads
+            image_url = save_image(request.FILES.get('image'), title)
+            image_url2 = save_image(request.FILES.get('new_ads'), title)
 
             # Create a new Product object and save it
             product = Product(
@@ -563,9 +583,9 @@ def add_product(request):
                 description=description,
                 category=category,
                 price=price,
-                stock=stock,
                 location=location,
-                image_url=image_url
+                image_url=image_url,
+                ads_url=image_url2
             )
             product.save()
 
