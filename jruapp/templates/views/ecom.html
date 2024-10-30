@@ -276,6 +276,8 @@
                 <!-- Product List -->
                 <div class="product-container col-md-12">
                   {% for product in top_products %}
+                  {% if product.ads_status == "approved" %}
+
                     <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">
                       <div class="card shadow-sm">
                         <div class="card-body">
@@ -351,13 +353,16 @@
                     </div>
 
                    
-                    <!-- End of Product Modal -->
+                          {% endif %}
+                          <!-- End of Product Modal -->
                   {% endfor %}
 
 
                 <!-- Product List -->
                 <div class="product-container col-md-12">
                   {% for product in products %}
+                  {% if product.ads_status == "approved" %}
+
                     <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">
                       <div class="card shadow-sm">
                         <div class="card-body">
@@ -426,13 +431,15 @@
                       </div>
                     </div>
 
-                   
+                    {% endif %}
                     <!-- End of Product Modal -->
                   {% endfor %}
 
 
 
                   {% for product in recommended_products  %}
+                  {% if product.ads_status == "approved" %}
+
                   <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">
                     <div class="card shadow-sm">
                       <div class="card-body">
@@ -499,6 +506,7 @@
                       </div>
                     </div>
                   </div>
+                  {% endif %}
                   {% endfor %} 
 
               

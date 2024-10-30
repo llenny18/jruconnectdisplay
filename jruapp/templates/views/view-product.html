@@ -386,13 +386,41 @@ display: inline-block;
                         
                         <div class="row">
                           <div class="col-md-6">
-                            <img src="{% if detail.image_url %}
-                                {% static detail.image_url %}
-                              {% else %}
-                                {% static 'images/default.png' %}
-                              {% endif %}"
-                              class="img-fluid rounded mb-3"
-                              alt="{{ detail.title }}" />
+                            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                              <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                  <img src="{% if detail.image_url %}
+                              {% static detail.ads_url %}
+                            {% else %}
+                              {% static 'images/default.png' %}
+                            {% endif %}"
+                           onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
+                            class="img-fluid rounded mb-3"
+                            style="height: 400px; object-fit: cover;"
+                            alt="{{ detail.title }}"  class="d-block w-100" />
+                                </div>
+                                <div class="carousel-item">
+                                  <img src="{% if detail.image_url %}
+                              {% static detail.image_url %}
+                            {% else %}
+                              {% static 'images/default.png' %}
+                            {% endif %}"
+                           onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
+                            class="img-fluid rounded mb-3"
+                            style="height: 400px; object-fit: cover;"
+                            alt="{{ detail.title }}"  class="d-block w-100" />
+                                </div>
+                             
+                              </div>
+                              <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"  style="color: black;"></span>
+                                <span class="sr-only"  style="color: black;">Previous</span>
+                              </a>
+                              <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"  style="color: black;"></span>
+                                <span class="sr-only"  style="color: black;">Next</span>
+                              </a>
+                            </div>
                           </div>
                           <div class="col-md-6">
                             <div style="background: #f3f3f3; padding: 10px; margin: 10px; color: darkblue; font-weight: bold;">
@@ -432,11 +460,8 @@ display: inline-block;
                     
 
 
-                        <a href="{{ detail.ad_link }}" target="_blank" class="btn btn-primary">View Advertisement</a>
                         <a href="{% url 'chat_message' user_id=detail.user_id %}" class="btn btn-primary">Message Seller</a>
                         <a href="{% url 'user_profile' user_profile_id=detail.user_id %}" class="btn btn-primary">View Seller Profile</a>
-                        <a href="{{ detail.fb_link }}" target="_blank" class="btn btn-primary"><i class="mdi mdi-facebook"></i></a>
-                        <a href="{{ detail.ins_link }}" target="_blank" class="btn btn-primary"><i class="mdi mdi-instagram"></i></a>
                       </div>
                     </div>
                   </div>
@@ -515,14 +540,41 @@ display: inline-block;
                       <div class="card shadow-sm">
                         <div class="card-body">
                           <div class="text-center">
-                            <img src="{% if product.image_url %}
-                                {% static product.image_url %}
-                              {% else %}
-                                {% static 'images/default.png' %}
-                              {% endif %}"
-                              class="img-fluid rounded mb-3"
-                              style="height: 200px; object-fit: cover;"
-                              alt="{{ product.title }}" />
+                            <div id="carouselExampleControls{{ product.product_id }}" class="carousel slide" data-ride="carousel">
+                              <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                  <img src="{% if product.image_url %}
+                              {% static product.ads_url %}
+                            {% else %}
+                              {% static 'images/default.png' %}
+                            {% endif %}"
+                           onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
+                            class="img-fluid rounded mb-3"
+                            style="height: 200px; object-fit: cover;"
+                            alt="{{ product.title }}"  class="d-block w-100" />
+                                </div>
+                                <div class="carousel-item">
+                                  <img src="{% if product.image_url %}
+                              {% static product.image_url %}
+                            {% else %}
+                              {% static 'images/default.png' %}
+                            {% endif %}"
+                           onerror="this.onerror=null; this.src='{% static 'images/default.png' %}';"
+                            class="img-fluid rounded mb-3"
+                            style="height: 200px; object-fit: cover;"
+                            alt="{{ product.title }}"  class="d-block w-100" />
+                                </div>
+                             
+                              </div>
+                              <a class="carousel-control-prev" href="#carouselExampleControls{{ product.product_id }}" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"  style="color: black;"></span>
+                                <span class="sr-only"  style="color: black;">Previous</span>
+                              </a>
+                              <a class="carousel-control-next" href="#carouselExampleControls{{ product.product_id }}" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"  style="color: black;"></span>
+                                <span class="sr-only"  style="color: black;">Next</span>
+                              </a>
+                            </div>
                           </div>
                           <h6 class="text-dark mb-2">{{ product.title }}</h6>
                           <p>
@@ -587,7 +639,6 @@ display: inline-block;
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button"  class="btn btn-primary" onclick="recordEngagement({{ product.product_id }}, 'like')">Like</button>
-                            <a href="{{ product.ad_link }}" target="_blank" class="btn btn-success">View Advertisement</a>
                             <a href="{% url 'chat_message' user_id=product.user_id %}" class="btn btn-success">Message Seller</a>
                             <a href="{{ product.fb_link }}" target="_blank" class="btn btn-success"><i class="mdi mdi-facebook"></i></a>
                             <a href="{{ product.ins_link }}" target="_blank" class="btn btn-success"><i class="mdi mdi-instagram"></i></a>

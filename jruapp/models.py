@@ -113,6 +113,7 @@ class Product(models.Model):
     location = models.CharField(max_length=100, null=True, blank=True)
     image_url = models.URLField(max_length=255, null=True, blank=True)
     ads_url = models.URLField(max_length=255, null=True, blank=True)
+    ads_status = models.CharField(max_length=255, null=True, blank=True)
     is_sold = models.IntegerField(max_length=11, null=True, blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
 

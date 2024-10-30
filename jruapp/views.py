@@ -487,6 +487,15 @@ def ecom(request):
 
 
 
+
+def update_ads_status(request, product_id, status):
+    product = get_object_or_404(Product, product_id=product_id)
+    product.ads_status = status
+    product.save()
+    return redirect('products')  # Redirect to the login page
+    
+
+
 def mark_product_as_sold(request, product_id):
     if request.method == "POST":
         product = get_object_or_404(Product, product_id=product_id)
