@@ -536,6 +536,8 @@ display: inline-block;
                 <!-- Product List -->
                 <div class="product-container col-md-12">
                   {% for product in products %}
+                  {% if product.product_id != product_id %}
+                  
                     <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">
                       <div class="card shadow-sm">
                         <div class="card-body">
@@ -647,6 +649,7 @@ display: inline-block;
                       </div>
                     </div>
                     <!-- End of Product Modal -->
+                  {% endif %}
                   {% endfor %}
                
                   <script>
