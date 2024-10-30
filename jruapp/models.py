@@ -12,9 +12,6 @@ class ProductEngagementSummary(models.Model):
     image_url = models.URLField(max_length=255, null=True, blank=True)
     date_posted = models.DateTimeField()
     purchase_count = models.IntegerField()
-    ad_link = models.URLField(max_length=255, null=True, blank=True)
-    fb_link = models.URLField(max_length=255, null=True, blank=True)
-    ins_link = models.URLField(max_length=255, null=True, blank=True)
     likes_count = models.IntegerField()
 
     class Meta:
@@ -96,6 +93,7 @@ class User(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     profile_url = models.URLField(max_length=255, null=True, blank=True)
     enrollment_url = models.URLField(max_length=455, null=True, blank=True)
+    course = models.URLField(max_length=455, null=True, blank=True)
 
     def __str__(self):
         return f'{self.full_name} ({self.username})'
@@ -114,9 +112,6 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     location = models.CharField(max_length=100, null=True, blank=True)
     image_url = models.URLField(max_length=255, null=True, blank=True)
-    ad_link = models.URLField(max_length=255, null=True, blank=True)
-    fb_link = models.URLField(max_length=255, null=True, blank=True)
-    ins_link = models.URLField(max_length=255, null=True, blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -178,12 +173,9 @@ class UserProductFeedbackView(models.Model):
     category = models.CharField(max_length=100, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     stock = models.IntegerField()
-    ad_link = models.CharField(max_length=255)
     location = models.CharField(max_length=255, null=True, blank=True)
     image_url = models.CharField(max_length=255, null=True, blank=True)
     date_posted = models.DateTimeField()
-    fb_link = models.CharField(max_length=255)
-    ins_link = models.CharField(max_length=255)
 
     feedback_id = models.IntegerField()
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)

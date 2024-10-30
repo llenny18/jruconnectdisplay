@@ -149,7 +149,7 @@
                   <input type="text" class="form-control form-control-lg" name="full_name" placeholder="Full Name" required>
                 </div>
                 <div class="form-group">
-                  <label for="email">Email</label>
+                  <label for="email">Email (Email must end with @my.jru.edu)</label>
                   <input type="text" id="email" name="email" class="form-control form-control-lg"  placeholder="Enter your email" 
                   pattern=".+@my\.jru\.edu$"
  
@@ -157,7 +157,7 @@
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                  <input type="text" class="form-control" id="password" name="password" placeholder="Enter password" required>
                   <span toggle="#password" class="mdi mdi-eye-outline position-absolute" id="toggle-password" style="top: 38px; right: 15px; cursor: pointer;"></span>
                 </div>
                 <div class="form-group">
@@ -172,8 +172,21 @@
       </div>
 
                 <div class="form-group">
-                  <label for="role">Role</label>
-                  <input type="text" class="form-control" name="role" value="student" readonly>
+                  <label for="role">Course</label>
+                  <select name="role" id="role" class="form-control">
+                    <option value="BSIT">BSIT</option>
+                    <option value="BSCPE">BSCPE</option>
+                    <option value="BSCE">BSCE</option>
+                    <option value="BSME">BSME</option>
+                    <option value="BSEE">BSEE</option>
+                    <option value="BSN">BSN</option>
+                    <option value="BSBA">BSBA</option>
+                    <option value="BSCS">BSCS</option>
+                    <option value="BSHRM">BSHRM</option>
+                    <option value="BSA">BSA</option>
+                    <option value="Undecided">Undecided</option>
+                  </select>
+                  
                 </div>
                 
                 <div class="mt-3">

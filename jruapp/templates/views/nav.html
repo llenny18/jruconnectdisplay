@@ -91,12 +91,6 @@
         </li>
         
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'profiles' %}">
-                <i class="mdi mdi-account menu-icon"></i>
-                <span class="menu-title">Profiles</span>
-            </a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" href="{% url 'support_inquiries' %}">
                 <i class="mdi mdi-help-circle menu-icon"></i>
                 <span class="menu-title">Support Inquiries</span>
@@ -188,3 +182,62 @@ fetch(`/update-user/${userId}/`, {
 </script>
 
 
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm">
+                    <div class="mb-3">
+                        <label for="password" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <input type="hidden" id="user_id" name="user_id" value="">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#changePasswordModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var userId = button.data('user-id'); // Extract info from data-* attributes
+            var modal = $(this);
+            modal.find('#user_id').val(userId); // Set user_id in the hidden input
+        });
+
+        $('#changePasswordForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var formData = {
+                'password': $('#password').val(),
+                'user_id': $('#user_id').val(),
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/change-password/' + formData.user_id + '/',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $('#changePasswordModal').modal('hide');
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
+            });
+        });
+    });
+</script>

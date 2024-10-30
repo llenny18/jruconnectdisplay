@@ -134,6 +134,11 @@
           <i class="mdi mdi-logout-variant menu-icon text-danger"  style="font-size: 30px;"></i>
         </div>
         <div class="preview-item-content flex-grow">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal" data-user-id="{{ user.user_id }}">
+            Change Password
+        </button>
+      </div>
+        <div class="preview-item-content flex-grow">
                 <button class="btn btn-danger m-1 edit-btn" >Logout</button>
 
         </div>
@@ -178,9 +183,7 @@
                             <th>Category</th>
                             <th>Price</th>
                             <th>Location</th>
-                            <th>Advertisement</th>
-                            <th>Facebook</th>
-                            <th>Instagram </th>
+                           
                             <th>Date Posted</th>
                             <th>Action</th>
                           </tr>
@@ -194,9 +197,6 @@
                             <td>{{ product.category }}</td>
                             <td>${{ product.price }}</td>
                             <td>{{ product.location }}</td>
-                            <td>{{ product.ad_link }}</td>
-                            <td>{{ product.fb_link }}</td>
-                            <td>{{ product.ins_link }}</td>
                             <td>
                               {{ product.date_posted|date:"Y-m-d H:i:s" }}
                             </td>
@@ -295,37 +295,6 @@
             />
           </div>
 
-          <!-- New fields for ad_link, fb_link, and ins_link -->
-          <div class="form-group">
-            <label for="ad_link">Advertisement Link</label>
-            <input
-              type="text"
-              class="form-control"
-              id="ad_link{{ product.product_id }}"
-              name="ad_link"
-              value="{{ product.ad_link }}"
-            />
-          </div>
-          <div class="form-group">
-            <label for="fb_link">Facebook Link</label>
-            <input
-              type="text"
-              class="form-control"
-              id="fb_link{{ product.product_id }}"
-              name="fb_link"
-              value="{{ product.fb_link }}"
-            />
-          </div>
-          <div class="form-group">
-            <label for="ins_link">Instagram Link</label>
-            <input
-              type="text"
-              class="form-control"
-              id="ins_link{{ product.product_id }}"
-              name="ins_link"
-              value="{{ product.ins_link }}"
-            />
-          </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -458,37 +427,6 @@ aria-hidden="true"
           />
         </div>
 
-        <!-- New fields for ad_link, fb_link, and ins_link -->
-        <div class="form-group">
-          <label for="new_ads">Advertisement Link</label>
-          <input
-            type="text"
-            class="form-control"
-            id="new_ads"
-            name="ad_link"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="new_fb">Facebook Link</label>
-          <input
-            type="text"
-            class="form-control"
-            id="new_fb"
-            name="fb_link"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="new_ins">Instagram Link</label>
-          <input
-            type="text"
-            class="form-control"
-            id="new_ins"
-            name="ins_link"
-            required
-          />
-        </div>
 
         <div class="form-group">
           <label for="new_image">Upload Image</label>
@@ -599,9 +537,7 @@ aria-hidden="true"
         const category = document.getElementById(`category${productId}`).value;
         const price = document.getElementById(`price${productId}`).value;
         const location = document.getElementById(`location${productId}`).value;
-        const ad_link = document.getElementById(`ad_link${productId}`).value;
-        const fb_link = document.getElementById(`fb_link${productId}`).value;
-        const ins_link = document.getElementById(`ins_link${productId}`).value;
+  
         
         const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
       
@@ -616,10 +552,7 @@ aria-hidden="true"
             description: description,
             category: category,
             price: price,
-            location: location,
-            ad_link: ad_link,
-            fb_link: fb_link,
-            ins_link: ins_link
+            location: location
           }),
         })
         .then((response) => response.json())

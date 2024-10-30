@@ -24,6 +24,7 @@ urlpatterns = [
     path('add-user/', views.add_user, name='add_user'),
     path('update-user/<int:user_id>/', views.update_user, name='update_user'),
     path('delete-user/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('change-password/<int:user_id>/', views.change_password, name='change_password'),
     
     # Engagement-related URLs
     path('engagements/', views.engagements, name='engagements'),

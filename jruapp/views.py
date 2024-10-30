@@ -188,7 +188,7 @@ def register(request):
                 full_name=request.POST.get('full_name'),
                 email=request.POST.get('email'),
                 password_hash=request.POST.get('password'),  # Hash the password appropriately
-                role=request.POST.get('role'),
+                course=request.POST.get('role'),
                 verified=request.POST.get('verified') == 'on',
                 profile_url=profile_image_url,
                 enrollment_url=enrollment_form_url
@@ -211,7 +211,7 @@ def login(request):
         
         # Query the user by username
         try:
-            user = User.objects.get(username=username, verified=1)
+            user = User.objects.get(email=username, verified=1)
         except User.DoesNotExist:
             return render(request, 'views/login.html', {'error': 'Invalid credentials'})
         
@@ -234,7 +234,7 @@ def loginstud(request):
         
         # Query the user by username
         try:
-            user = User.objects.get(username=username, verified=1, role="student")
+            user = User.objects.get(email=username, verified=1, role="student")
         except User.DoesNotExist:
             return render(request, 'views/login.html', {'error': 'Invalid credentials'})
         
@@ -256,7 +256,7 @@ def loginadmin(request):
         
         # Query the user by username
         try:
-            user = User.objects.get(username=username, role="admin", verified=1)
+            user = User.objects.get(email=username, role="admin", verified=1)
         except User.DoesNotExist:
             return render(request, 'views/login.html', {'error': 'Invalid credentials'})
         
@@ -387,6 +387,7 @@ def view_product(request, product_id):
     feedback = UserProductFeedbackView.objects.filter(product_id=product_id)
     is_liked = Engagement.objects.filter(user_id=admin_id, type="like", product_id=product_id).exists()
     user_list = User.objects.all()
+    engagements = Engagement.objects.all()
 
     # Handle like submission
     if request.method == 'POST':
@@ -406,6 +407,7 @@ def view_product(request, product_id):
         'admin_id': admin_id,
         'user_list' : user_list,
         'role': role,
+        'engagements' : engagements,
         'is_liked': is_liked,
         'product_id' : product_id,
         'admin_user': admin_user,
@@ -415,6 +417,21 @@ def view_product(request, product_id):
 
     return render(request, 'views/view-product.html', context)
 
+
+
+
+def change_password(request, user_id):
+    if request.method == 'POST':
+        new_password = request.POST.get('password')
+        user = get_object_or_404(User, user_id=user_id)
+        
+        # Update the user's password
+        user.password_hash = new_password
+        user.save()
+        
+        return JsonResponse({'success': True, 'message': 'Password changed successfully.'})
+    
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 
 
@@ -481,11 +498,6 @@ def update_product(request, product_id):
             product.price = data.get('price', product.price)
             product.stock = data.get('stock', product.stock)
             product.location = data.get('location', product.location)
-            
-            # Update the new fields
-            product.ad_link = data.get('ad_link', product.ad_link)
-            product.fb_link = data.get('fb_link', product.fb_link)
-            product.ins_link = data.get('ins_link', product.ins_link)
 
             product.save()
             return JsonResponse({'status': 'success', 'message': 'Product updated successfully.'})
@@ -522,11 +534,6 @@ def add_product(request):
             stock = request.POST.get('stock')
             location = request.POST.get('location')
 
-            # Get the new fields
-            ad_link = request.POST.get('ad_link')
-            fb_link = request.POST.get('fb_link')
-            ins_link = request.POST.get('ins_link')
-
             # Handle image upload
             image = request.FILES.get('image')
             if image:
@@ -558,10 +565,7 @@ def add_product(request):
                 price=price,
                 stock=stock,
                 location=location,
-                image_url=image_url,
-                ad_link=ad_link,
-                fb_link=fb_link,
-                ins_link=ins_link
+                image_url=image_url
             )
             product.save()
 
