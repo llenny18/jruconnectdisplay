@@ -155,7 +155,7 @@
                                                     <td>{{ forloop.counter }}</td>
                                                     <td>{{ engagement.user.username }}</td>
                                                     <td>{{ engagement.product.title }}</td>
-                                                    <td>{{ engagement.get_type_display }}</td>
+                                                    <td>{{ engagement.type }}</td>
                                                     <td>{{ engagement.date_created }}</td>
                                                     <td>
                                                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editEngagementModal" data-id="{{ engagement.engagement_id }}" data-user="{{ engagement.user.user_id }}" data-product="{{ engagement.product.product_id }}" data-type="{{ engagement.type }}">Edit</button>

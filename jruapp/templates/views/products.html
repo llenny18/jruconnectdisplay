@@ -186,7 +186,12 @@
                         + Add Product
                       </button>
                     </h4>
-
+                    <div>
+                      <label><input type="checkbox" id="filter-approved"> Approved</label>
+                      <label><input type="checkbox" id="filter-restricted"> Restricted</label>
+                      <label><input type="checkbox" id="filter-sold"> Sold</label>
+                      <button id="filter-button" class="btn btn-primary">Filter</button>
+                    </div>
                     <div class="table-responsive pt-3">
                       <table class="table table-bordered" id="example">
                         <thead>
@@ -199,6 +204,8 @@
                             <th>Location</th>
                             <th>Image</th>
                             <th>Advertisement</th>
+                            <th>Advertisement Status</th>
+                            <th>Sold Status</th>
                            
                             <th>Date Posted</th>
                             <th>Action</th>
@@ -206,7 +213,7 @@
                         </thead>
                         <tbody>
                           {% for product in products %}
-                          <tr>
+                          <tr data-status="{{ product.ads_status}}" data-sold="{% if product.is_sold %}true{% else %}false{% endif %}d">
                             <td>{{ forloop.counter }}</td>
                             <td>{{ product.title }}</td>
                             <td>{{ product.description }}</td>
@@ -239,6 +246,12 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lgads-{{ product.product_id }}">View Image</button>
                           </td>
 
+                          <td>{{ product.ads_status|capfirst }}</td>
+                          <td>{% if product.is_sold %}
+                            True
+                        {% else %}
+                            False
+                        {% endif %}</td>
 
                             
                             <td>
@@ -259,7 +272,7 @@
                                 onclick="deleteProduct({{ product.product_id }})"
                                 >Delete</a
                               >
-                              {% if product.is_sold == 0 %}
+                              {% if product.is_sold != 1 %}
                               <hr>
                               <button
                                
@@ -738,7 +751,59 @@ aria-hidden="true"
     
       {% endfor %}
 
+      <script>
+        $(document).ready(function() {
+          const table = $('#example').DataTable(); // Initialize DataTable
+      
+          // Filtering function
+          function filterItems() {
+            const approved = $('#filter-approved').prop('checked');
+            const restricted = $('#filter-restricted').prop('checked');
+            const sold = $('#filter-sold').prop('checked');
+      
+            table.rows().every(function() {
+              const row = this.node(); // Get the row
+              const status = $(row).data('status');
+              const isSold = $(row).data('sold') === 'trued';
 
+              console.log("sold: "+sold);
+              console.log("isSold: "+isSold);
+      
+              // Decide whether to show or hide the row based on filters
+              let showRow = true;
+      
+              if (approved && status !== 'approved') {
+                showRow = false;
+              }
+      
+              if (restricted && status !== 'restricted') {
+                showRow = false;
+              }
+      
+              if (sold && !isSold) {
+                showRow = false;
+              }
+      
+              // Apply the filter: hide or show row
+              if (showRow) {
+                $(row).show();
+              } else {
+                $(row).hide();
+              }
+            });
+      
+            // Redraw the table to update pagination and other DataTable functionality
+            table.draw();
+          }
+      
+          // Attach filter function to the filter button
+          $('#filter-button').on('click', function() {
+            filterItems();
+          });
+        });
+      </script>
+      
+      
     <!-- endinject -->
     <!-- Plugin js for this page-->
     <!-- End plugin js for this page-->

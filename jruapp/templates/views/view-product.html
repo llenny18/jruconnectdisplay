@@ -642,8 +642,13 @@ display: inline-block;
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button"  class="btn btn-primary" onclick="recordEngagement({{ product.product_id }}, 'like')">Like</button>
                             <a href="{% url 'chat_message' user_id=product.user_id %}" class="btn btn-success">Message Seller</a>
-                            <a href="{{ product.fb_link }}" target="_blank" class="btn btn-success"><i class="mdi mdi-facebook"></i></a>
-                            <a href="{{ product.ins_link }}" target="_blank" class="btn btn-success"><i class="mdi mdi-instagram"></i></a>
+                            {% if product.is_sold == 0 %}
+                            <button type="button" class="btn btn-primary w-100"  onclick="recordEngagement({{ product.product_id }}, 'click')"><i class="mdi mdi-eye"></i> VIEW</button>
+                            {% endif %}
+                            
+                            {% if product.is_sold == 1 %}
+                            <button type="button" class="btn btn-danger w-100"  disabled><i class="mdi mdi-cart-off"></i> PRODUCT IS SOLD</button>
+                            {% endif %}
                           </div>
                         </div>
                       </div>

@@ -113,8 +113,8 @@ class Product(models.Model):
     location = models.CharField(max_length=100, null=True, blank=True)
     image_url = models.URLField(max_length=255, null=True, blank=True)
     ads_url = models.URLField(max_length=255, null=True, blank=True)
-    ads_status = models.CharField(max_length=255, null=True, blank=True)
-    is_sold = models.IntegerField(max_length=11, null=True, blank=True)
+    ads_status = models.CharField(max_length=255, default="on_review", blank=True)
+    is_sold = models.IntegerField(max_length=11, default="0", blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -136,8 +136,6 @@ class Engagement(models.Model):
     type = models.CharField(max_length=10, choices=ENGAGEMENT_TYPES)
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.user.username} {self.get_type_display()} {self.product.title}'
 
     class Meta:
         managed = False

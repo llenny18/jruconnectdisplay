@@ -189,6 +189,7 @@ def register(request):
                 email=request.POST.get('email'),
                 password_hash=request.POST.get('password'),  # Hash the password appropriately
                 course=request.POST.get('role'),
+                role="student",
                 verified=request.POST.get('verified') == 'on',
                 profile_url=profile_image_url,
                 enrollment_url=enrollment_form_url
