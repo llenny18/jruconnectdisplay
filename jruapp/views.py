@@ -440,7 +440,6 @@ from django.db.models import Q
 
 
 from django.db.models import Count
-
 def ecom(request):
     full_name = request.session.get('full_name', 'Guest')
     admin_id = request.session.get('admin_id', '0')
@@ -472,10 +471,20 @@ def ecom(request):
         engagement__user_id=admin_id
     ).distinct()
 
-    # Pass both the top products and recommended products to the template
+    # Get a list of product IDs that are either in top products or recommended products
+    excluded_product_ids = list(top_products.values_list('product_id', flat=True)) + \
+                           list(recommended_products.values_list('product_id', flat=True))
+
+    # Fetch products that are not in top products and recommended products
+    other_products = Product.objects.exclude(
+        product_id__in=excluded_product_ids
+    )
+
+    # Pass top products, recommended products, and other products to the template
     context = {
         'top_products': top_products,
         'recommended_products': recommended_products,
+        'other_products': other_products,
         'full_name': full_name,
         'admin_id': admin_id,
         'admin_user': admin_user,
@@ -485,7 +494,6 @@ def ecom(request):
     }
 
     return render(request, 'views/ecom.html', context)
-
 
 
 
@@ -896,8 +904,6 @@ def add_message(request):
             receiver_id = data.get('receiver_id')
             content = data.get('content')
 
-            # Debugging output
-            print("Received data:", data)
 
             sender = User.objects.get(pk=sender_id)
             receiver = User.objects.get(pk=receiver_id)

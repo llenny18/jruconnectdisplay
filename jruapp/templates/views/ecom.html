@@ -360,7 +360,7 @@
 
                 <!-- Product List -->
                 <div class="product-container col-md-12">
-                  {% for product in products %}
+                  {% for product in other_products %}
                   {% if product.ads_status == "approved" %}
 
                     <div class="product m-1" data-category="{{ product.category }}" data-price="{{ product.price }}">

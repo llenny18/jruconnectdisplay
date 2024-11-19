@@ -188,6 +188,7 @@
                     </h4>
                     <div>
                       <label><input type="checkbox" id="filter-approved"> Approved</label>
+                      <label><input type="checkbox" id="filter-onreview"> Not Approved</label>
                       <label><input type="checkbox" id="filter-restricted"> Restricted</label>
                       <label><input type="checkbox" id="filter-sold"> Sold</label>
                       <button id="filter-button" class="btn btn-primary">Filter</button>
@@ -233,7 +234,7 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lgimg-{{ product.product_id }}">View Image</button>
 
                           </td>
-                            <td><img src="{% if product.adsurl %}
+                            <td><img src="{% if product.ads_url %}
                               {% static product.ads_url %}
                             {% else %}
                               {% static 'images/default.png' %}
@@ -758,6 +759,7 @@ aria-hidden="true"
           // Filtering function
           function filterItems() {
             const approved = $('#filter-approved').prop('checked');
+            const not_approved = $('#filter-onreview').prop('checked');
             const restricted = $('#filter-restricted').prop('checked');
             const sold = $('#filter-sold').prop('checked');
       
@@ -773,6 +775,10 @@ aria-hidden="true"
               let showRow = true;
       
               if (approved && status !== 'approved') {
+                showRow = false;
+              }
+
+              if (not_approved && status !== 'on_review') {
                 showRow = false;
               }
       

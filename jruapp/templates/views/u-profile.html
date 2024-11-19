@@ -247,8 +247,8 @@
               <div class="card p-3 py-4">
                   
                   <div class="text-center">
-                      <img src="{% if admin_user.profile_url %}
-                      {% static admin_user.profile_url %}
+                      <img src="{% if detail.profile_url %}
+                      {% static detail.profile_url %}
                     {% else %}
                       {% static 'images/default.png' %}
                     {% endif %}" width="200" class="rounded-circle">
