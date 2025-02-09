@@ -98,8 +98,22 @@
         }
       }
 
+  // Password matching validation
+  const password = document.getElementById('password').value;
+  const rpassword = document.getElementById('rpassword').value;
+
+      if (password !== rpassword) {
+        alert("Passwords do not match. Please re-enter them.");
+        document.getElementById('password').classList.add('invalid'); // Highlight password field
+        document.getElementById('rpassword').classList.add('invalid'); // Highlight confirm password field
+        return false;
+      } else {
+        document.getElementById('password').classList.remove('invalid');
+        document.getElementById('rpassword').classList.remove('invalid');
+      }
+
       // If no bad words were detected, submit the form
-      if (!hasBadWords) {
+      if (!hasBadWords && (password === rpassword)) {
         document.getElementById('registrationForm').submit(); // Programmatically submit the form
       }
     }
@@ -145,8 +159,16 @@
                   <input type="text" class="form-control form-control-lg" name="username" placeholder="Username" required>
                 </div>
                 <div class="form-group">
-                  <label for="full_name">Full Name</label>
-                  <input type="text" class="form-control form-control-lg" name="full_name" placeholder="Full Name" required>
+                  <label for="first_name">First Name</label>
+                  <input type="text" class="form-control form-control-lg" name="first_name" placeholder="First Name" required>
+                </div>
+                <div class="form-group">
+                  <label for="middle_name">Middle Name</label>
+                  <input type="text" class="form-control form-control-lg" name="middle_name" placeholder="Middle Name" required>
+                </div>
+                <div class="form-group">
+                  <label for="last_name">Last Name</label>
+                  <input type="text" class="form-control form-control-lg" name="last_name" placeholder="Last Name" required>
                 </div>
                 <div class="form-group">
                   <label for="email">Email (Email must end with @my.jru.edu)</label>
@@ -157,9 +179,47 @@
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="text" class="form-control" id="password" name="password" placeholder="Enter password" required>
-                  <span toggle="#password" class="mdi mdi-eye-outline position-absolute" id="toggle-password" style="top: 38px; right: 15px; cursor: pointer;"></span>
+                  <div class="input-group">
+                    <input 
+                      type="password" 
+                      class="form-control" 
+                      id="password" 
+                      pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$"  
+                      name="password" 
+                      placeholder="Enter password" 
+                      required>
+                    <div class="input-group-append">
+                      <button 
+                        class="btn btn-outline-secondary toggle-password" 
+                        type="button" 
+                        data-target="#password">
+                        <i class="mdi mdi-eye"></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
+                <div class="form-group">
+                  <label for="rpassword">Re-Type Password</label>
+                  <div class="input-group">
+                    <input 
+                      type="password" 
+                      class="form-control" 
+                      id="rpassword" 
+                      pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$"  
+                      name="rpassword" 
+                      placeholder="Enter password" 
+                      required>
+                    <div class="input-group-append">
+                      <button 
+                        class="btn btn-outline-secondary toggle-password" 
+                        type="button" 
+                        data-target="#rpassword">
+                        <i class="mdi mdi-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
                 <div class="form-group">
                   <label for="profile_image">Profile Image</label>
                   <input type="file" class="form-control" name="profile_image" accept="image/*">
@@ -205,6 +265,25 @@
     <!-- page-body-wrapper ends -->
   </div>
 
+  <script>
+    document.querySelectorAll('.toggle-password').forEach(button => {
+      button.addEventListener('click', function () {
+        const target = document.querySelector(this.getAttribute('data-target'));
+        const icon = this.querySelector('i');
+        
+        if (target.type === 'password') {
+          target.type = 'text';
+          icon.classList.remove('mdi-eye');
+          icon.classList.add('mdi-eye-off');
+        } else {
+          target.type = 'password';
+          icon.classList.remove('mdi-eye-off');
+          icon.classList.add('mdi-eye');
+        }
+      });
+    });
+  </script>    
+  
   <!-- container-scroller -->
   <!-- base:js -->
   <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
@@ -217,3 +296,5 @@
 </body>
 
 </html>
+
+

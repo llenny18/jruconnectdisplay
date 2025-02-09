@@ -246,8 +246,15 @@
                             <hr>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lgads-{{ product.product_id }}">View Image</button>
                           </td>
+                          {% if product.ads_status != "restricted" %}
 
                           <td>{{ product.ads_status|capfirst }}</td>
+                          {% endif %}
+                          {% if product.ads_status == "restricted" %}
+
+                          <td>{{ product.ads_status|capfirst }} <br> Reason: {{ product.restriction_reason|capfirst }} </td>
+                          {% endif %}
+
                           <td>{% if product.is_sold %}
                             True
                         {% else %}
@@ -284,10 +291,13 @@
                                 {% endif %}
 
                                 {% if role == "admin" %}
+                                {% if product.ads_status != "restricted" %}
                                 <hr>
-                                
-                                <button onclick="updateStatus({{ product.product_id }}, 'restricted')" class="btn btn-secondary m-1">Restrict Ad</button><br>
+                                <input type="text" id="rreason{{ product.product_id }}" placeholder="Restriction Reason" class="form-control" required>
+                                <button onclick="updateStatus1({{ product.product_id }}, 'restricted', document.getElementById('rreason{{ product.product_id }}').value)" class="btn btn-secondary m-1">Restrict Ad</button><br>
+                                 {% endif %}
                                 {% if product.ads_status != "approved" %}
+                                <hr>
                                 <button onclick="updateStatus({{ product.product_id }}, 'approved')" class="btn btn-success m-1">Approve Ad</button><br>
                                 {% endif %}
                                 {% endif %}
@@ -685,6 +695,22 @@ aria-hidden="true"
         .catch(error => console.error('Error:', error));
         window.location.href = window.location.href;
       }
+
+      function updateStatus1(productId, status, reason) {
+        fetch(`/products/update_status_r/${productId}/${status}/${reason}/`, {
+          method: 'GET',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(`Product status updated to: ${data.status}`);
+            location.reload();  // Reload the page to show the updated status
+          }
+        })
+        .catch(error => console.error('Error:', error));
+        window.location.href = window.location.href;
+      }
     </script>
 
     <script>
@@ -755,14 +781,14 @@ aria-hidden="true"
       <script>
         $(document).ready(function() {
           const table = $('#example').DataTable(); // Initialize DataTable
-      
+
           // Filtering function
           function filterItems() {
             const approved = $('#filter-approved').prop('checked');
             const not_approved = $('#filter-onreview').prop('checked');
             const restricted = $('#filter-restricted').prop('checked');
             const sold = $('#filter-sold').prop('checked');
-      
+
             table.rows().every(function() {
               const row = this.node(); // Get the row
               const status = $(row).data('status');
@@ -770,10 +796,10 @@ aria-hidden="true"
 
               console.log("sold: "+sold);
               console.log("isSold: "+isSold);
-      
+
               // Decide whether to show or hide the row based on filters
               let showRow = true;
-      
+
               if (approved && status !== 'approved') {
                 showRow = false;
               }
@@ -781,15 +807,15 @@ aria-hidden="true"
               if (not_approved && status !== 'on_review') {
                 showRow = false;
               }
-      
+
               if (restricted && status !== 'restricted') {
                 showRow = false;
               }
-      
+
               if (sold && !isSold) {
                 showRow = false;
               }
-      
+
               // Apply the filter: hide or show row
               if (showRow) {
                 $(row).show();
@@ -797,11 +823,11 @@ aria-hidden="true"
                 $(row).hide();
               }
             });
-      
+
             // Redraw the table to update pagination and other DataTable functionality
             table.draw();
           }
-      
+
           // Attach filter function to the filter button
           $('#filter-button').on('click', function() {
             filterItems();

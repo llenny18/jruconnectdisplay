@@ -17,8 +17,16 @@
             <input type="text" value="{{ admin_user.username }}" class="form-control" id="editUsername" name="username" required>
           </div>
           <div class="form-group">
-            <label for="editFullName">Full Name</label>
-            <input type="text" class="form-control" value="{{ admin_user.full_name }}" id="editFullName" name="full_name" required>
+            <label for="editFName">Full Name</label>
+            <input type="text" class="form-control" value="{{ admin_user.first_name}}" id="editFName" name="full_name" required>
+          </div>
+          <div class="form-group">
+            <label for="editMName">Middle Name</label>
+            <input type="text" class="form-control" value="{{ admin_user.middle_name }}" id="editMName" name="middle_name" required>
+          </div>
+          <div class="form-group">
+            <label for="editLName">Last Name</label>
+            <input type="text" class="form-control" value="{{ admin_user.last_name}}" id="editLName" name="last_name" required>
           </div>
           <div class="form-group">
             <label for="editEmail">Email</label>
@@ -46,8 +54,6 @@
     </div>
   </div>
 </div>
-
-
 
 
 <!-- Edit Icon Modal -->

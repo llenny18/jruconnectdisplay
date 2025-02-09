@@ -104,7 +104,7 @@
 </nav>
 
 <script>
-    let username = '{{ admin_user.full_name }}';
+    let username = '{{ admin_user.first_name }}';
     
 
     if (username === null || username === '') {
@@ -119,40 +119,46 @@
 
 
         // Edit User
-$('#editUserFormnav').on('submit', function(e) {
-e.preventDefault();
-let userId = $('#editUserId').val();
-let username = $('#editUsername').val();
-let fullName = $('#editFullName').val();
-let email = $('#editEmail').val();
-let password = $('#editPassword').val(); // Optional
-let role = $('#editRole').val();
-let verified = $('#editVerified').is(':checked');
-
-fetch(`/update-user/${userId}/`, {
-  method: 'POST',
-  headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': '{{ csrf_token }}'
-  },
-  body: JSON.stringify({
-      username: username,
-      full_name: fullName,
-      email: email,
-      password: password, // Optional
-      role: role,
-      verified: verified
-  })
-})
-.then(response => response.json())
-.then(data => {
-  if (data.status === 'success') {
-      location.reload();
-  } else {
-      alert(data.message);
-  }
-});
-});
+        // Edit User
+        $('#editUserFormnav').on('submit', function(e) {
+            e.preventDefault();
+            let userId = $('#editUserId').val();
+            let username = $('#editUsername').val();
+            let fName = $('#editFName').val();
+            let mName = $('#editMName').val();
+            let lName = $('#editLName').val();
+            let email = $('#editEmail').val();
+            let password = $('#editPassword').val(); // Optional
+            let role = $('#editRole').val();
+            let verified = $('#editVerified').is(':checked');
+            
+            fetch(`/update-user/${userId}/`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}'
+              },
+              body: JSON.stringify({
+                  username: username,
+                  first_name: fName,
+                  middle_name: mName,
+                  last_name: lName,
+                  email: email,
+                  password: password, // Optional
+                  role: role,
+                  verified: verified
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'success') {
+                  location.reload();
+              } else {
+                  alert(data.message);
+              }
+            });
+            });
+            
 
 
         // Delete User

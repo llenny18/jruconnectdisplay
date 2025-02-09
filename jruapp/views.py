@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import logout
 from jruconnect import settings
-from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary, ViewEngagementsByType, ViewProductEngagementOverTime, ViewFeedbackByRating, ViewSupportInquiriesByStatus, UserLikes, UserProductFeedbackView
+from .models import Product, User, Engagement, Feedback, Message, Profile, SupportInquiry, ProductEngagementSummary, ViewEngagementsByType, ViewProductEngagementOverTime, ViewFeedbackByRating, ViewSupportInquiriesByStatus, UserLikes, UserProductFeedbackView, Top5ProductLikes, Top5ProductViews, Top5ProductRatings, Top5CombinedProducts
 import json
 import os
 from django.db.models import Q
@@ -86,7 +86,14 @@ def recommendations_view(request):
             'message': 'Please log in to see recommendations.'
         })
 
-
+    combined = list(Top5CombinedProducts.objects.all())
+from decimal import Decimal
+def convert_decimal_to_float(data):
+    for item in data:
+        for key, value in item.items():
+            if isinstance(value, Decimal):
+                item[key] = float(value)
+    return data
 
 def home(request):
     full_name = request.session.get('full_name', 'Guest')
@@ -98,6 +105,14 @@ def home(request):
     view_feedback_by_rating = ViewFeedbackByRating.objects.all()
     view_product_engagement_over_time = ViewProductEngagementOverTime.objects.all()
     view_support_inquiries_by_status = ViewSupportInquiriesByStatus.objects.all()
+    likes = list(Top5ProductLikes.objects.values("product_id", "title", "image_url", "likes_count"))
+    views = list(Top5ProductViews.objects.values("product_id", "title", "image_url", "views_count"))
+    ratings = list(Top5ProductRatings.objects.values("product_id", "title", "image_url", "avg_rating"))
+    combined = list(Top5CombinedProducts.objects.values("product_id", "title", "image_url", "combined_score"))
+
+    # Convert Decimal fields to float
+    ratings = convert_decimal_to_float(ratings)
+    combined = convert_decimal_to_float(combined)
     
     # Fetch the admin user based on admin_id
     admin_user = None
@@ -125,6 +140,10 @@ def home(request):
         'view_support_inquiries_by_status': view_support_inquiries_by_status,
         'collab_recommendations': recommendations.get('collab_recommendations', []),
         'content_recommendations': recommendations.get('content_recommendations', []),
+        "likes": json.dumps(likes),
+        "views": json.dumps(views),
+        "ratings": json.dumps(ratings),
+        "combined": json.dumps(combined),
     }
 
     return render(request, 'views/index.html', context)
@@ -219,7 +238,7 @@ def login(request):
         # Check password (assuming password_hash is a hashed password)
         if user.password_hash == password:  # Ideally, use a password hashing library
             request.session['admin_id'] = user.user_id  # Set session variable
-            request.session['full_name'] = user.full_name  # Set session variable
+            request.session['full_name'] = f"{user.first_name} {user.middle_name} {user.last_name}"  # Set session variable
             request.session['role'] = user.role  # Set session variable
             return redirect('home')
         else:
@@ -242,7 +261,7 @@ def loginstud(request):
         # Check password (assuming password_hash is a hashed password)
         if user.password_hash == password:  # Ideally, use a password hashing library
             request.session['admin_id'] = user.user_id  # Set session variable
-            request.session['full_name'] = user.full_name  # Set session variable
+            request.session['full_name'] = f"{user.first_name} {user.middle_name} {user.last_name}"  # Set session variable
             request.session['role'] = user.role  # Set session variable
             return redirect('home')
         else:
@@ -264,7 +283,7 @@ def loginadmin(request):
         # Check password (assuming password_hash is a hashed password)
         if user.password_hash == password:  # Ideally, use a password hashing library
             request.session['admin_id'] = user.user_id  # Set session variable
-            request.session['full_name'] = user.full_name  # Set session variable
+            request.session['full_name'] = f"{user.first_name} {user.middle_name} {user.last_name}"  # Set session variable
             request.session['role'] = user.role  # Set session variable
             return redirect('home')
         else:
@@ -502,7 +521,17 @@ def update_ads_status(request, product_id, status):
     product.ads_status = status
     product.save()
     return redirect('products')  # Redirect to the login page
+
+
+
+def update_ads_status_r(request, product_id, status, reason):
+    product = get_object_or_404(Product, product_id=product_id)
+    product.ads_status = status
+    product.restriction_reason = reason
+    product.save()
+    return redirect('products')  # Redirect to the login page
     
+
 
 
 def mark_product_as_sold(request, product_id):
@@ -895,21 +924,31 @@ def add_feedback(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
+# Revision
+from django.db import connection
+
 @csrf_exempt
 def add_message(request):
     if request.method == 'POST':
         try:
+            # Parse JSON data
             data = json.loads(request.body)
             sender_id = data.get('sender_id')
             receiver_id = data.get('receiver_id')
             content = data.get('content')
 
-
+            # Validate sender and receiver existence
             sender = User.objects.get(pk=sender_id)
             receiver = User.objects.get(pk=receiver_id)
 
-            message = Message(sender=sender, receiver=receiver, content=content)
-            message.save()
+            # Save the message with a custom timestamp
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO messages (sender_id, receiver_id, content, date_sent)
+                    VALUES (%s, %s, %s, CONVERT_TZ(NOW(), '+00:00', '+08:00'))
+                    """, [sender.user_id, receiver.user_id, content]
+                )
 
             return JsonResponse({'status': 'success', 'message': 'Message added successfully!'})
         except User.DoesNotExist:
@@ -973,7 +1012,9 @@ def update_user(request, user_id):
             data = json.loads(request.body)
             user = User.objects.get(pk=user_id)
             user.username = data.get('username', user.username)
-            user.full_name = data.get('full_name', user.full_name)
+            user.first_name = data.get('first_name', user.first_name)
+            user.middle_name = data.get('middle_name', user.middle_name)
+            user.last_name = data.get('last_name', user.last_name)
             user.role = data.get('role', user.role)
             user.email = data.get('email', user.email)
             user.verified = data.get('verified', user.verified)

@@ -80,13 +80,14 @@ class User(models.Model):
         ('student', 'Student'),
         ('admin', 'Admin'),
     ]
-
     user_id = models.AutoField(primary_key=True)
     stud_id = models.CharField(max_length=255, null=True, blank=True)
     username = models.CharField(max_length=50, unique=True)
     password_hash = models.CharField(max_length=255)
     email = models.EmailField(max_length=100, unique=True)
-    full_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=455)
+    middle_name = models.CharField(max_length=455)
+    last_name = models.CharField(max_length=455)
     role = models.CharField(max_length=10, choices=USER_ROLES)
     verified = models.BooleanField(default=False)
     last_login = models.DateTimeField(null=True, blank=True)
@@ -113,6 +114,7 @@ class Product(models.Model):
     location = models.CharField(max_length=100, null=True, blank=True)
     image_url = models.URLField(max_length=255, null=True, blank=True)
     ads_url = models.URLField(max_length=255, null=True, blank=True)
+    restriction_reason = models.URLField(max_length=255, null=True, blank=True)
     ads_status = models.CharField(max_length=255, default="on_review", blank=True)
     is_sold = models.IntegerField(max_length=11, default="0", blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
@@ -191,12 +193,57 @@ class UserProductFeedbackView(models.Model):
         return f'User {self.username} - Product: {self.title} - Rating: {self.rating}'
 
 
+
+class Top5ProductLikes(models.Model):
+    product_id = models.IntegerField()
+    title = models.CharField(max_length=455)
+    image_url = models.CharField(max_length=255)
+    likes_count = models.IntegerField()
+
+    class Meta:
+        managed = False  # No migration will be created
+        db_table = 'top_5_products_likes'
+
+
+class Top5ProductViews(models.Model):
+    product_id = models.IntegerField()
+    title = models.CharField(max_length=455)
+    image_url = models.CharField(max_length=255)
+    views_count = models.IntegerField()
+
+    class Meta:
+        managed = False  # No migration will be created
+        db_table = 'top_5_products_views'
+
+
+class Top5ProductRatings(models.Model):
+    product_id = models.IntegerField()
+    title = models.CharField(max_length=455)
+    image_url = models.CharField(max_length=255)
+    avg_rating = models.DecimalField(max_digits=2, decimal_places=1)
+
+    class Meta:
+        managed = False  # No migration will be created
+        db_table = 'top_5_products_ratings'
+
+
+class Top5CombinedProducts(models.Model):
+    product_id = models.IntegerField()
+    title = models.CharField(max_length=455)
+    image_url = models.CharField(max_length=255)
+    combined_score = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        managed = False  # No migration will be created
+        db_table = 'top_5_combined_products'
+
+# Revision
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
     content = models.TextField()
-    date_sent = models.DateTimeField(auto_now_add=True)
+    date_sent = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f'Message from {self.sender.username} to {self.receiver.username}'
