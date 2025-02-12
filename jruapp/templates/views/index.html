@@ -134,6 +134,47 @@
     <!-- partial -->
 <div class="main-panel">
   <div class="content-wrapper">
+
+    <div class="row">
+    
+
+      <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+      <div class="card-body">
+        <p class="card-title">Top 5 Products (Combined)</p>
+        <canvas id="combinedChart"></canvas>
+      </div>
+      </div>
+      </div>
+      
+      
+      <div class="col-md-4 grid-margin stretch-card">
+        <div class="card">
+      <div class="card-body">
+      <p class="card-title">Top 5 Products by Likes</p>
+      <canvas id="likesChart"></canvas>
+      </div>
+      </div>
+      </div>
+      
+      <div class="col-md-4 grid-margin stretch-card">
+      <div class="card">
+      <div class="card-body">
+      <p class="card-title">Top 5 Products by Views</p>
+      <canvas id="viewsChart"></canvas>
+      </div>
+      </div>
+      </div>
+      
+      <div class="col-md-4 grid-margin stretch-card">
+      <div class="card">
+      <div class="card-body">
+      <p class="card-title">Top 5 Products by Ratings</p>
+      <canvas id="ratingsChart"></canvas>
+      </div>
+      </div>
+      </div>
+      </div>
     <div class="row">
       <div class="col-12 col-xl-12 grid-margin stretch-card">
         <div class="row w-100 flex-grow">
@@ -162,6 +203,7 @@
         </div>
       </div>
     </div>
+    
     <div class="row">
       <div class="col-md-6 grid-margin stretch-card">
         <div class="card">
@@ -183,22 +225,6 @@
       </div>
     </div>
     
-<div>
-  <h2>Top 5 Products by Likes</h2>
-  <canvas id="likesChart"></canvas>
-</div>
-<div>
-  <h2>Top 5 Products by Views</h2>
-  <canvas id="viewsChart"></canvas>
-</div>
-<div>
-  <h2>Top 5 Products by Ratings</h2>
-  <canvas id="ratingsChart"></canvas>
-</div>
-<div>
-  <h2>Top 5 Products (Combined)</h2>
-  <canvas id="combinedChart"></canvas>
-</div>
 
 <!-- Bootstrap Modals for each chart -->
 <!-- Likes Modal -->
@@ -268,66 +294,127 @@
       </div>
   </div>
 </div>
-
 <script>
-  const likesData = JSON.parse('{{ likes|escapejs }}');
-  const viewsData = JSON.parse('{{ views|escapejs }}');
-  const ratingsData = JSON.parse('{{ ratings|escapejs }}');
-  const combinedData = JSON.parse('{{ combined|escapejs }}');
+  const likesData = JSON.parse('{{ likes|safe }}');
+  const viewsData = JSON.parse('{{ views|safe }}');
+  const ratingsData = JSON.parse('{{ ratings|safe }}');
+  const combinedData = JSON.parse('{{ combined|safe }}');
 
-  // Helper function to create a chart
-  const createChart = (ctx, labels, data, title, chartType, modalId, contentId, imageId, buttonId) => {
-      const chart = new Chart(ctx, {
-          type: chartType,
-          data: {
-              labels: labels,
-              datasets: [{
-                  label: title,
-                  data: data,
-                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                  borderColor: 'rgba(75, 192, 192, 1)',
-                  borderWidth: 1
-              }]
-          },
-          options: {
-              responsive: true,
-              scales: {
-                  y: {
-                      beginAtZero: true
-                  }
-              },
-              onClick: (event, elements) => {
-                  if (elements.length > 0) {
-                      const index = elements[0].index;
-                      const selectedData = chart.data.labels[index];
-                      const selectedValue = chart.data.datasets[0].data[index];
-                      const link = chart.data.datasets[0].data[index].link; // Add a `link` to your data to use here
-                      const imageUrl = chart.data.datasets[0].data[index].image_url || 'images/default.png'; // Add `image_url` to your data if needed
-
-                      // Populate modal with data
-                      const modal = new bootstrap.Modal(document.getElementById(modalId));
-                      const content = document.getElementById(contentId);
-                      const image = document.getElementById(imageId);
-                      const visitButton = document.getElementById(buttonId);
-
-                      content.textContent = `Product: ${selectedData}, Value: ${selectedValue}`;
-                      visitButton.href = link; // Update the button link
-                      image.src = `{% static '${imageUrl}' %}`; // Set the image source based on the data
-
-                      // Show the modal
-                      modal.show();
-                  }
-              }
-          }
-      });
+  function getRandomPastelColor() {
+    const hue = Math.floor(Math.random() * 360);
+    return `hsl(${hue}, 70%, 80%)`;
   }
 
-  // Create charts for each data set
-  createChart(document.getElementById('likesChart'), likesData.map(p => p.title), likesData.map(p => p.likes_count), 'Likes Count', 'bar', 'likesModal', 'likesModalContent', 'likesModalImage', 'likesVisitButton');
-  createChart(document.getElementById('viewsChart'), viewsData.map(p => p.title), viewsData.map(p => p.views_count), 'Views Count', 'bar', 'viewsModal', 'viewsModalContent', 'viewsModalImage', 'viewsVisitButton');
-  createChart(document.getElementById('ratingsChart'), ratingsData.map(p => p.title), ratingsData.map(p => p.avg_rating), 'Average Ratings', 'bar', 'ratingsModal', 'ratingsModalContent', 'ratingsModalImage', 'ratingsVisitButton');
-  createChart(document.getElementById('combinedChart'), combinedData.map(p => p.title), combinedData.map(p => p.combined_score), 'Combined Score', 'bar', 'combinedModal', 'combinedModalContent', 'combinedModalImage', 'combinedVisitButton');
+  // Helper function to create a chart
+  const createChart = (ctx, labels, ids, image_urls, data, title, chartType, modalId, contentId, imageId, buttonId) => {
+    const backgroundColors = labels.map(() => getRandomPastelColor());
+    const borderColors = labels.map(() => getRandomPastelColor());
+
+    const chart = new Chart(ctx, {
+      type: chartType,
+      data: {
+        labels: labels,
+        datasets: [{
+          label: title,
+          data: data,
+          backgroundColor: backgroundColors,
+          borderColor: borderColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        onClick: (event, elements) => {
+          if (elements.length > 0) {
+            const index = elements[0].index;
+            const selectedData = chart.data.labels[index];
+            const selectedValue = chart.data.datasets[0].data[index];
+            const selectedId = ids[index];
+            let selectedImageUrl = "static/" +  image_urls[index];
+
+            // Populate modal with data
+            const modal = new bootstrap.Modal(document.getElementById(modalId));
+            const content = document.getElementById(contentId);
+            const image = document.getElementById(imageId);
+            const visitButton = document.getElementById(buttonId);
+
+            content.textContent = `Product: ${selectedData}, Value: ${selectedValue}`;
+            visitButton.href = `/view_product/${selectedId}/`; // Construct the URL dynamically
+            
+
+            image.src = selectedImageUrl; // Set image source
+
+            // Show the modal
+            modal.show();
+          }
+        }
+      }
+    });
+  }
+
+  // Create charts for each dataset
+  createChart(
+    document.getElementById('likesChart'),
+    likesData.map(p => p.title),
+    likesData.map(p => p.product_id),
+    likesData.map(p => p.image_url),
+    likesData.map(p => p.likes_count),
+    'Likes Count',
+    'bar',
+    'likesModal',
+    'likesModalContent',
+    'likesModalImage',
+    'likesVisitButton'
+  );
+
+  createChart(
+    document.getElementById('viewsChart'),
+    viewsData.map(p => p.title),
+    viewsData.map(p => p.product_id),
+    viewsData.map(p => p.image_url),
+    viewsData.map(p => p.views_count),
+    'Views Count',
+    'bar',
+    'viewsModal',
+    'viewsModalContent',
+    'viewsModalImage',
+    'viewsVisitButton'
+  );
+
+  createChart(
+    document.getElementById('ratingsChart'),
+    ratingsData.map(p => p.title),
+    ratingsData.map(p => p.product_id),
+    ratingsData.map(p => "{% static '" + p.image_url + "' %}"),
+    ratingsData.map(p => p.avg_rating),
+    'Average Ratings',
+    'bar',
+    'ratingsModal',
+    'ratingsModalContent',
+    'ratingsModalImage',
+    'ratingsVisitButton'
+  );
+
+  createChart(
+    document.getElementById('combinedChart'),
+    combinedData.map(p => p.title),
+    combinedData.map(p => p.product_id),
+    combinedData.map(p => p.image_url),
+    combinedData.map(p => p.combined_score),
+    'Combined Score',
+    'bar',
+    'combinedModal',
+    'combinedModalContent',
+    'combinedModalImage',
+    'combinedVisitButton'
+  );
 </script>
+
   <!-- container-scroller -->
 
   <!-- base:js -->
