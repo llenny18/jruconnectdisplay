@@ -183,84 +183,151 @@
       </div>
     </div>
     
-    <div>
-      <h2>Top 5 Products by Likes</h2>
-      <canvas id="likesChart"></canvas>
-  </div>
-  <div>
-      <h2>Top 5 Products by Views</h2>
-      <canvas id="viewsChart"></canvas>
-  </div>
-  <div>
-      <h2>Top 5 Products by Ratings</h2>
-      <canvas id="ratingsChart"></canvas>
-  </div>
-  <div>
-      <h2>Top 5 Products (Combined)</h2>
-      <canvas id="combinedChart"></canvas>
-  </div>
+<div>
+  <h2>Top 5 Products by Likes</h2>
+  <canvas id="likesChart"></canvas>
+</div>
+<div>
+  <h2>Top 5 Products by Views</h2>
+  <canvas id="viewsChart"></canvas>
+</div>
+<div>
+  <h2>Top 5 Products by Ratings</h2>
+  <canvas id="ratingsChart"></canvas>
+</div>
+<div>
+  <h2>Top 5 Products (Combined)</h2>
+  <canvas id="combinedChart"></canvas>
+</div>
 
-  <script>
-    const likesData = JSON.parse('{{ likes|escapejs }}');
-    const viewsData = JSON.parse('{{ views|escapejs }}');
-    const ratingsData = JSON.parse('{{ ratings|escapejs }}');
-    const combinedData = JSON.parse('{{ combined|escapejs }}');
+<!-- Bootstrap Modals for each chart -->
+<!-- Likes Modal -->
+<div class="modal fade" id="likesModal" tabindex="-1" aria-labelledby="likesModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="likesModalLabel">Likes Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <p id="likesModalContent"></p>
+              <img id="likesModalImage" src="" alt="Product Image" class="img-fluid rounded mb-3" style="height: 200px; object-fit: cover;">
+              <a id="likesVisitButton" class="btn btn-primary" href="" target="_blank">Visit</a>
+          </div>
+      </div>
+  </div>
+</div>
 
-      const createChart = (ctx, labels, data, title) => {
-          new Chart(ctx, {
-              type: 'bar',
-              data: {
-                  labels: labels,
-                  datasets: [{
-                      label: title,
-                      data: data,
-                      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                      borderColor: 'rgba(75, 192, 192, 1)',
-                      borderWidth: 1
-                  }]
+<!-- Views Modal -->
+<div class="modal fade" id="viewsModal" tabindex="-1" aria-labelledby="viewsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="viewsModalLabel">Views Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <p id="viewsModalContent"></p>
+              <img id="viewsModalImage" src="" alt="Product Image" class="img-fluid rounded mb-3" style="height: 200px; object-fit: cover;">
+              <a id="viewsVisitButton" class="btn btn-primary" href="" target="_blank">Visit</a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Ratings Modal -->
+<div class="modal fade" id="ratingsModal" tabindex="-1" aria-labelledby="ratingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="ratingsModalLabel">Ratings Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <p id="ratingsModalContent"></p>
+              <img id="ratingsModalImage" src="" alt="Product Image" class="img-fluid rounded mb-3" style="height: 200px; object-fit: cover;">
+              <a id="ratingsVisitButton" class="btn btn-primary" href="" target="_blank">Visit</a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Combined Modal -->
+<div class="modal fade" id="combinedModal" tabindex="-1" aria-labelledby="combinedModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="combinedModalLabel">Combined Score Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <p id="combinedModalContent"></p>
+              <img id="combinedModalImage" src="" alt="Product Image" class="img-fluid rounded mb-3" style="height: 200px; object-fit: cover;">
+              <a id="combinedVisitButton" class="btn btn-primary" href="" target="_blank">Visit</a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  const likesData = JSON.parse('{{ likes|escapejs }}');
+  const viewsData = JSON.parse('{{ views|escapejs }}');
+  const ratingsData = JSON.parse('{{ ratings|escapejs }}');
+  const combinedData = JSON.parse('{{ combined|escapejs }}');
+
+  // Helper function to create a chart
+  const createChart = (ctx, labels, data, title, chartType, modalId, contentId, imageId, buttonId) => {
+      const chart = new Chart(ctx, {
+          type: chartType,
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: title,
+                  data: data,
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              responsive: true,
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
               },
-              options: {
-                  responsive: true,
-                  scales: {
-                      y: {
-                          beginAtZero: true
-                      }
+              onClick: (event, elements) => {
+                  if (elements.length > 0) {
+                      const index = elements[0].index;
+                      const selectedData = chart.data.labels[index];
+                      const selectedValue = chart.data.datasets[0].data[index];
+                      const link = chart.data.datasets[0].data[index].link; // Add a `link` to your data to use here
+                      const imageUrl = chart.data.datasets[0].data[index].image_url || 'images/default.png'; // Add `image_url` to your data if needed
+
+                      // Populate modal with data
+                      const modal = new bootstrap.Modal(document.getElementById(modalId));
+                      const content = document.getElementById(contentId);
+                      const image = document.getElementById(imageId);
+                      const visitButton = document.getElementById(buttonId);
+
+                      content.textContent = `Product: ${selectedData}, Value: ${selectedValue}`;
+                      visitButton.href = link; // Update the button link
+                      image.src = `{% static '${imageUrl}' %}`; // Set the image source based on the data
+
+                      // Show the modal
+                      modal.show();
                   }
               }
-          });
-      }
+          }
+      });
+  }
 
-      // Top 5 Likes Chart
-      createChart(document.getElementById('likesChart'), likesData.map(p => p.title), likesData.map(p => p.likes_count), 'Likes Count');
-
-      // Top 5 Views Chart
-      createChart(document.getElementById('viewsChart'), viewsData.map(p => p.title), viewsData.map(p => p.views_count), 'Views Count');
-
-      // Top 5 Ratings Chart
-      createChart(document.getElementById('ratingsChart'), ratingsData.map(p => p.title), ratingsData.map(p => p.avg_rating), 'Average Ratings');
-
-      // Top 5 Combined Chart
-      createChart(document.getElementById('combinedChart'), combinedData.map(p => p.title), combinedData.map(p => p.combined_score), 'Combined Score');
-  </script>
-    
-    <!-- row end -->
-  </div>
-  <!-- content-wrapper ends -->
-  <!-- partial:./partials/_footer.html -->
-  {% include 'views/footer.html' %}
-  <!-- partial -->
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
-</div>
-{% if role == "student" %}
-<script>
-
-  window.location.href = '{% url 'advertisements' %}';
-
+  // Create charts for each data set
+  createChart(document.getElementById('likesChart'), likesData.map(p => p.title), likesData.map(p => p.likes_count), 'Likes Count', 'bar', 'likesModal', 'likesModalContent', 'likesModalImage', 'likesVisitButton');
+  createChart(document.getElementById('viewsChart'), viewsData.map(p => p.title), viewsData.map(p => p.views_count), 'Views Count', 'bar', 'viewsModal', 'viewsModalContent', 'viewsModalImage', 'viewsVisitButton');
+  createChart(document.getElementById('ratingsChart'), ratingsData.map(p => p.title), ratingsData.map(p => p.avg_rating), 'Average Ratings', 'bar', 'ratingsModal', 'ratingsModalContent', 'ratingsModalImage', 'ratingsVisitButton');
+  createChart(document.getElementById('combinedChart'), combinedData.map(p => p.title), combinedData.map(p => p.combined_score), 'Combined Score', 'bar', 'combinedModal', 'combinedModalContent', 'combinedModalImage', 'combinedVisitButton');
 </script>
-{% endif %}
   <!-- container-scroller -->
 
   <!-- base:js -->
