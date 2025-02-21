@@ -22,6 +22,9 @@ urlpatterns = [
     path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
     path('update-profile-image/', views.update_profile_image, name='update_profile_image'),
     path('user/<int:user_id>/update-verified/', views.update_user_verified, name='update_user_verified'),
+
+    path('forgot_password/', views.request_otp, name='forgot_password'),
+    path('change_password/', views.verify_otp_and_reset_password, name='change_password'),
     # User-related URLs
     path('users/', views.users, name='users'),
     path('add-user/', views.add_user, name='add_user'),

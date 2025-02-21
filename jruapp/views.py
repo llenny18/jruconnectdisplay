@@ -14,9 +14,64 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from django.db.models import Count
+import random
+from datetime import timedelta
+from django.utils.timezone import now
+from django.core.mail import send_mail
+
+def generate_otp():
+    return str(random.randint(100000, 999999))  # Generate a 6-digit OTP
+
+def send_otp_email(email):
+    otp = generate_otp()
+    expires_at = now() + timedelta(minutes=10)  # OTP expires in 10 minutes
+
+    subject = "Password Reset OTP"
+    message = f"Your OTP for password reset is: {otp}. It expires in 10 minutes."
+    from_email = "qwertylord1222@gmail.com"  # Replace with your Gmail
+    recipient_list = [email]
+
+    send_mail(subject, message, from_email, recipient_list)
 
 
+def request_otp(request):
+    response_data = "-"
+    if request.method == 'POST':
+        email = request.POST.get('email')
 
+        
+
+        if User.objects.filter(email=email).exists():
+            send_otp_email(email)  # Send OTP to email
+            response_data = "OTP has been sent to your email"
+            status_code = 200
+            request.session['email_forgot_pass'] =  email
+            return redirect('change_password')
+        else:
+            response_data = "Email does not exist in our records."
+            status_code = 400
+
+
+    return render(request, 'views/forgot-password.html', { "response_data": response_data})  # Render Forgot Password page
+
+def verify_otp_and_reset_password(request):
+    if request.method == 'POST':
+        email = request.session.get('email_forgot_pass', '')
+        otp = request.POST.get('otp')
+        new_password = request.POST.get('new_password')
+
+        user = get_object_or_404(User, email=email)
+
+        if user:
+            user.password_hash = new_password
+            user.save()
+            redirect('login')
+        else: 
+            return JsonResponse({"message": "non exisitent email!"}, status=200)
+
+        return JsonResponse({"error": "Invalid or expired OTP."}, status=400)
+
+    return render(request, 'views/change-password.html')  # Renders Change Password page
 
 def product_engagement_trends():
     return (
@@ -223,6 +278,8 @@ def register(request):
 
 def view(request):
     return render(request, 'views/view.html')
+
+
 
 def login(request):
     if request.method == 'POST':

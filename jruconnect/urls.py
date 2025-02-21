@@ -16,6 +16,10 @@ urlpatterns = [
     path('advertisements/', views.ecom, name='advertisements'),
     path('user/<int:user_id>/update-verified/',  views.update_user_verified, name='update_user_verified'),
 
+    
+    path('forgot_password/', views.request_otp, name='forgot_password'),
+    path('change_password/', views.verify_otp_and_reset_password, name='change_password'),
+
     path('user_profile/<int:user_profile_id>/', views.user_profile, name='user_profile'),
     path('record_engagement/', views.record_engagement, name='record_engagement'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
