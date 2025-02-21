@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('register/', views.register, name='register'),
     path('home', views.home, name='home'),
+    path('login/', views.login, name='login'),
     path('adminlog/', views.loginadmin, name='adminlog'),
     path('student/', views.loginstud, name='student'),
     path('products_student/', views.products_student, name='products_student'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
     path('add_product/', views.add_product, name='add_product'),
     path('product/mark_as_sold/<int:product_id>/', views.mark_product_as_sold, name='mark_product_as_sold'),
+    path('product/mark_as_available/<int:product_id>/', views.mark_product_as_available, name='mark_as_available'),
     path('update-profile-image/', views.update_profile_image, name='update_profile_image'),
     # User-related URLs
     path('users/', views.users, name='users'),

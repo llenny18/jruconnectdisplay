@@ -71,7 +71,7 @@
             </button>
             <div class="navbar-brand-wrapper mr-5"></div>
             <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">
-              Welcome back, {{ admin_user.full_name }}
+              Welcome back, {{ full_name }}
             </h4>
             <ul class="navbar-nav navbar-nav-right">
               <li class="nav-item">
@@ -198,6 +198,7 @@
                         <thead>
                           <tr>
                             <th>#</th>
+                            <th>Seller</th>
                             <th>Title</th>
                             <th>Description</th>
                             <th>Category</th>
@@ -216,10 +217,11 @@
                           {% for product in products %}
                           <tr data-status="{{ product.ads_status}}" data-sold="{% if product.is_sold %}true{% else %}false{% endif %}d">
                             <td>{{ forloop.counter }}</td>
+                            <td>{{ product.user.first_name }} {{ product.user.last_name }}</td>
                             <td>{{ product.title }}</td>
                             <td>{{ product.description }}</td>
                             <td>{{ product.category }}</td>
-                            <td>${{ product.price }}</td>
+                            <td>PHP {{ product.price }}</td>
                             <td>{{ product.location }}</td>
                             <td><img src="{% if product.image_url %}
                               {% static product.image_url %}
@@ -256,9 +258,9 @@
                           {% endif %}
 
                           <td>{% if product.is_sold %}
-                            True
+                            Not Available
                         {% else %}
-                            False
+                            Available
                         {% endif %}</td>
 
                             
@@ -266,6 +268,8 @@
                               {{ product.date_posted|date:"Y-m-d H:i:s" }}
                             </td>
                             <td>
+                            {% if role == "student" %}
+
                               <a
                                 href="#"
                                 class="btn btn-primary m-1"
@@ -273,13 +277,14 @@
                                 data-target="#editModal{{ product.product_id }}"
                                 >Edit</a
                               >
-
+                            {% endif %}
                               <a
                                 href="#"
                                 class="btn btn-danger m-1"
                                 onclick="deleteProduct({{ product.product_id }})"
                                 >Delete</a
                               >
+                              
                               {% if product.is_sold != 1 %}
                               <hr>
                               <button
@@ -289,7 +294,15 @@
                                 >Mark as Sold</button>
 
                                 {% endif %}
-
+                                {% if product.is_sold == 1 %}
+                                <hr>
+                                <button
+                                 
+                                  class="btn btn-primary m-1"
+                                   onclick="markAsAvailable({{ product.product_id }})"
+                                  >Mark as Available</button>
+  
+                                  {% endif %}
                                 {% if role == "admin" %}
                                 {% if product.ads_status != "restricted" %}
                                 <hr>
@@ -737,6 +750,30 @@ aria-hidden="true"
               }
           });
       }
+      function markAsAvailable(productId) {
+          const csrfToken = '{{ csrf_token }}'; // CSRF token for POST request
+
+          $.ajax({
+              url: `/product/mark_as_available/${productId}/`,
+              type: 'POST',
+              headers: {
+                  'X-CSRFToken': csrfToken,
+              },
+              success: function(response) {
+                  if (response.success) {
+                      alert(response.message);
+                      // Optionally, reload the product list or update the UI as needed
+                      location.reload(); // Reloads the page
+                  } else {
+                      alert(response.message);
+                  }
+              },
+              error: function(xhr) {
+                  alert('An error occurred: ' + xhr.statusText);
+              }
+          });
+      }
+
   </script>
 
 

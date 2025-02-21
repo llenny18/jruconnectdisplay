@@ -59,7 +59,7 @@
           <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
             <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize"><span class="mdi mdi-menu"></span></button>
             <div class="navbar-brand-wrapper mr-5"></div>
-            <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, {{ admin_user.first_name }}</h4>
+            <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1"> Welcome back, {{ full_name }}</h4>
             <ul class="navbar-nav navbar-nav-right">
               <li class="nav-item">
                 <h4 id="date-time" class="mb-0 font-weight-bold d-none d-xl-block">Loading...</h4>
@@ -326,6 +326,9 @@
                           <h6 class="text-dark mb-2">{{ product.title }}</h6>
                           <p>
                             <strong>Category:</strong> {{ product.category }}
+                          </p>
+                          <p>
+                            <strong>Seller:</strong> {{ product.user.first_name }} {{ product.user.last_name }}
                           </p>
                           <div class="d-flex justify-content-center mb-3 mt-4">
                             <div class="p-2 mr-2">

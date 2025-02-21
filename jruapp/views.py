@@ -303,7 +303,7 @@ def products(request):
         except User.DoesNotExist:
             admin_user = None  # Handle case where no admin user is found
    
-    all_products = Product.objects.all()
+    all_products = Product.objects.select_related('user')
     context = {'products': all_products, 'full_name': full_name, 'admin_id' : admin_id, 'role': role, 'admin_user': admin_user }
     return render(request, 'views/products.html', context)
 
@@ -475,7 +475,7 @@ def ecom(request):
     # Count likes for each product, order by likes, and select the top 20 unique products
     top_products = Product.objects.annotate(
         like_count=Count('engagement', filter=Q(engagement__type='like'))
-    ).order_by('-like_count')[:20]
+    ).select_related('user').order_by('-like_count')[:20]
 
     # Fetch categories of products that the admin has engaged with (liked or clicked)
     engaged_categories = Engagement.objects.filter(
@@ -483,12 +483,12 @@ def ecom(request):
         type__in=['like', 'click']
     ).values_list('product__category', flat=True).distinct()
 
-    # Fetch recommended products based on the engaged categories (excluding products already engaged with)
+    # Fetch recommended products based on engaged categories (excluding products already engaged with)
     recommended_products = Product.objects.filter(
         category__in=engaged_categories
     ).exclude(
         engagement__user_id=admin_id
-    ).distinct()
+    ).select_related('user').distinct()
 
     # Get a list of product IDs that are either in top products or recommended products
     excluded_product_ids = list(top_products.values_list('product_id', flat=True)) + \
@@ -497,7 +497,7 @@ def ecom(request):
     # Fetch products that are not in top products and recommended products
     other_products = Product.objects.exclude(
         product_id__in=excluded_product_ids
-    )
+    ).select_related('user')
 
     # Pass top products, recommended products, and other products to the template
     context = {
@@ -533,6 +533,14 @@ def update_ads_status_r(request, product_id, status, reason):
     
 
 
+def mark_product_as_available(request, product_id):
+    if request.method == "POST":
+        product = get_object_or_404(Product, product_id=product_id)
+        product.is_sold = 0
+        product.save()
+        return JsonResponse({'success': True, 'message': 'Product marked as Available.'})
+    return JsonResponse({'success': False, 'message': 'Invalid request.'})
+    
 
 def mark_product_as_sold(request, product_id):
     if request.method == "POST":
