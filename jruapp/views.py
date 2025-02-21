@@ -39,8 +39,6 @@ def request_otp(request):
     if request.method == 'POST':
         email = request.POST.get('email')
 
-        
-
         if User.objects.filter(email=email).exists():
             send_otp_email(email)  # Send OTP to email
             response_data = "OTP has been sent to your email"
