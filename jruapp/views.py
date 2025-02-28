@@ -65,9 +65,9 @@ def verify_otp_and_reset_password(request):
             user.save()
             redirect('login')
         else: 
-            return JsonResponse({"message": "non exisitent email!"}, status=200)
+            return render(request, 'views/change-password.html', { "response_data": "non exisitent email!"})
 
-        return JsonResponse({"error": "Invalid or expired OTP."}, status=400)
+        return render(request, 'views/change-password.html', { "response_data": "Invalid or expired OTP."})
 
     return render(request, 'views/change-password.html')  # Renders Change Password page
 
